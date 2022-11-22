@@ -1,8 +1,9 @@
 -- The global table used by the client and server to access all trophy data
 TTTTrophies = {}
 TTTTrophies.trophies = {}
-TTTTrophies.earnedTrophies = {}
-TTTTrophies.toMessageTrophies = {}
+TTTTrophies.earned = {}
+TTTTrophies.toMessage = {}
+TTTTrophies.toRegister = {}
 -- Creating a fake class of "TROPHY" using metatables, borrowed from the randomat's "EVENT" class
 local trophies_meta = {}
 trophies_meta.__index = trophies_meta
@@ -18,14 +19,14 @@ if SERVER then
         for _, ply in ipairs(plys) do
             local plyID = ply:SteamID()
             -- Don't earn trophies that are already earned
-            if earnedTrophies[plyID] and earnedTrophies[plyID][self.id] then return end
+            if TTTTrophies.earned[plyID] and TTTTrophies.earned[plyID][self.id] then return end
             -- Add the player to the earnedTrophies table if they haven't earned a trophy before
-            earnedTrophies[plyID] = earnedTrophies[plyID] or {}
+            TTTTrophies.earned[plyID] = TTTTrophies.earned[plyID] or {}
             -- Make the trophy as earned
-            earnedTrophies[plyID][self.id] = true
+            TTTTrophies.earned[plyID][self.id] = true
             -- Also mark the trophy to show a message at the end of the round
-            toMessageTrophies[plyID] = toMessageTrophies[plyID] or {}
-            table.insert(toMessageTrophies[plyID], self.id)
+            TTTTrophies.toMessage[plyID] = TTTTrophies.toMessage[plyID] or {}
+            table.insert(TTTTrophies.toMessage[plyID], self.id)
             -- Show the earned trophy popup for the player
             net.Start("TTTEarnTrophy")
             net.WriteString(self.id)
@@ -85,23 +86,35 @@ end
 
 if SERVER then
     function RegisterTTTTrophy(trophy)
-        trophy.__index = trophy
-        setmetatable(trophy, trophies_meta)
-        -- Don't add trophies that don't have their required mods installed
-        if not trophy:Condition() then return end
-        SetGlobalBool("TTTTrophy" .. trophy.id, true)
-        -- Apply the trophy's trigger hooks
-        trophy:Trigger()
-        TTTTrophies.trophies[trophy.id] = trophy
+        table.insert(TTTTrophies.toRegister, trophy)
     end
+
+    hook.Add("InitPostEntity", "TTTTrophiesPopulateList", function()
+        for _, trophy in ipairs(TTTTrophies.toRegister) do
+            trophy.__index = trophy
+            setmetatable(trophy, trophies_meta)
+            -- Don't add trophies that don't have their required mods installed
+            if not trophy:Condition() then return end
+            SetGlobalBool("TTTTrophy" .. trophy.id, true)
+            -- Apply the trophy's trigger hooks
+            trophy:Trigger()
+            TTTTrophies.trophies[trophy.id] = trophy
+        end
+    end)
 else
     function RegisterTTTTrophy(trophy)
-        trophy.__index = trophy
-        setmetatable(trophy, trophies_meta)
-        -- Don't add trophies on the client that aren't enabled on the server
-        if not GetGlobalBool("TTTTrophy" .. trophy.id, true) then return end
-        TTTTrophies.trophies[trophy.id] = trophy
+        table.insert(TTTTrophies.toRegister, trophy)
     end
+
+    hook.Add("InitPostEntity", "TTTTrophiesPopulateList", function()
+        for _, trophy in ipairs(TTTTrophies.toRegister) do
+            trophy.__index = trophy
+            setmetatable(trophy, trophies_meta)
+            -- Don't add trophies on the client that aren't enabled on the server
+            if not GetGlobalBool("TTTTrophy" .. trophy.id) then return end
+            TTTTrophies.trophies[trophy.id] = trophy
+        end
+    end)
 end
 
 -- Reading all trophy lua files and adding them to the global table

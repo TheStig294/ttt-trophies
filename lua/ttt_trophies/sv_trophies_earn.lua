@@ -4,7 +4,7 @@ util.AddNetworkString("TTTSendEarnedTrophies")
 -- Reads the earned trophies from a file
 if file.Exists("ttt/trophies.txt", "DATA") then
     local fileContent = file.Read("ttt/trophies.txt")
-    TTTTrophies.earnedTrophies = util.JSONToTable(fileContent)
+    TTTTrophies.earned = util.JSONToTable(fileContent)
 else
     -- Creates the earned trophies file if it doesn't exist
     file.CreateDir("ttt")
@@ -17,16 +17,16 @@ net.Receive("TTTRequestEarnedTrophies", function(len, ply)
     local id = ply:SteamID()
     local count
 
-    if not TTTTrophies.earnedTrophies[id] or table.IsEmpty(TTTTrophies.earnedTrophies[id]) or TTTTrophies.earnedTrophies[id] == {} then
+    if not TTTTrophies.earned or not TTTTrophies.earned[id] or table.IsEmpty(TTTTrophies.earned[id]) or TTTTrophies.earned[id] == {} then
         count = 0
     else
-        count = table.Count(TTTTrophies.earnedTrophies[id])
+        count = table.Count(TTTTrophies.earned[id])
     end
 
     net.WriteUInt(count, 16)
 
     if count > 0 then
-        for trophyID, earned in ipairs(TTTTrophies.earnedTrophies[id]) do
+        for trophyID, earned in ipairs(TTTTrophies.earned[id]) do
             net.WriteString(trophyID)
         end
     end
@@ -36,18 +36,18 @@ end)
 
 -- Saves the trophies earned to a file so they persist
 hook.Add("ShutDown", "TTTTrophiesSaveEarned", function()
-    local fileContent = util.TableToJSON(TTTTrophies.earnedTrophies, true)
+    local fileContent = util.TableToJSON(TTTTrophies.earned, true)
     file.Write("ttt/trophies.txt", fileContent)
 end)
 
 -- Shows a chat alert to everyone at the end of the round if someone has earned a trophy
 hook.Add("TTTEndRound", "TTTTrophiesChatAnnouncement", function()
-    if table.IsEmpty(TTTTrophies.toMessageTrophies) or TTTTrophies.toMessageTrophies == {} then return end
+    if table.IsEmpty(TTTTrophies.toMessage) or TTTTrophies.toMessage == {} then return end
 
     timer.Simple(6, function()
         BroadcastLua("surface.PlaySound(\"ttt_trophies/trophypop.mp3\")")
 
-        for nick, trophies in pairs(TTTTrophies.toMessageTrophies) do
+        for nick, trophies in pairs(TTTTrophies.toMessage) do
             PrintMessage(HUD_PRINTTALK, nick .. ":")
 
             for _, trophyID in ipairs(trophies) do
@@ -56,6 +56,6 @@ hook.Add("TTTEndRound", "TTTTrophiesChatAnnouncement", function()
             end
         end
 
-        table.Empty(TTTTrophies.toMessageTrophies)
+        table.Empty(TTTTrophies.toMessage)
     end)
 end)
