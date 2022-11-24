@@ -18,6 +18,7 @@ if SERVER then
 
         for _, ply in ipairs(plys) do
             local plyID = ply:SteamID()
+            local nick = ply:Nick()
             -- Don't earn trophies that are already earned
             if TTTTrophies.earned[plyID] and TTTTrophies.earned[plyID][self.id] then return end
             -- Add the player to the earnedTrophies table if they haven't earned a trophy before
@@ -25,8 +26,8 @@ if SERVER then
             -- Make the trophy as earned
             TTTTrophies.earned[plyID][self.id] = true
             -- Also mark the trophy to show a message at the end of the round
-            TTTTrophies.toMessage[plyID] = TTTTrophies.toMessage[plyID] or {}
-            table.insert(TTTTrophies.toMessage[plyID], self.id)
+            TTTTrophies.toMessage[nick] = TTTTrophies.toMessage[nick] or {}
+            table.insert(TTTTrophies.toMessage[nick], self.id)
             -- Show the earned trophy popup for the player
             net.Start("TTTEarnTrophy")
             net.WriteString(self.id)
