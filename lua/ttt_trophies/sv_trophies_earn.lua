@@ -4,7 +4,7 @@ util.AddNetworkString("TTTSendEarnedTrophies")
 -- Reads the earned trophies from a file
 if file.Exists("ttt/trophies.txt", "DATA") then
     local fileContent = file.Read("ttt/trophies.txt")
-    TTTTrophies.earned = util.JSONToTable(fileContent)
+    TTTTrophies.earned = util.JSONToTable(fileContent) or {}
 else
     -- Creates the earned trophies file if it doesn't exist
     file.CreateDir("ttt")
