@@ -90,31 +90,37 @@ if SERVER then
         table.insert(TTTTrophies.toRegister, trophy)
     end
 
-    hook.Add("InitPostEntity", "TTTTrophiesPopulateList", function()
+    -- Don't process trophies list until the first round begins to give time for server configs to load
+    hook.Add("TTTPrepareRound", "TTTTrophiesPopulateList", function()
         for _, trophy in ipairs(TTTTrophies.toRegister) do
             trophy.__index = trophy
             setmetatable(trophy, trophies_meta)
             -- Don't add trophies that don't have their required mods installed
-            if not trophy:Condition() then return end
+            if not trophy:Condition() then continue end
             SetGlobalBool("TTTTrophy" .. trophy.id, true)
             -- Apply the trophy's trigger hooks
             trophy:Trigger()
             TTTTrophies.trophies[trophy.id] = trophy
         end
+
+        hook.Remove("TTTPrepareRound", "TTTTrophiesPopulateList")
     end)
 else
     function RegisterTTTTrophy(trophy)
         table.insert(TTTTrophies.toRegister, trophy)
     end
 
-    hook.Add("InitPostEntity", "TTTTrophiesPopulateList", function()
+    -- Don't process trophies list until the player sees a round begin to give time for client configs to load
+    hook.Add("TTTBeginRound", "TTTTrophiesPopulateList", function()
         for _, trophy in ipairs(TTTTrophies.toRegister) do
             trophy.__index = trophy
             setmetatable(trophy, trophies_meta)
             -- Don't add trophies on the client that aren't enabled on the server
-            if not GetGlobalBool("TTTTrophy" .. trophy.id) then return end
+            if not GetGlobalBool("TTTTrophy" .. trophy.id) then continue end
             TTTTrophies.trophies[trophy.id] = trophy
         end
+
+        hook.Remove("TTTBeginRound", "TTTTrophiesPopulateList")
     end)
 end
 
