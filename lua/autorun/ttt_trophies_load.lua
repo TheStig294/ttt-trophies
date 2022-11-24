@@ -111,16 +111,18 @@ else
     end
 
     -- Don't process trophies list until the player sees a round begin to give time for client configs to load
-    hook.Add("TTTBeginRound", "TTTTrophiesPopulateList", function()
-        for _, trophy in ipairs(TTTTrophies.toRegister) do
-            trophy.__index = trophy
-            setmetatable(trophy, trophies_meta)
-            -- Don't add trophies on the client that aren't enabled on the server
-            if not GetGlobalBool("TTTTrophy" .. trophy.id) then continue end
-            TTTTrophies.trophies[trophy.id] = trophy
-        end
+    hook.Add("TTTPrepareRound", "TTTTrophiesPopulateList", function()
+        timer.Simple(3, function()
+            for _, trophy in ipairs(TTTTrophies.toRegister) do
+                trophy.__index = trophy
+                setmetatable(trophy, trophies_meta)
+                -- Don't add trophies on the client that aren't enabled on the server
+                if not GetGlobalBool("TTTTrophy" .. trophy.id) then continue end
+                TTTTrophies.trophies[trophy.id] = trophy
+            end
 
-        hook.Remove("TTTBeginRound", "TTTTrophiesPopulateList")
+            hook.Remove("TTTPrepareRound", "TTTTrophiesPopulateList")
+        end)
     end)
 end
 

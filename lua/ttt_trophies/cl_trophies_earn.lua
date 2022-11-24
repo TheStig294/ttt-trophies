@@ -1,8 +1,8 @@
-hook.Add("TTTBeginRound", "TTTTrophiesSyncEarned", function()
-    timer.Simple(1, function()
+hook.Add("TTTPrepareRound", "TTTTrophiesSyncEarned", function()
+    timer.Simple(6, function()
         net.Start("TTTRequestEarnedTrophies")
         net.SendToServer()
-        hook.Remove("TTTBeginRound", "TTTTrophiesSyncEarned")
+        hook.Remove("TTTPrepareRound", "TTTTrophiesSyncEarned")
     end)
 end)
 
