@@ -74,7 +74,7 @@ net.Receive("TTTEarnTrophy", function()
             alpha = alpha + 0.1
         end)
 
-        hook.Add("HUDPaint", "TTTTrophyPopup", function()
+        hook.Add("DrawOverlay", "TTTTrophyPopup", function()
             surface.SetAlphaMultiplier(alpha)
             -- Background box
             draw.RoundedBox(10, leftEdge, topEdge, width, height, greyColour)
