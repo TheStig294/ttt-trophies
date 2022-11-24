@@ -17,8 +17,10 @@ net.Receive("TTTRequestEarnedTrophies", function(len, ply)
     local id = ply:SteamID()
     local count
 
-    if not TTTTrophies.earned or not TTTTrophies.earned[id] or table.IsEmpty(TTTTrophies.earned[id]) or TTTTrophies.earned[id] == {} then
+    if not TTTTrophies.earned[id] or table.IsEmpty(TTTTrophies.earned[id]) or TTTTrophies.earned[id] == {} then
         count = 0
+        TTTTrophies.earned[id] = {}
+        TTTTrophies.earned[id]["___name"] = ply:Nick()
     else
         count = table.Count(TTTTrophies.earned[id])
     end
@@ -26,7 +28,9 @@ net.Receive("TTTRequestEarnedTrophies", function(len, ply)
     net.WriteUInt(count, 16)
 
     if count > 0 then
-        for trophyID, earned in ipairs(TTTTrophies.earned[id]) do
+        for trophyID, earned in pairs(TTTTrophies.earned[id]) do
+            -- Don't send the saved player's name as a trophy in the earned trophies stats file
+            if trophyID == "___name" then continue end
             net.WriteString(trophyID)
         end
     end
