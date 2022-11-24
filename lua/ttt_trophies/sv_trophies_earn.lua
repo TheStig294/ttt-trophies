@@ -29,8 +29,6 @@ net.Receive("TTTRequestEarnedTrophies", function(len, ply)
 
     if count > 0 then
         for trophyID, earned in pairs(TTTTrophies.earned[id]) do
-            -- Don't send the saved player's name as a trophy in the earned trophies stats file
-            if trophyID == "___name" then continue end
             net.WriteString(trophyID)
         end
     end
@@ -49,15 +47,29 @@ hook.Add("TTTEndRound", "TTTTrophiesChatAnnouncement", function()
     if table.IsEmpty(TTTTrophies.toMessage) or TTTTrophies.toMessage == {} then return end
 
     timer.Simple(6, function()
-        BroadcastLua("surface.PlaySound(\"ttt_trophies/trophypop.mp3\")")
+        PrintMessage(HUD_PRINTTALK, "###Players have earned trophies!###")
 
         for nick, trophies in pairs(TTTTrophies.toMessage) do
             PrintMessage(HUD_PRINTTALK, nick .. ":")
 
             for _, trophyID in ipairs(trophies) do
                 local trophy = TTTTrophies.trophies[trophyID]
-                PrintMessage(HUD_PRINTTALK, "[" .. trophy.title .. "]\n" .. trophy.desc)
+                local rarity = ""
+
+                if trophy.rarity == 1 then
+                    rarity = "Bronze"
+                elseif trophy.rarity == 2 then
+                    rarity = "Silver"
+                elseif trophy.rarity == 3 then
+                    rarity = "Gold"
+                elseif trophy.rarity == 4 then
+                    rarity = "Platinum"
+                end
+
+                PrintMessage(HUD_PRINTTALK, "[" .. trophy.title .. "]\n" .. trophy.desc .. " " .. rarity)
             end
+
+            PrintMessage(HUD_PRINTTALK, "##########################")
         end
 
         table.Empty(TTTTrophies.toMessage)
