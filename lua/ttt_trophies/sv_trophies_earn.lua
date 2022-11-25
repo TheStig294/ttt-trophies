@@ -13,7 +13,6 @@ end
 
 -- Sends each player their list of earned trophies when they have loaded in enough
 net.Receive("TTTRequestEarnedTrophies", function(len, ply)
-    net.Start("TTTSendEarnedTrophies")
     local id = ply:SteamID()
     local count
 
@@ -25,6 +24,7 @@ net.Receive("TTTRequestEarnedTrophies", function(len, ply)
         count = table.Count(TTTTrophies.earned[id])
     end
 
+    net.Start("TTTSendEarnedTrophies")
     net.WriteUInt(count, 16)
 
     if count > 0 then
