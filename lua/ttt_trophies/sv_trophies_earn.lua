@@ -92,3 +92,67 @@ hook.Add("TTTBeginRound", "TTTTrophiesRoleSpecificChatSuggestion", function()
         end
     end)
 end)
+
+-- Changes a player's playermodel colours over time
+local rainbowPhase = 1
+local colourSetPlayers = {}
+local mult = 1
+
+hook.Add("PlayerPostThink", "TTTPlatinumTrophyReward", function(ply)
+    -- if not TTTTrophies.platinumPlayers[ply:SteamID()] or not ply:Alive() or ply:IsSpec() then return end
+    if not colourSetPlayers[ply] then
+        ply:SetColor(COLOR_WHITE)
+        colourSetPlayers[ply] = true
+    end
+
+    local colour = ply:GetColor()
+    print(colour)
+
+    if rainbowPhase == 1 then
+        vector.b = vector.b + mult
+
+        if vector.b + mult == 255 then
+            vector.b = 1
+            rainbowPhase = rainbowPhase + 1
+        end
+    elseif rainbowPhase == 2 then
+        vector.r = vector.r - mult
+
+        if vector.r - mult == 0 then
+            vector.r = 0
+            rainbowPhase = rainbowPhase + 1
+        end
+    elseif rainbowPhase == 3 then
+        vector.g = vector.g + mult
+
+        if vector.g + mult == 255 then
+            vector.g = 1
+            rainbowPhase = rainbowPhase + 1
+        end
+    elseif rainbowPhase == 4 then
+        vector.b = vector.b - mult
+
+        if vector.b - mult == 0 then
+            vector.b = 0
+            rainbowPhase = rainbowPhase + 1
+        end
+    elseif rainbowPhase == 5 then
+        vector.r = vector.r + mult
+
+        if vector.r + mult == 255 then
+            vector.r = 1
+            rainbowPhase = rainbowPhase + 1
+        end
+    elseif rainbowPhase == 6 then
+        vector.g = vector.g - mult
+
+        if vector.g - mult == 0 then
+            vector.g = 0
+            rainbowPhase = 1
+        end
+    end
+
+    print(rainbowPhase)
+    -- ply:SetPlayerColor(vector)
+    ply:SetColor(colour)
+end)

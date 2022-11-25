@@ -10,10 +10,7 @@ function TROPHY:Trigger()
             local earnedTrophies = TTTTrophies.earned[ply:SteamID()]
 
             if table.Count(TTTTrophies.trophies) == table.Count(earnedTrophies) then
-                -- Make the trophy unlock delayed by a few seconds so it doesn't overlap the last trophy earned
-                timer.Simple(3, function()
-                    self:Earn(ply)
-                end)
+                self:Earn(ply)
             end
         end
     end)

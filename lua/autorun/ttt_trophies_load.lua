@@ -5,6 +5,7 @@ TTTTrophies.earned = {}
 TTTTrophies.toMessage = {}
 TTTTrophies.toRegister = {}
 TTTTrophies.roleSpecific = {}
+TTTTrophies.platinumPlayers = {}
 -- Creating a fake class of "TROPHY" using metatables, borrowed from the randomat's "EVENT" class
 local trophies_meta = {}
 trophies_meta.__index = trophies_meta
@@ -19,10 +20,18 @@ if SERVER then
 
         -- Hook to stop trophies from being earned
         if hook.Run("TTTBlockTrophyEarned", self, plys) == true then return end
+        local delay = 0
 
         for _, ply in ipairs(plys) do
             local plyID = ply:SteamID()
             local nick = ply:Nick()
+
+            -- Make the trophy unlock delayed by a few seconds so the platinum doesn't overlap the last trophy earned
+            if self.id == "platinum" then
+                delay = 3
+                TTTTrophies.platinumPlayers[plyID] = true
+            end
+
             -- Don't earn trophies that are already earned
             if TTTTrophies.earned[plyID] and TTTTrophies.earned[plyID][self.id] then return end
             -- Add the player to the earnedTrophies table if they haven't earned a trophy before
@@ -32,10 +41,13 @@ if SERVER then
             -- Also mark the trophy to show a message at the end of the round
             TTTTrophies.toMessage[nick] = TTTTrophies.toMessage[nick] or {}
             table.insert(TTTTrophies.toMessage[nick], self.id)
+
             -- Show the earned trophy popup for the player
-            net.Start("TTTEarnTrophy")
-            net.WriteString(self.id)
-            net.Send(ply)
+            timer.Simple(delay, function()
+                net.Start("TTTEarnTrophy")
+                net.WriteString(self.id)
+                net.Send(ply)
+            end)
         end
 
         hook.Run("TTTTrophyEarned", self, plys)
