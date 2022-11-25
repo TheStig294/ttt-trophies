@@ -4,6 +4,7 @@ TTTTrophies.trophies = {}
 TTTTrophies.earned = {}
 TTTTrophies.toMessage = {}
 TTTTrophies.toRegister = {}
+TTTTrophies.roleSpecific = {}
 -- Creating a fake class of "TROPHY" using metatables, borrowed from the randomat's "EVENT" class
 local trophies_meta = {}
 trophies_meta.__index = trophies_meta
@@ -146,6 +147,16 @@ if SERVER then
             -- Apply the trophy's trigger hooks
             trophy:Trigger()
             TTTTrophies.trophies[trophy.id] = trophy
+            -- Mark a trophy as role specific to give a suggestion in chat when you are that role to earn that trophy
+            local role = trophy.roleSpecific
+
+            if role then
+                if not TTTTrophies.roleSpecific[role] then
+                    TTTTrophies.roleSpecific[role] = {}
+                end
+
+                table.insert(TTTTrophies.roleSpecific[role], trophy.id)
+            end
         end
 
         SetGlobalBool("TTTTrophiesServerLoaded", true)

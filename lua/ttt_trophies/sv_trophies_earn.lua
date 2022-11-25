@@ -71,3 +71,24 @@ hook.Add("TTTEndRound", "TTTTrophiesChatAnnouncement", function()
         table.Empty(TTTTrophies.toMessage)
     end)
 end)
+
+-- Displays a chat message at the start of the round if a player is a role that they could earn a trophy with
+hook.Add("TTTBeginRound", "TTTTrophiesRoleSpecificChatSuggestion", function()
+    timer.Simple(3, function()
+        for _, ply in ipairs(player.GetAll()) do
+            if not ply:Alive() or ply:IsSpec() then continue end
+            local role = ply:GetRole()
+            local trophies = TTTTrophies.roleSpecific[role]
+
+            if trophies then
+                for _, trophyID in ipairs(trophies) do
+                    local earned = TTTTrophies.earned[ply:SteamID()][trophyID]
+                    if earned then continue end
+                    local trophy = TTTTrophies.trophies[trophyID]
+                    ply:ChatPrint("[Trophy suggestion]\n" .. trophy.desc)
+                    break
+                end
+            end
+        end
+    end)
+end)
