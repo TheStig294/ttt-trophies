@@ -85,48 +85,11 @@ function trophies_meta:CleanUpHooks()
     table.Empty(self.Hooks)
 end
 
-if SERVER then
-    function RegisterTTTTrophy(trophy)
-        table.insert(TTTTrophies.toRegister, trophy)
-    end
-
-    -- Don't process trophies list until the first round begins to give time for server configs to load
-    hook.Add("TTTPrepareRound", "TTTTrophiesPopulateList", function()
-        for _, trophy in ipairs(TTTTrophies.toRegister) do
-            trophy.__index = trophy
-            setmetatable(trophy, trophies_meta)
-            -- Don't add trophies that don't have their required mods installed
-            if not trophy:Condition() then continue end
-            SetGlobalBool("TTTTrophy" .. trophy.id, true)
-            -- Apply the trophy's trigger hooks
-            trophy:Trigger()
-            TTTTrophies.trophies[trophy.id] = trophy
-        end
-
-        hook.Remove("TTTPrepareRound", "TTTTrophiesPopulateList")
-    end)
-else
-    function RegisterTTTTrophy(trophy)
-        table.insert(TTTTrophies.toRegister, trophy)
-    end
-
-    -- Don't process trophies list until the player sees a round begin to give time for client configs to load
-    hook.Add("TTTPrepareRound", "TTTTrophiesPopulateList", function()
-        timer.Simple(3, function()
-            for _, trophy in ipairs(TTTTrophies.toRegister) do
-                trophy.__index = trophy
-                setmetatable(trophy, trophies_meta)
-                -- Don't add trophies on the client that aren't enabled on the server
-                if not GetGlobalBool("TTTTrophy" .. trophy.id) then continue end
-                TTTTrophies.trophies[trophy.id] = trophy
-            end
-
-            hook.Remove("TTTPrepareRound", "TTTTrophiesPopulateList")
-        end)
-    end)
+function RegisterTTTTrophy(trophy)
+    table.insert(TTTTrophies.toRegister, trophy)
 end
 
--- Reading all trophy lua files and adding them to the global table
+-- Reading all trophy lua files
 local function AddServer(fil)
     if SERVER then
         include(fil)
@@ -152,4 +115,41 @@ local files, _ = file.Find("ttt_trophies/trophies/*.lua", "LUA")
 for _, fil in ipairs(files) do
     AddServer("ttt_trophies/trophies/" .. fil)
     AddClient("ttt_trophies/trophies/" .. fil)
+end
+
+-- Loading the trophies list on the client and server
+if SERVER then
+    -- Don't process trophies list until the first round begins to give time for server configs to load,
+    -- so the trophy:Condition() function can use them to check if certain mods are installed/enabled
+    hook.Add("TTTPrepareRound", "TTTTrophiesPopulateList", function()
+        for _, trophy in ipairs(TTTTrophies.toRegister) do
+            trophy.__index = trophy
+            setmetatable(trophy, trophies_meta)
+            -- Don't add trophies that don't have their required mods installed
+            if not trophy:Condition() then continue end
+            SetGlobalBool("TTTTrophy" .. trophy.id, true)
+            -- Apply the trophy's trigger hooks
+            trophy:Trigger()
+            TTTTrophies.trophies[trophy.id] = trophy
+        end
+
+        SetGlobalBool("TTTTrophiesServerLoaded", true)
+        hook.Remove("TTTPrepareRound", "TTTTrophiesPopulateList")
+    end)
+else
+    -- Don't process trophies list until the server has loaded, and all trophy files on the client have loaded
+    hook.Add("Think", "TTTTrophiesPopulateList", function()
+        if GetGlobalBool("TTTTrophiesServerLoaded") then
+            for _, trophy in ipairs(TTTTrophies.toRegister) do
+                trophy.__index = trophy
+                setmetatable(trophy, trophies_meta)
+                -- Don't add trophies on the client that aren't enabled on the server
+                if not GetGlobalBool("TTTTrophy" .. trophy.id) then continue end
+                TTTTrophies.trophies[trophy.id] = trophy
+            end
+
+            SetGlobalBool("TTTTrophiesClientLoaded", true)
+            hook.Remove("Think", "TTTTrophiesPopulateList")
+        end
+    end)
 end
