@@ -17,7 +17,6 @@ function TROPHY:Trigger()
     end)
 end
 
--- Condition for trophy to work
 function TROPHY:Condition()
     return ConVarExists("ttt_jester_enabled") and GetConVar("ttt_jester_enabled"):GetBool()
 end

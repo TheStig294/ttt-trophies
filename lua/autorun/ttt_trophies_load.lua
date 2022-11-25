@@ -33,6 +33,8 @@ if SERVER then
             net.WriteString(self.id)
             net.Send(ply)
         end
+
+        hook.Run("TTTTrophyEarned", self, plys)
     end
 end
 
