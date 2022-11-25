@@ -109,6 +109,8 @@ local function AddClient(fil)
 end
 
 AddServer("ttt_trophies/sv_trophies_earn.lua")
+AddServer("ttt_trophies/trophies_shared.lua")
+AddClient("ttt_trophies/trophies_shared.lua")
 AddClient("ttt_trophies/cl_trophies_earn.lua")
 AddClient("ttt_trophies/cl_trophies_f1_tab.lua")
 AddClient("ttt_trophies/cl_trophy_popup.lua")
