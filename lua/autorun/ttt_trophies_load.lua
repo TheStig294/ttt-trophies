@@ -16,6 +16,9 @@ if SERVER then
             plys = {plys}
         end
 
+        -- Hook to stop trophies from being earned
+        if hook.Run("TTTBlockTrophyEarned", self, plys) == true then return end
+
         for _, ply in ipairs(plys) do
             local plyID = ply:SteamID()
             local nick = ply:Nick()
