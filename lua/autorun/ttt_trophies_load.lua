@@ -41,21 +41,15 @@ if SERVER then
     end
 end
 
-function trophies_meta:ProgressUpdate(plys, numerator, denominator)
-    if not istable(plys) then
-        plys = {plys}
-    end
-
-    for _, ply in ipairs(plys) do
-        ply:ChatPrint("[Trophy progress]\n" .. self.desc .. "\n(" .. numerator .. "/" .. denominator .. ")")
-    end
-end
-
 function trophies_meta:Trigger()
 end
 
 function trophies_meta:Condition()
     return true
+end
+
+function RegisterTTTTrophy(trophy)
+    table.insert(TTTTrophies.toRegister, trophy)
 end
 
 -- This function is from Malivil's randomat mod, to save having to come up with a unique ID for a hook every time...
@@ -97,8 +91,14 @@ function trophies_meta:PlayerAlive(ply)
     return ply:Alive() and not ply:IsSpec()
 end
 
-function RegisterTTTTrophy(trophy)
-    table.insert(TTTTrophies.toRegister, trophy)
+function trophies_meta:ProgressUpdate(plys, numerator, denominator)
+    if not istable(plys) then
+        plys = {plys}
+    end
+
+    for _, ply in ipairs(plys) do
+        ply:ChatPrint("[Trophy progress]\n" .. self.desc .. "\n(" .. numerator .. "/" .. denominator .. ")")
+    end
 end
 
 -- Reading all trophy lua files
