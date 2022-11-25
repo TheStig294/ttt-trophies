@@ -60,31 +60,28 @@ function trophies_meta:AddHook(hooktype, callbackfunc, suffix)
     table.insert(self.Hooks, {hooktype, id})
 end
 
-function trophies_meta:RemoveHook(hooktype, suffix)
-    local id = "TTTTrophy." .. self.id .. ":" .. hooktype
-
-    if suffix and type(suffix) == "string" and #suffix > 0 then
-        id = id .. ":" .. suffix
-    end
-
-    for idx, ahook in ipairs(self.Hooks or {}) do
-        if ahook[1] == hooktype and ahook[2] == id then
-            hook.Remove(ahook[1], ahook[2])
-            table.remove(self.Hooks, idx)
-
-            return
-        end
-    end
+function trophies_meta:GetShuffledPlayers()
+    return table.Shuffle(player.GetAll())
 end
 
-function trophies_meta:CleanUpHooks()
-    if not self.Hooks then return end
+function trophies_meta:GetAlivePlayers(shuffle)
+    local plys = {}
 
-    for _, ahook in ipairs(self.Hooks) do
-        hook.Remove(ahook[1], ahook[2])
+    for _, ply in ipairs(plys) do
+        if ply:Alive() and not ply:IsSpec() then
+            table.insert(plys, ply)
+        end
     end
 
-    table.Empty(self.Hooks)
+    if shuffle then
+        table.Shuffle(plys)
+    end
+
+    return plys
+end
+
+function trophies_meta:PlayerAlive(ply)
+    return ply:Alive() and not ply:IsSpec()
 end
 
 function RegisterTTTTrophy(trophy)
