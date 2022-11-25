@@ -1,9 +1,3 @@
-hook.Add("PlayerButtonDown", "TTTTrophiesTest", function(ply, button)
-    if button == KEY_J then
-        TTTEarnTrophy("jester", ply)
-    end
-end)
-
 local TROPHY = {}
 TROPHY.id = "jester"
 TROPHY.title = "Directed by Robert B. Weide"
