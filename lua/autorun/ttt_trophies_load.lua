@@ -41,6 +41,16 @@ if SERVER then
     end
 end
 
+function trophies_meta:ProgressUpdate(plys, numerator, denominator)
+    if not istable(plys) then
+        plys = {plys}
+    end
+
+    for _, ply in ipairs(plys) do
+        ply:ChatPrint("[Trophy progress]\n" .. self.desc .. "\n(" .. numerator .. "/" .. denominator .. ")")
+    end
+end
+
 function trophies_meta:Trigger()
 end
 
@@ -48,7 +58,7 @@ function trophies_meta:Condition()
     return true
 end
 
--- These 3 functions are from Malivil's randomat mod
+-- This function is from Malivil's randomat mod, to save having to come up with a unique ID for a hook every time...
 function trophies_meta:AddHook(hooktype, callbackfunc, suffix)
     callbackfunc = callbackfunc or self[hooktype]
     local id = "TTTTrophy." .. self.id .. ":" .. hooktype
