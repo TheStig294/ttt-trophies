@@ -1,0 +1,120 @@
+-- local stats = {}
+-- local fileContent
+-- -- Create stats file if it doesn't exist
+-- if file.Exists("ttt/trophystats.txt", "DATA") then
+--     fileContent = file.Read("ttt/trophystats.txt")
+--     stats = util.JSONToTable(fileContent) or {}
+-- else
+--     file.CreateDir("ttt")
+--     file.Write("ttt/trophystats.txt", stats)
+-- end
+-- -- Setup all entries for every player as they connect
+-- -- This *should* ensure all players have every needed key in the stats table, so we should never try to index a nil value in the table
+-- hook.Add("PlayerInitialSpawn", "TTTTrophiesSetInitialStats", function(ply, transition)
+--     local ID = ply:SteamID()
+--     if not stats[ID] then
+--         stats[ID] = {}
+--     end
+--     if not stats[ID]["EquipmentItems"] then
+--         stats[ID]["EquipmentItems"] = {}
+--     end
+--     if not stats[ID]["DetectiveWins"] then
+--         stats[ID]["DetectiveWins"] = 0
+--     end
+--     if not stats[ID]["DetectiveRounds"] then
+--         stats[ID]["DetectiveRounds"] = 0
+--     end
+--     if not stats[ID]["TraitorPartnerWins"] then
+--         stats[ID]["TraitorPartnerWins"] = {}
+--     end
+--     if not stats[ID]["TraitorPartnerRounds"] then
+--         stats[ID]["TraitorPartnerRounds"] = {}
+--     end
+-- end)
+-- -- Keeps track of the number of times any player has bought any one buy menu item
+-- hook.Add("TTTOrderedEquipment", "TTTTrophiesEquipmentStats", function(ply, equipment, is_item, given_by_randomat)
+--     -- Items given by randomats aren't bought by the player, so they shouldn't count
+--     if given_by_randomat then return end
+--     local ID = ply:SteamID()
+--     -- Passive items are indexed by their print name, if it exists
+--     if is_item then
+--         equipment = tonumber(equipment)
+--         if equipment then
+--             equipment = math.floor(equipment)
+--         else
+--             -- If is_item is truthy but the passed equipment failed to be converted to a number then something went wrong here
+--             return
+--         end
+--         local itemTable = GetEquipmentItem(equipment, ROLE_DETECTIVE) or GetEquipmentItem(equipment, ROLE_TRAITOR)
+--         local itemName
+--         if itemTable then
+--             itemName = itemTable.name
+--         end
+--         if itemName then
+--             local equipmentCount = stats[ID]["EquipmentItems"][itemName]
+--             if equipmentCount then
+--                 equipmentCount = equipmentCount + 1
+--                 stats[ID]["EquipmentItems"][itemName] = equipmentCount
+--             else
+--                 stats[ID]["EquipmentItems"][itemName] = 1
+--             end
+--         end
+--     else
+--         -- Active items are indexed by their classname, which this hook passes by itself
+--         local equipmentCount = stats[ID]["EquipmentItems"][equipment]
+--         if equipmentCount then
+--             equipmentCount = equipmentCount + 1
+--             stats[ID]["EquipmentItems"][equipment] = equipmentCount
+--         else
+--             stats[ID]["EquipmentItems"][equipment] = 1
+--         end
+--     end
+-- end)
+-- -- Record player wins at the end of each round
+-- hook.Add("TTTEndRound", "TTTTrophiesRoundEndStats", function(winType)
+--     local traitors = {}
+--     for _, ply in ipairs(player.GetAll()) do
+--         local ID = ply:SteamID()
+--         if TTTTrophies:IsGoodDetectiveLike(ply) then
+--             if stats[ID]["DetectiveRounds"] then
+--                 stats[ID]["DetectiveRounds"] = stats[ID]["DetectiveRounds"] + 1
+--             else
+--                 stats[ID]["DetectiveRounds"] = 1
+--             end
+--             if winType == WIN_INNOCENT then
+--                 if stats[ID]["DetectiveWins"] then
+--                     stats[ID]["DetectiveWins"] = stats[ID]["DetectiveWins"] + 1
+--                 else
+--                     stats[ID]["DetectiveWins"] = 1
+--                 end
+--             end
+--         elseif TTTTrophies:IsTraitorTeam(ply) then
+--             table.insert(traitors, ply)
+--         end
+--     end
+--     for _, traitor in ipairs(traitors) do
+--         local ID = traitor:SteamID()
+--         for _, traitorPartner in ipairs(traitors) do
+--             if traitor ~= traitorPartner then
+--                 local partnerID = traitorPartner:SteamID()
+--                 if stats[ID]["TraitorPartnerRounds"][partnerID] then
+--                     stats[ID]["TraitorPartnerRounds"][partnerID] = stats[ID]["TraitorPartnerRounds"][partnerID] + 1
+--                 else
+--                     stats[ID]["TraitorPartnerRounds"][partnerID] = 1
+--                 end
+--                 if winType == WIN_TRAITOR then
+--                     if stats[ID]["TraitorPartnerWins"][partnerID] then
+--                         stats[ID]["TraitorPartnerWins"][partnerID] = stats[ID]["TraitorPartnerWins"][partnerID] + 1
+--                     else
+--                         stats[ID]["TraitorPartnerWins"][partnerID] = 1
+--                     end
+--                 end
+--             end
+--         end
+--     end
+-- end)
+-- -- Record all stats in the stats file when server shuts down/changes maps
+-- hook.Add("ShutDown", "TTTTrophiesSaveStats", function()
+--     fileContent = util.TableToJSON(stats, true)
+--     file.Write("ttt/trophystats.txt", fileContent)
+-- end)
