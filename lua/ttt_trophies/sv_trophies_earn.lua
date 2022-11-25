@@ -48,7 +48,7 @@ hook.Add("TTTEndRound", "TTTTrophiesChatAnnouncement", function()
 
     timer.Simple(6, function()
         for nick, trophies in pairs(TTTTrophies.toMessage) do
-            PrintMessage(HUD_PRINTTALK, nick .. " has earned trophies!")
+            PrintMessage(HUD_PRINTTALK, "##########################\n" .. nick .. " has earned trophies!")
 
             for _, trophyID in ipairs(trophies) do
                 local trophy = TTTTrophies.trophies[trophyID]
@@ -66,8 +66,6 @@ hook.Add("TTTEndRound", "TTTTrophiesChatAnnouncement", function()
 
                 PrintMessage(HUD_PRINTTALK, "[" .. trophy.title .. "] (" .. rarity .. ")\n" .. trophy.desc)
             end
-
-            PrintMessage(HUD_PRINTTALK, "##########################")
         end
 
         table.Empty(TTTTrophies.toMessage)
