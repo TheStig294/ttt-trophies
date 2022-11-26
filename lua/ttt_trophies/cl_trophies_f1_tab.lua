@@ -122,7 +122,7 @@ local function AddTrophiesList()
         progressBar:SetSize(580, 20)
         -- Textbox for changing the hotkey to open the trophy list
         local textboxText = nonScrollList:Add("DLabel")
-        textboxText:SetText("                                                 Hotkey for opening this list:")
+        textboxText:SetText("     Keybind that opens this window:")
         textboxText:SetFont("TrophyDesc")
         textboxText:SetTextColor(COLOUR_WHITE)
         textboxText:SizeToContents()
@@ -136,6 +136,24 @@ local function AddTrophiesList()
 
         textbox.OnEnter = function(self)
             GetConVar("ttt_trophies_hotkey"):SetString(string.upper(self:GetText()))
+        end
+
+        -- Textbox for changing the hotkey to toggle the reward for earning all trophies
+        local textboxTextReward = nonScrollList:Add("DLabel")
+        textboxTextReward:SetText("Keybind to toggle all trophies reward (if earned):")
+        textboxTextReward:SetFont("TrophyDesc")
+        textboxTextReward:SetTextColor(COLOUR_WHITE)
+        textboxTextReward:SizeToContents()
+        local textboxReward = nonScrollList:Add("DTextEntry")
+        textboxReward:SetSize(20, 20)
+        textboxReward:SetText(GetConVar("ttt_trophies_hotkey_rainbow"):GetString())
+
+        textboxReward.OnLoseFocus = function(self)
+            GetConVar("ttt_trophies_hotkey_rainbow"):SetString(string.upper(self:GetText()))
+        end
+
+        textboxReward.OnEnter = function(self)
+            GetConVar("ttt_trophies_hotkey_rainbow"):SetString(string.upper(self:GetText()))
         end
 
         -- Scrollbar

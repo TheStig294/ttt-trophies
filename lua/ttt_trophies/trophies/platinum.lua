@@ -1,6 +1,6 @@
 local TROPHY = {}
 TROPHY.id = "platinum"
-TROPHY.title = "It. Is. DONE."
+TROPHY.title = "The reward is yours..."
 TROPHY.desc = "Earn all other trophies"
 TROPHY.rarity = 4
 
