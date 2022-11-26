@@ -97,6 +97,7 @@ end)
 local rainbowPhase = 1
 local colourSetPlayers = {}
 local mult = 1
+local halfMult = mult / 2
 
 hook.Add("PlayerPostThink", "TTTPlatinumTrophyReward", function(ply)
     -- if not TTTTrophies.platinumPlayers[ply:SteamID()] or not ply:Alive() or ply:IsSpec() then return end
@@ -106,53 +107,34 @@ hook.Add("PlayerPostThink", "TTTPlatinumTrophyReward", function(ply)
     end
 
     local colour = ply:GetColor()
-    print(colour)
+    --print(colour)
 
     if rainbowPhase == 1 then
-        vector.b = vector.b + mult
+        colour.r = colour.r + mult
+		colour.g = colour.g - halfMult
+		colour.b = colour.b - mult
 
-        if vector.b + mult == 255 then
-            vector.b = 1
-            rainbowPhase = rainbowPhase + 1
+        if colour.r + mult == 255 then
+            rainbowPhase = 2
         end
     elseif rainbowPhase == 2 then
-        vector.r = vector.r - mult
+        colour.r = colour.r - mult
+		colour.g = colour.g + mult
+		colour.b = colour.b - halfMult
 
-        if vector.r - mult == 0 then
-            vector.r = 0
-            rainbowPhase = rainbowPhase + 1
+        if colour.g + mult == 255 then
+            rainbowPhase = 3
         end
     elseif rainbowPhase == 3 then
-        vector.g = vector.g + mult
-
-        if vector.g + mult == 255 then
-            vector.g = 1
-            rainbowPhase = rainbowPhase + 1
-        end
-    elseif rainbowPhase == 4 then
-        vector.b = vector.b - mult
-
-        if vector.b - mult == 0 then
-            vector.b = 0
-            rainbowPhase = rainbowPhase + 1
-        end
-    elseif rainbowPhase == 5 then
-        vector.r = vector.r + mult
-
-        if vector.r + mult == 255 then
-            vector.r = 1
-            rainbowPhase = rainbowPhase + 1
-        end
-    elseif rainbowPhase == 6 then
-        vector.g = vector.g - mult
-
-        if vector.g - mult == 0 then
-            vector.g = 0
+        colour.r = colour.r - halfMult
+		colour.g = colour.g - mult
+		colour.b = colour.b + mult
+		
+        if colour.b + mult == 255 then
             rainbowPhase = 1
         end
     end
-
-    print(rainbowPhase)
-    -- ply:SetPlayerColor(vector)
+	
+    --print(rainbowPhase)
     ply:SetColor(colour)
 end)
