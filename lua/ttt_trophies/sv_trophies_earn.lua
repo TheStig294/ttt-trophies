@@ -1,3 +1,4 @@
+-- All server-side logic related to earning or earned trophies
 util.AddNetworkString("TTTRequestEarnedTrophies")
 util.AddNetworkString("TTTSendEarnedTrophies")
 

@@ -1,3 +1,4 @@
+-- This file sets up all the core important logic of the trophies, as well as loads all other lua files in the right order
 -- The global table used by the client and server to access all trophy data
 TTTTrophies = {}
 TTTTrophies.trophies = {}

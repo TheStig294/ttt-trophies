@@ -1,3 +1,4 @@
+-- General TTT player stats used to trigger certain trophies
 -- local stats = {}
 -- local fileContent
 -- -- Create stats file if it doesn't exist

@@ -1,3 +1,4 @@
+-- All client-side logic related to earning or earned trophies
 hook.Add("Think", "TTTTrophiesSyncEarned", function()
     if GetGlobalBool("TTTTrophiesClientLoaded") then
         net.Start("TTTRequestEarnedTrophies")

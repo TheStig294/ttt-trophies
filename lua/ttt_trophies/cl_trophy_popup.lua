@@ -1,3 +1,4 @@
+-- The popup that appears on the top right of the screen when you earn a trophy
 local fontSize = 22
 
 surface.CreateFont("TTTTrophyPopup", {

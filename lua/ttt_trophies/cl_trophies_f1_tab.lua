@@ -1,3 +1,4 @@
+-- The tab added to TTT's F1 settings menu
 local hotkeyPressed = false
 local earnedTrophies = {}
 local unearnedTrophies = {}

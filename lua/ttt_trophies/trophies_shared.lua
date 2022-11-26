@@ -1,4 +1,5 @@
 -- These shared functions were created by Malivil, and are taken from his "Randomat for Custom Roles for TTT" mod
+-- Used for making trophy trigger functions
 ROLE_JESTER = ROLE_JESTER or -1
 ROLE_SWAPPER = ROLE_SWAPPER or -1
 ROLE_GLITCH = ROLE_GLITCH or -1
