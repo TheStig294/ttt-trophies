@@ -12,6 +12,7 @@ trophies_meta.__index = trophies_meta
 
 if SERVER then
     util.AddNetworkString("TTTEarnTrophy")
+    util.AddNetworkString("TTTDoTrophyPopup")
 
     function trophies_meta:Earn(plys)
         if not istable(plys) then
@@ -25,13 +26,6 @@ if SERVER then
         for _, ply in ipairs(plys) do
             local plyID = ply:SteamID()
             local nick = ply:Nick()
-
-            -- Make the trophy unlock delayed by a few seconds so the platinum doesn't overlap the last trophy earned
-            if self.id == "platinum" then
-                delay = 3
-                TTTTrophies.rainbowPlayers[plyID] = true
-            end
-
             -- Don't earn trophies that are already earned
             if TTTTrophies.earned[plyID] and TTTTrophies.earned[plyID][self.id] then return end
             -- Add the player to the earnedTrophies table if they haven't earned a trophy before
@@ -42,9 +36,19 @@ if SERVER then
             TTTTrophies.toMessage[nick] = TTTTrophies.toMessage[nick] or {}
             table.insert(TTTTrophies.toMessage[nick], self.id)
 
+            -- Make the trophy unlock delayed by a few seconds so the platinum doesn't overlap the last trophy earned
+            if self.id == "platinum" then
+                delay = 3
+                TTTTrophies.rainbowPlayers[plyID] = true
+            end
+
+            net.Start("TTTEarnTrophy")
+            net.WriteString(self.id)
+            net.Send(ply)
+
             -- Show the earned trophy popup for the player
             timer.Simple(delay, function()
-                net.Start("TTTEarnTrophy")
+                net.Start("TTTDoTrophyPopup")
                 net.WriteString(self.id)
                 net.Send(ply)
             end)

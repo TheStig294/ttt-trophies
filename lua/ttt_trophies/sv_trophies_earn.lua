@@ -28,6 +28,7 @@ net.Receive("TTTRequestEarnedTrophies", function(len, ply)
 
     net.Start("TTTSendEarnedTrophies")
     net.WriteUInt(count, 16)
+    net.WriteBool(TTTTrophies.rainbowPlayers[id] or false)
 
     if count > 0 then
         for trophyID, earned in pairs(TTTTrophies.earned[id]) do
@@ -118,19 +119,22 @@ local mult = 1
 local halfMult = mult / 2
 
 hook.Add("PlayerPostThink", "TTTPlatinumTrophyReward", function(ply)
+    local wep = ply:GetActiveWeapon()
+    if not IsValid(wep) then return end
+
     -- Don't try to do the rainbow effect while a player is disguised, invisible, dead or hasn't earned all trophies yet
     if not TTTTrophies.rainbowPlayers[ply:SteamID()] or ply:IsSpec() or not ply:Alive() or ply:GetRenderMode() ~= RENDERMODE_NORMAL or ply:GetNoDraw() or ply:GetNWBool("disguised", false) or ply:GetMaterial() == "sprites/heatwave" then
-        ply:SetColor(COLOR_WHITE)
+        wep:SetColor(COLOR_WHITE)
 
         return
     end
 
     if not colourSetPlayers[ply] then
-        ply:SetColor(COLOR_WHITE)
+        wep:SetColor(COLOR_WHITE)
         colourSetPlayers[ply] = true
     end
 
-    local colour = ply:GetColor()
+    local colour = wep:GetColor()
 
     if rainbowPhase == 1 then
         colour.r = colour.r + mult
@@ -158,5 +162,5 @@ hook.Add("PlayerPostThink", "TTTPlatinumTrophyReward", function(ply)
         end
     end
 
-    ply:SetColor(colour)
+    wep:SetColor(colour)
 end)

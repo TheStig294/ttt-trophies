@@ -20,10 +20,9 @@ surface.CreateFont("TTTTrophyPopup", {
 
 local soundAndDelay = CreateClientConVar("ttt_trophies_sound_and_delay", "1", true, false, "Whether there should be a delay and sound played when a trophy is earned")
 
-net.Receive("TTTEarnTrophy", function()
+net.Receive("TTTDoTrophyPopup", function()
     local trophyID = net.ReadString()
     local trophy = TTTTrophies.trophies[trophyID]
-    trophy.earned = true
     -- Drawing the popup
     local width = 360
     local height = 85
