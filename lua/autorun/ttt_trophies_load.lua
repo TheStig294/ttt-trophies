@@ -5,7 +5,7 @@ TTTTrophies.earned = {}
 TTTTrophies.toMessage = {}
 TTTTrophies.toRegister = {}
 TTTTrophies.roleSpecific = {}
-TTTTrophies.platinumPlayers = {}
+TTTTrophies.rainbowPlayers = {}
 -- Creating a fake class of "TROPHY" using metatables, borrowed from the randomat's "EVENT" class
 local trophies_meta = {}
 trophies_meta.__index = trophies_meta
@@ -29,7 +29,7 @@ if SERVER then
             -- Make the trophy unlock delayed by a few seconds so the platinum doesn't overlap the last trophy earned
             if self.id == "platinum" then
                 delay = 3
-                TTTTrophies.platinumPlayers[plyID] = true
+                TTTTrophies.rainbowPlayers[plyID] = true
             end
 
             -- Don't earn trophies that are already earned
