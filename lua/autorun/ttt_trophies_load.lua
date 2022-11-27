@@ -22,7 +22,6 @@ if SERVER then
 
         -- Hook to stop trophies from being earned
         if hook.Run("TTTBlockTrophyEarned", self, plys) == true then return end
-        local delay = 0
 
         for _, ply in ipairs(plys) do
             local plyID = ply:SteamID()
@@ -39,20 +38,16 @@ if SERVER then
 
             -- Make the trophy unlock delayed by a few seconds so the platinum doesn't overlap the last trophy earned
             if self.id == "platinum" then
-                delay = 3
                 TTTTrophies.rainbowPlayers[plyID] = true
             end
 
             net.Start("TTTEarnTrophy")
             net.WriteString(self.id)
             net.Send(ply)
-
             -- Show the earned trophy popup for the player
-            timer.Simple(delay, function()
-                net.Start("TTTDoTrophyPopup")
-                net.WriteString(self.id)
-                net.Send(ply)
-            end)
+            net.Start("TTTDoTrophyPopup")
+            net.WriteString(self.id)
+            net.Send(ply)
         end
 
         hook.Run("TTTTrophyEarned", self, plys)

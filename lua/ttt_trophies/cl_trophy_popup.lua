@@ -19,10 +19,7 @@ surface.CreateFont("TTTTrophyPopup", {
     outline = false,
 })
 
-local soundAndDelay = CreateClientConVar("ttt_trophies_sound_and_delay", "1", true, false, "Whether there should be a delay and sound played when a trophy is earned")
-
-net.Receive("TTTDoTrophyPopup", function()
-    local trophyID = net.ReadString()
+local function TrophyPopup(trophyID)
     local trophy = TTTTrophies.trophies[trophyID]
     -- Drawing the popup
     local width = 360
@@ -58,50 +55,74 @@ net.Receive("TTTDoTrophyPopup", function()
     }
 
     local alpha = 0
-    local delay = 0
+    surface.PlaySound("ttt_trophies/trophypop.mp3")
 
-    if soundAndDelay:GetBool() then
-        delay = 6
+    timer.Create("TTTTrophyPopupFadeIn", 0.01, 10, function()
+        alpha = alpha + 0.1
+    end)
+
+    hook.Add("DrawOverlay", "TTTTrophyPopup", function()
+        surface.SetAlphaMultiplier(alpha)
+        -- Background box
+        draw.RoundedBox(10, leftEdge, topEdge, width, height, greyColour)
+        -- Icon
+        surface.SetMaterial(icon)
+        surface.SetDrawColor(255, 255, 255, 255)
+        surface.DrawTexturedRect(leftEdge + offSet, topEdge + offSet, iconSize, iconSize)
+        -- Rarity Icon
+        surface.SetMaterial(rarityIcon)
+        surface.DrawTexturedRect(leftEdge + offSet + iconSize + offSet, topEdge + offSet + fontSize + offSet, rarityIconSize, rarityIconSize)
+        -- Top text
+        draw.TextShadow(topText, 2, 200)
+        draw.Text(topText)
+        -- Bottom text
+        draw.TextShadow(bottomText, 2, 200)
+        draw.Text(bottomText)
+        surface.SetAlphaMultiplier(1)
+    end)
+
+    timer.Simple(5, function()
+        timer.Create("TTTTrophyPopupFadeOut", 0.01, 10, function()
+            alpha = alpha - 0.1
+        end)
+
+        timer.Simple(0.1, function()
+            hook.Remove("HUDPaint", "TTTTrophyPopup")
+        end)
+    end)
+end
+
+-- A buffer to prevent trophy popups from appearing on top of each other
+local buffer = {}
+local secondsPassed = 0
+-- Time between trophy popups
+local secondsPadding = 6
+-- PlayStation trophies had a delay of 6 seconds before the popup showed (on the PS3), this delay emulates that
+local delay = 6
+
+net.Receive("TTTDoTrophyPopup", function()
+    local id = net.ReadString()
+
+    if table.IsEmpty(buffer) or buffer == {} then
+        buffer[delay] = id
+    else
+        buffer[table.Count(buffer) * secondsPadding + delay] = id
     end
 
-    -- Emulating the trophy popup delay from the old playstation 3 days...
-    timer.Simple(delay, function()
-        if soundAndDelay:GetBool() then
-            surface.PlaySound("ttt_trophies/trophypop.mp3")
+    timer.Create("TTTTrophyPopupBuffer", secondsPadding, 0, function()
+        secondsPassed = secondsPassed + secondsPadding
+        local trophy = buffer[secondsPassed]
+
+        if trophy then
+            TrophyPopup(trophy)
         end
 
-        timer.Create("TTTTrophyPopupFadeIn", 0.01, 10, function()
-            alpha = alpha + 0.1
-        end)
+        if (table.Count(buffer) - 1) * secondsPadding + delay <= secondsPassed then
+            table.Empty(buffer)
+            secondsPassed = 0
+            timer.Remove("TTTTrophyPopupBuffer")
 
-        hook.Add("DrawOverlay", "TTTTrophyPopup", function()
-            surface.SetAlphaMultiplier(alpha)
-            -- Background box
-            draw.RoundedBox(10, leftEdge, topEdge, width, height, greyColour)
-            -- Icon
-            surface.SetMaterial(icon)
-            surface.SetDrawColor(255, 255, 255, 255)
-            surface.DrawTexturedRect(leftEdge + offSet, topEdge + offSet, iconSize, iconSize)
-            -- Rarity Icon
-            surface.SetMaterial(rarityIcon)
-            surface.DrawTexturedRect(leftEdge + offSet + iconSize + offSet, topEdge + offSet + fontSize + offSet, rarityIconSize, rarityIconSize)
-            -- Top text
-            draw.TextShadow(topText, 2, 200)
-            draw.Text(topText)
-            -- Bottom text
-            draw.TextShadow(bottomText, 2, 200)
-            draw.Text(bottomText)
-            surface.SetAlphaMultiplier(1)
-        end)
-
-        timer.Simple(5, function()
-            timer.Create("TTTTrophyPopupFadeOut", 0.01, 10, function()
-                alpha = alpha - 0.1
-            end)
-
-            timer.Simple(0.1, function()
-                hook.Remove("HUDPaint", "TTTTrophyPopup")
-            end)
-        end)
+            return
+        end
     end)
 end)
