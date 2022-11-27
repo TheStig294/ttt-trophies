@@ -36,7 +36,7 @@ net.Receive("TTTEarnTrophy", function()
 
     -- Turn on a player's rainbow if the trophy earned is the platinum
     if trophy.id == "platinum" then
-        timer.Simple(9, function()
+        timer.Simple(12, function()
             rainbowToggle = true
             chat.AddText(Color(183, 0, 255), "Press '" .. string.upper(GetConVar("ttt_trophies_hotkey_rainbow"):GetString()) .. "' to toggle rainbow effect!")
         end)
