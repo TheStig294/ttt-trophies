@@ -85,7 +85,7 @@ hook.Add("TTTBeginRound", "TTTTrophiesRoleSpecificChatSuggestion", function()
         for _, ply in ipairs(player.GetAll()) do
             if not ply:Alive() or ply:IsSpec() then continue end
             local role = ply:GetRole()
-            local trophies = TTTTrophies.roleSpecific[role]
+            local trophies = TTTTrophies.roleMessage[role]
 
             if trophies then
                 for _, trophyID in ipairs(trophies) do
