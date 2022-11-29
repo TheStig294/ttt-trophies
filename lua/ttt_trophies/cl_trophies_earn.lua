@@ -43,6 +43,25 @@ net.Receive("TTTEarnTrophy", function()
     end
 end)
 
+net.Receive("TTTEarnedTrophiesChatMessage", function()
+    local nick = net.ReadString()
+    local id = net.ReadString()
+    local trophy = TTTTrophies.trophies[id]
+    local rarityColour
+
+    if trophy.rarity == 1 then
+        rarityColour = Color(231, 131, 82)
+    elseif trophy.rarity == 2 then
+        rarityColour = Color(192, 192, 192)
+    elseif trophy.rarity == 3 then
+        rarityColour = Color(212, 175, 55)
+    elseif trophy.rarity == 4 then
+        rarityColour = Color(46, 104, 165)
+    end
+
+    chat.AddText(nick, COLOR_WHITE, " has earned a trophy ", rarityColour, "[", trophy.title, "]\n", COLOR_WHITE, "\"", trophy.desc, "\"")
+end)
+
 -- Rainbow guns reward
 CreateClientConVar("ttt_trophies_hotkey_rainbow", "J", true, false, "Hotkey for toggling rainbow effect")
 

@@ -1,6 +1,7 @@
 -- All server-side logic related to earning or earned trophies
 util.AddNetworkString("TTTRequestEarnedTrophies")
 util.AddNetworkString("TTTSendEarnedTrophies")
+util.AddNetworkString("TTTEarnedTrophiesChatMessage")
 
 -- Reads the earned trophies, and players with the rainbow effect on, from a file
 if file.Exists("ttt/trophies.txt", "DATA") then
@@ -55,23 +56,11 @@ hook.Add("TTTEndRound", "TTTTrophiesChatAnnouncement", function()
 
     timer.Simple(6, function()
         for nick, trophies in pairs(TTTTrophies.toMessage) do
-            PrintMessage(HUD_PRINTTALK, "##########################\n" .. nick .. " has earned trophies!")
-
             for _, trophyID in ipairs(trophies) do
-                local trophy = TTTTrophies.trophies[trophyID]
-                local rarity = ""
-
-                if trophy.rarity == 1 then
-                    rarity = "Bronze"
-                elseif trophy.rarity == 2 then
-                    rarity = "Silver"
-                elseif trophy.rarity == 3 then
-                    rarity = "Gold"
-                elseif trophy.rarity == 4 then
-                    rarity = "Platinum"
-                end
-
-                PrintMessage(HUD_PRINTTALK, "[" .. trophy.title .. "] (" .. rarity .. ")\n" .. trophy.desc)
+                net.Start("TTTEarnedTrophiesChatMessage")
+                net.WriteString(nick)
+                net.WriteString(trophyID)
+                net.Broadcast()
             end
         end
 
