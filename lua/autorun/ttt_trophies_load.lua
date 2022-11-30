@@ -65,7 +65,7 @@ function RegisterTTTTrophy(trophy)
     table.insert(TTTTrophies.toRegister, trophy)
 end
 
--- This function is from Malivil's randomat mod, to save having to come up with a unique ID for a hook every time...
+-- These 2 functions are from Malivil's randomat mod, to save having to come up with a unique ID for a hook every time...
 function trophies_meta:AddHook(hooktype, callbackfunc, suffix)
     callbackfunc = callbackfunc or self[hooktype]
     local id = "TTTTrophy." .. self.id .. ":" .. hooktype
