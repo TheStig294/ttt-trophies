@@ -80,6 +80,23 @@ function trophies_meta:AddHook(hooktype, callbackfunc, suffix)
     table.insert(self.Hooks, {hooktype, id})
 end
 
+function trophies_meta:RemoveHook(hooktype, suffix)
+    local id = "RandomatEvent." .. self.Id .. ":" .. hooktype
+
+    if suffix and type(suffix) == "string" and #suffix > 0 then
+        id = id .. ":" .. suffix
+    end
+
+    for idx, ahook in ipairs(self.Hooks or {}) do
+        if ahook[1] == hooktype and ahook[2] == id then
+            hook.Remove(ahook[1], ahook[2])
+            table.remove(self.Hooks, idx)
+
+            return
+        end
+    end
+end
+
 function trophies_meta:GetShuffledPlayers()
     return table.Shuffle(player.GetAll())
 end
