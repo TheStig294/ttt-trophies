@@ -81,7 +81,7 @@ function trophies_meta:AddHook(hooktype, callbackfunc, suffix)
 end
 
 function trophies_meta:RemoveHook(hooktype, suffix)
-    local id = "RandomatEvent." .. self.Id .. ":" .. hooktype
+    local id = "TTTTrophy." .. self.id .. ":" .. hooktype
 
     if suffix and type(suffix) == "string" and #suffix > 0 then
         id = id .. ":" .. suffix
