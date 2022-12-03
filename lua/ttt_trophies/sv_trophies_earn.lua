@@ -69,7 +69,11 @@ hook.Add("TTTEndRound", "TTTTrophiesChatAnnouncement", function()
 end)
 
 -- Displays a chat message at the start of the round if a player is a role that they could earn a trophy with
+CreateConVar("ttt_trophies_chat_suggestions", "1", {FCVAR_NONE}, "Whether messages should be printed to chat suggesting trophies to earn", 0, 1)
+
 hook.Add("TTTBeginRound", "TTTTrophiesRoleSpecificChatSuggestion", function()
+    if not GetConVar("ttt_trophies_chat_suggestions"):GetBool() then return end
+
     timer.Simple(3, function()
         for _, ply in ipairs(player.GetAll()) do
             if not ply:Alive() or ply:IsSpec() then continue end
