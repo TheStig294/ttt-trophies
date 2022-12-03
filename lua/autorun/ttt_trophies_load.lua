@@ -51,13 +51,13 @@ if SERVER then
             hook.Run("TTTTrophyEarned", self, ply)
         end
     end
-end
 
-function trophies_meta:Trigger()
-end
+    function trophies_meta:Trigger()
+    end
 
-function trophies_meta:Condition()
-    return true
+    function trophies_meta:Condition()
+        return true
+    end
 end
 
 function RegisterTTTTrophy(trophy)
