@@ -26,7 +26,7 @@ if SERVER then
         for _, ply in ipairs(plys) do
             local plyID = ply:SteamID()
             -- Don't earn trophies that are already earned
-            if TTTTrophies.earned[plyID] and TTTTrophies.earned[plyID][self.id] then return end
+            if TTTTrophies.earned[plyID] and TTTTrophies.earned[plyID][self.id] then continue end
             -- Add the player to the earnedTrophies table if they haven't earned a trophy before
             TTTTrophies.earned[plyID] = TTTTrophies.earned[plyID] or {}
             -- Make the trophy as earned
@@ -48,9 +48,8 @@ if SERVER then
             net.Start("TTTDoTrophyPopup")
             net.WriteString(self.id)
             net.Send(ply)
+            hook.Run("TTTTrophyEarned", self, ply)
         end
-
-        hook.Run("TTTTrophyEarned", self, plys)
     end
 end
 
@@ -97,27 +96,7 @@ function trophies_meta:RemoveHook(hooktype, suffix)
     end
 end
 
-function trophies_meta:GetShuffledPlayers()
-    return table.Shuffle(player.GetAll())
-end
-
-function trophies_meta:GetAlivePlayers(shuffle)
-    local plys = {}
-
-    for _, ply in ipairs(plys) do
-        if ply:Alive() and not ply:IsSpec() then
-            table.insert(plys, ply)
-        end
-    end
-
-    if shuffle then
-        table.Shuffle(plys)
-    end
-
-    return plys
-end
-
-function trophies_meta:PlayerAlive(ply)
+function trophies_meta:IsAlive(ply)
     return ply:Alive() and not ply:IsSpec()
 end
 
@@ -127,6 +106,7 @@ function trophies_meta:ProgressUpdate(plys, numerator, denominator)
     end
 
     for _, ply in ipairs(plys) do
+        if TTTTrophies.earned[plyID] and TTTTrophies.earned[plyID][self.id] then continue end
         ply:ChatPrint("[Trophy progress]\n" .. self.desc .. "\n(" .. numerator .. "/" .. denominator .. ")")
     end
 end

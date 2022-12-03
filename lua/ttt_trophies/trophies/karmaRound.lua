@@ -9,7 +9,7 @@ function TROPHY:Trigger()
 
     self:AddHook("TTTBeginRound", function()
         for _, ply in ipairs(player.GetAll()) do
-            if self:PlayerAlive(ply) then
+            if self:IsAlive(ply) then
                 table.insert(noKarmaLostPlayers, ply)
             end
         end
