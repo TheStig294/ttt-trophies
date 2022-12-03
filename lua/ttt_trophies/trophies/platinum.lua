@@ -8,17 +8,27 @@ function TROPHY:Trigger()
     self:AddHook("TTTTrophyEarned", function(trophy, ply)
         local earnedTrophies = TTTTrophies.earned[ply:SteamID()]
 
-        if table.Count(TTTTrophies.trophies) == table.Count(earnedTrophies) then
-            self:Earn(ply)
+        for trophyID, _ in pairs(TTTTrophies.trophies) do
+            if not earnedTrophies[trophyID] then return end
         end
+
+        self:Earn(ply)
     end)
 
     -- Backup check for earning the platinum, in case the last trophy becomes disabled, or some other weirdness I didn't think of
     self:AddHook("TTTPrepareRound", function()
         for _, ply in ipairs(player.GetAll()) do
+            local earnedPlatinum = true
             local earnedTrophies = TTTTrophies.earned[ply:SteamID()]
 
-            if table.Count(TTTTrophies.trophies) == table.Count(earnedTrophies) then
+            for trophyID, _ in pairs(TTTTrophies.trophies) do
+                if not earnedTrophies[trophyID] then
+                    earnedPlatinum = false
+                    break
+                end
+            end
+
+            if earnedPlatinum then
                 self:Earn(ply)
             end
         end
