@@ -3,9 +3,9 @@ TROPHY.id = "marshal"
 TROPHY.title = "But I did not kill the deputy!"
 TROPHY.desc = "As a Marshal, win a round with a player you promoted still alive"
 TROPHY.rarity = 2
-TROPHY.roleMessage = ROLE_MARSHAL
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_MARSHAL
     local promotionPair = {}
 
     self:AddHook("TTTPlayerRoleChangedByItem", function(ply, tgt, item)
