@@ -1,5 +1,5 @@
 local TROPHY = {}
-TROPHY.id = "dna"
+TROPHY.id = "detective"
 TROPHY.title = "Wait, this thing is useful?"
 TROPHY.desc = "As a Detective, use your DNA Scanner on a body to track their killer"
 TROPHY.rarity = 1
