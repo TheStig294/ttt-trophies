@@ -169,8 +169,8 @@ if SERVER then
         end
 
         SetGlobalBool("TTTTrophiesServerLoaded", true)
-        hook.Remove("TTTPrepareRound", "TTTTrophiesPopulateList")
     end)
+    -- hook.Remove("TTTPrepareRound", "TTTTrophiesPopulateList")
 else
     -- Don't process trophies list until the server has loaded, and all trophy files on the client have loaded
     hook.Add("Think", "TTTTrophiesPopulateList", function()
