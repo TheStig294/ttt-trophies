@@ -9,7 +9,7 @@ function TROPHY:Trigger()
     local killed2Traitors = {}
 
     self:AddHook("DoPlayerDeath", function(ply, attacker, dmg)
-        if TTTTrophies:IsInnocentTeam(attacker) and TTTTrophies:IsTraitorTeam(ply) then
+        if IsPlayer(attacker) and TTTTrophies:IsInnocentTeam(attacker) and TTTTrophies:IsTraitorTeam(ply) then
             if killedTraitor[attacker] then
                 killed2Traitors[attacker] = true
             end
