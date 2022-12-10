@@ -20,6 +20,7 @@ function TROPHY:Trigger()
         for _, ply in ipairs(player.GetAll()) do
             local earnedPlatinum = true
             local earnedTrophies = TTTTrophies.earned[ply:SteamID()]
+            if not earnedTrophies then continue end
 
             for trophyID, _ in pairs(TTTTrophies.trophies) do
                 if not earnedTrophies[trophyID] then
