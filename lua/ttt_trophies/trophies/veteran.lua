@@ -5,8 +5,6 @@ TROPHY.desc = "As a Veteran, be the last innocent alive"
 TROPHY.rarity = 3
 
 function TROPHY:Trigger()
-    self.roleMessage = ROLE_VETERAN
-
     self:AddHook("DoPlayerDeath", function()
         if GetRoundState() ~= ROUND_ACTIVE then return end
         local veteranAlive
