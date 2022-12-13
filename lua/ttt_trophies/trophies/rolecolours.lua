@@ -1,0 +1,36 @@
+local TROPHY = {}
+TROPHY.id = "rolecolours"
+TROPHY.title = "Customise your colours!"
+TROPHY.desc = "In the settings tab above, scroll down and set your colour setting to \"Simplified\""
+TROPHY.rarity = 1
+
+if CLIENT then
+    cvars.AddChangeCallback("ttt_color_mode", function(convar, oldValue, newValue)
+        if newValue == "simple" then
+            if not GetGlobalBool("TTTTrophiesServerLoaded") then
+                hook.Add("TTTBeginRound", "TTTTrophiesDelayRoleColoursTrophy", function()
+                    net.Start("TTTTrophiesChangeRoleColours")
+                    net.SendToServer()
+                    hook.Remove("TTTBeginRound", "TTTTrophiesDelayRoleColoursTrophy")
+                end)
+            else
+                net.Start("TTTTrophiesChangeRoleColours")
+                net.SendToServer()
+            end
+        end
+    end)
+end
+
+function TROPHY:Trigger()
+    util.AddNetworkString("TTTTrophiesChangeRoleColours")
+
+    net.Receive("TTTTrophiesChangeRoleColours", function(len, ply)
+        self:Earn(ply)
+    end)
+end
+
+function TROPHY:Condition()
+    return CR_VERSION
+end
+
+RegisterTTTTrophy(TROPHY)
