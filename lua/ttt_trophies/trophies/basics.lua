@@ -27,8 +27,12 @@ function TROPHY:Trigger()
     }
 
     local newItemPlayers = {}
+    local boughtItemPlayers = {}
 
     self:AddHook("TTTOrderedEquipment", function(ply, equ, passive)
+        if not TTTTrophies:IsTraitorTeam(ply) then return end
+        boughtItemPlayers[ply] = true
+
         if not ogItem[equ] then
             newItemPlayers[ply] = true
         end
@@ -37,13 +41,14 @@ function TROPHY:Trigger()
     self:AddHook("TTTEndRound", function(result)
         if result == WIN_TRAITOR then
             for _, ply in ipairs(player.GetAll()) do
-                if TTTTrophies:IsTraitorTeam(ply) and not newItemPlayers[ply] then
+                if boughtItemPlayers[ply] and not newItemPlayers[ply] then
                     self:Earn(ply)
                 end
             end
         end
 
         table.Empty(newItemPlayers)
+        table.Empty(boughtItemPlayers)
     end)
 end
 
