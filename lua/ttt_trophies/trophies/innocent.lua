@@ -1,7 +1,7 @@
 local TROPHY = {}
-TROPHY.id = "karmaRound"
+TROPHY.id = "innocent"
 TROPHY.title = "Rythian-Doing-Murders"
-TROPHY.desc = "Don't lose karma for a whole round"
+TROPHY.desc = "As an innocent, don't lose karma for a whole round"
 TROPHY.rarity = 1
 
 function TROPHY:Trigger()
@@ -10,18 +10,20 @@ function TROPHY:Trigger()
     self:AddHook("TTTBeginRound", function()
         for _, ply in ipairs(player.GetAll()) do
             if self:IsAlive(ply) then
-                table.insert(noKarmaLostPlayers, ply)
+                noKarmaLostPlayers[ply] = true
             end
         end
     end)
 
     self:AddHook("TTTKarmaGivePenalty", function(ply, penalty, victim)
-        table.RemoveByValue(noKarmaLostPlayers, ply)
+        noKarmaLostPlayers[ply] = false
     end)
 
     self:AddHook("TTTEndRound", function()
-        if not table.IsEmpty(noKarmaLostPlayers) and noKarmaLostPlayers ~= {} then
-            self:Earn(noKarmaLostPlayers)
+        for _, ply in ipairs(player.GetAll()) do
+            if noKarmaLostPlayers[ply] and TTTTrophies:IsInnocentTeam(ply) then
+                self:Earn(ply)
+            end
         end
 
         table.Empty(noKarmaLostPlayers)
