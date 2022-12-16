@@ -1,7 +1,7 @@
 local TROPHY = {}
 TROPHY.id = "crowbarpush"
 TROPHY.title = "The pusher strikes again"
-TROPHY.desc = "Get a kill with a crowbar push"
+TROPHY.desc = "See someone killed shortly after you crowbar-pushed them"
 TROPHY.rarity = 3
 
 function TROPHY:Trigger()
