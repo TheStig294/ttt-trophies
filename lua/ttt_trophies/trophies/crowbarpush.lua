@@ -2,7 +2,7 @@ local TROPHY = {}
 TROPHY.id = "crowbarpush"
 TROPHY.title = "The pusher strikes again"
 TROPHY.desc = "See someone killed shortly after you crowbar-pushed them"
-TROPHY.rarity = 3
+TROPHY.rarity = 2
 
 function TROPHY:Trigger()
     self:AddHook("EntityTakeDamage", function(ent, dmg)
