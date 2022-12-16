@@ -93,3 +93,10 @@ function TTTTrophies:ShouldActLikeJester(ply)
 
     return TTTTrophies:IsJesterTeam(ply)
 end
+
+function TTTTrophies:MapIsSwitching()
+    local rounds_left = math.max(0, GetGlobalInt("ttt_rounds_left", 6) - 1)
+    local time_left = math.max(0, (GetConVar("ttt_time_limit_minutes"):GetInt() * 60) - CurTime())
+
+    return rounds_left <= 0 or time_left <= 0
+end
