@@ -5,6 +5,7 @@ TROPHY.desc = "As an innocent, don't lose karma for a whole round"
 TROPHY.rarity = 1
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_INNOCENT
     local noKarmaLostPlayers = {}
 
     self:AddHook("TTTBeginRound", function()

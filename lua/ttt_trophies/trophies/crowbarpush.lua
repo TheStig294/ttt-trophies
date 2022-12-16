@@ -5,6 +5,8 @@ TROPHY.desc = "See someone killed shortly after you crowbar-pushed them"
 TROPHY.rarity = 2
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_TRAITOR
+
     self:AddHook("EntityTakeDamage", function(ent, dmg)
         if not ent.was_pushed or not IsPlayer(ent) then return end
         local attacker = ent.was_pushed.att

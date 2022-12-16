@@ -1,7 +1,7 @@
 local TROPHY = {}
 TROPHY.id = "rolecolours"
 TROPHY.title = "Customise your colours!"
-TROPHY.desc = "In the settings tab above, scroll down and set your colour setting to \"Simplified\""
+TROPHY.desc = "In the settings tab, scroll down and set your role colours setting to \"Simplified\""
 TROPHY.rarity = 1
 
 if CLIENT then
@@ -22,6 +22,7 @@ if CLIENT then
 end
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_GLITCH
     util.AddNetworkString("TTTTrophiesChangeRoleColours")
 
     net.Receive("TTTTrophiesChangeRoleColours", function(len, ply)

@@ -1,10 +1,12 @@
 local TROPHY = {}
 TROPHY.id = "basics"
 TROPHY.title = "Back to basics"
-TROPHY.desc = "Win a round as a traitor after buying only original TTT items"
+TROPHY.desc = "As a traitor, win a round after buying only original TTT items"
 TROPHY.rarity = 2
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_TRAITOR
+
     local ogItem = {
         [EQUIP_ARMOR] = true,
         [EQUIP_RADAR] = true,

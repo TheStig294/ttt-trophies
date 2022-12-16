@@ -5,6 +5,8 @@ TROPHY.desc = "Look upwards and shoot a backwards shotgun"
 TROPHY.rarity = 1
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_INNOCENT
+
     self:AddHook("TTTBackwardsShotgunPrimary", function(ply)
         local aimVector = ply:GetAimVector()
 

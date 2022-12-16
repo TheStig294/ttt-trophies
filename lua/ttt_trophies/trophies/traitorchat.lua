@@ -5,6 +5,8 @@ TROPHY.desc = "Communicate to your fellow traitors in secret using \"traitor cha
 TROPHY.rarity = 1
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_TRAITOR
+
     self:AddHook("PlayerSay", function(ply, txt, teamChat)
         if teamChat and TTTTrophies:IsTraitorTeam(ply) then
             self:Earn(ply)

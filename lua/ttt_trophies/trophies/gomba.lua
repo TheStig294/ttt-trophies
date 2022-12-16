@@ -5,6 +5,8 @@ TROPHY.desc = "Damage someone by landing on top of them"
 TROPHY.rarity = 3
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_TRAITOR
+
     self:AddHook("EntityTakeDamage", function(ent, dmg)
         if not IsPlayer(ent) then return end
         local attacker = dmg:GetAttacker()

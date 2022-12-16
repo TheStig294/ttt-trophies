@@ -5,6 +5,7 @@ TROPHY.desc = "Stay crouched and alive from the beginning to the end of a round"
 TROPHY.rarity = 3
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_INNOCENT
     local startedCrouching = {}
     local stoppedCrouching = {}
 

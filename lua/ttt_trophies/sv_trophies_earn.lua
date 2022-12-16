@@ -78,6 +78,8 @@ hook.Add("TTTBeginRound", "TTTTrophiesRoleSpecificChatSuggestion", function()
         for _, ply in ipairs(player.GetAll()) do
             if not ply:Alive() or ply:IsSpec() then continue end
             local role = ply:GetRole()
+            -- Make trophies suggested to innocents have a rarer chance of showing up
+            if role == ROLE_INNOCENT and math.random() < 0.5 then return end
             local trophies = TTTTrophies.roleMessage[role]
 
             if trophies then

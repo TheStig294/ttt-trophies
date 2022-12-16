@@ -5,6 +5,8 @@ TROPHY.desc = "Turn around instantly by right-clicking with the backwards shotgu
 TROPHY.rarity = 1
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_INNOCENT
+
     self:AddHook("TTTBackwardsShotgunFlip", function(ply)
         self:Earn(ply)
     end)

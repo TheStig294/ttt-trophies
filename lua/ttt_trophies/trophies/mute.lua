@@ -12,6 +12,7 @@ if CLIENT then
 end
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_INNOCENT
     util.AddNetworkString("TTTTrophyMusicMuteButton")
 
     net.Receive("TTTTrophyMusicMuteButton", function(len, ply)

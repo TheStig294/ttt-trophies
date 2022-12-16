@@ -5,6 +5,8 @@ TROPHY.desc = "Kill someone with an uno reverse card"
 TROPHY.rarity = 3
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_DETECTIVE
+
     self:AddHook("DoPlayerDeath", function(ply, attacker, dmg)
         local inflictor = dmg:GetInflictor()
         if not IsValid(inflictor) or not IsPlayer(attacker) then return end

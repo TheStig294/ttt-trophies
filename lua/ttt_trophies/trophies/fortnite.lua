@@ -5,6 +5,8 @@ TROPHY.desc = "Witness someone use a fortnite building tool while they're not a 
 TROPHY.rarity = 2
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_TRAITOR
+
     local function EarnTrophy(plys)
         self:Earn(plys)
     end

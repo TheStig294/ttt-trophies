@@ -1,7 +1,7 @@
 local TROPHY = {}
 TROPHY.id = "fastweaponswitch"
 TROPHY.title = "Fast weapon switch!"
-TROPHY.desc = "In the settings tab above, turn on the 'Fast weapon switch' checkbox"
+TROPHY.desc = "In the settings tab, turn on the checkbox for \"Fast weapon switch\""
 TROPHY.rarity = 1
 
 if CLIENT then
@@ -22,6 +22,7 @@ if CLIENT then
 end
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_INNOCENT
     util.AddNetworkString("TTTTrophiesChangeFastWeapons")
 
     net.Receive("TTTTrophiesChangeFastWeapons", function(len, ply)

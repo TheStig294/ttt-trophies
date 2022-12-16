@@ -5,6 +5,8 @@ TROPHY.desc = "Type \"bloxwich\" in chat"
 TROPHY.rarity = 1
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_INNOCENT
+
     self:AddHook("PlayerSay", function(sender, text, teamChat)
         if text == "bloxwich" then
             self:Earn(sender)
