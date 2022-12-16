@@ -77,6 +77,7 @@ end
 
 function TTTTrophies:IsGoodDetectiveLike(ply)
     local role = ply:GetRole()
+    if role == ROLE_DEPUTY or role == ROLE_IMPERSONATOR then return false end
 
     return role == ROLE_DETECTIVE or (TTTTrophies:IsDetectiveLike(ply) and TTTTrophies:IsInnocentTeam(ply))
 end
