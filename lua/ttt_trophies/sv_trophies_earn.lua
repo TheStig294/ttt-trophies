@@ -87,7 +87,7 @@ hook.Add("TTTBeginRound", "TTTTrophiesRoleSpecificChatSuggestion", function()
 
             if trophies then
                 for _, trophyID in ipairs(trophies) do
-                    local earned = TTTTrophies.earned[ply:SteamID()][trophyID]
+                    local earned = TTTTrophies.earned[ply:SteamID()] and TTTTrophies.earned[ply:SteamID()][trophyID]
                     if earned then continue end
                     net.Start("TTTTrophySuggestion")
                     net.WriteString(trophyID)
