@@ -48,6 +48,7 @@ hook.Add("ShutDown", "TTTTrophiesSaveEarned", function()
     local fileContent = {}
     fileContent.earned = TTTTrophies.earned
     fileContent.rainbowPlayers = TTTTrophies.rainbowPlayers
+    fileContent.stats = TTTTrophies.stats
     fileContent = util.TableToJSON(fileContent, true)
     file.Write("ttt/trophies.txt", fileContent)
 end)
@@ -79,8 +80,6 @@ hook.Add("TTTBeginRound", "TTTTrophiesRoleSpecificChatSuggestion", function()
             if ply.DisableTrophyChatMessages then continue end
             if not ply:Alive() or ply:IsSpec() then continue end
             local role = ply:GetRole()
-            -- Make trophies suggested to innocents have a rarer chance of showing up
-            if role == ROLE_INNOCENT and math.random() < 0.5 then return end
             local trophies = TTTTrophies.roleMessage[role]
 
             if trophies then
@@ -88,6 +87,10 @@ hook.Add("TTTBeginRound", "TTTTrophiesRoleSpecificChatSuggestion", function()
                     local earned = TTTTrophies.earned[ply:SteamID()] and TTTTrophies.earned[ply:SteamID()][trophyID]
                     if earned then continue end
                     local trophy = TTTTrophies.trophies[trophyID]
+
+                    local plys = {ply}
+
+                    if hook.Run("TTTBlockTrophyEarned", trophy, plys) == true then return end
                     ply:ChatPrint("[Trophy suggestion]\n" .. trophy.desc)
                     break
                 end
