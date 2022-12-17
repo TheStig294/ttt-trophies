@@ -1,7 +1,7 @@
 local TROPHY = {}
 TROPHY.id = "onemistake"
 TROPHY.title = "One mistake is all it takes..."
-TROPHY.desc = "Don't loose karma at all for 5 maps in a row, good luck!"
+TROPHY.desc = "Don't loose karma at all for 5 maps in a row"
 TROPHY.rarity = 3
 
 function TROPHY:Trigger()
