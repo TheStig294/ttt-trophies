@@ -123,7 +123,7 @@ local function AddTrophiesList()
         progressBar:SetSize(580, 20)
         -- Textbox for changing the hotkey to open the trophy list
         local textboxText = nonScrollList:Add("DLabel")
-        textboxText:SetText("        Key that opens this window:")
+        textboxText:SetText("   Key that opens this window:")
         textboxText:SetFont("TrophyDesc")
         textboxText:SetTextColor(COLOUR_WHITE)
         textboxText:SizeToContents()
@@ -141,7 +141,7 @@ local function AddTrophiesList()
 
         -- Textbox for changing the hotkey to toggle the reward for earning all trophies
         local textboxTextReward = nonScrollList:Add("DLabel")
-        textboxTextReward:SetText("Key to toggle reward (if all trophies are earned):")
+        textboxTextReward:SetText("Key to toggle messages, or reward if all trophies earned:")
         textboxTextReward:SetFont("TrophyDesc")
         textboxTextReward:SetTextColor(COLOUR_WHITE)
         textboxTextReward:SizeToContents()
