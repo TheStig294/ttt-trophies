@@ -46,6 +46,7 @@ net.Receive("TTTEarnTrophy", function()
 end)
 
 net.Receive("TTTEarnedTrophiesChatMessage", function()
+    if not chatMessagesCvar:GetBool() then return end
     local nick = net.ReadString()
     local id = net.ReadString()
     local trophy = TTTTrophies.trophies[id]
@@ -84,7 +85,7 @@ hook.Add("PlayerButtonDown", "TTTTrophiesRainbowHokey", function(ply, button)
         else
             if chatMessagesCvar:GetBool() then
                 chatMessagesCvar:SetBool(false)
-                chat.AddText("Trophy chat messages disabled")
+                chat.AddText("Trophy chat messages disabled\n(\"Trophy earned\" popups on the top right will still show)")
             else
                 chatMessagesCvar:SetBool(true)
                 chat.AddText("Trophy chat messages enabled")
