@@ -32,7 +32,7 @@ function TROPHY:Trigger()
 
                 TTTTrophies.stats[self.id][ply:SteamID()] = rounds
 
-                if rounds == 69 then
+                if rounds >= 69 then
                     self:Earn(ply)
                 end
             end
