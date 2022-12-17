@@ -1,7 +1,7 @@
 local TROPHY = {}
 TROPHY.id = "crouch"
 TROPHY.title = "Squat walk"
-TROPHY.desc = "Stay crouched and alive from the beginning to the end of a round"
+TROPHY.desc = "Stay crouched and alive from first 10 seconds of a round to the end"
 TROPHY.rarity = 3
 
 function TROPHY:Trigger()
@@ -10,7 +10,7 @@ function TROPHY:Trigger()
     local stoppedCrouching = {}
 
     self:AddHook("PlayerButtonDown", function(ply, button)
-        if button == KEY_LCONTROL and GetRoundState() == ROUND_PREP then
+        if button == KEY_LCONTROL and (GetRoundState() == ROUND_PREP or (GetRoundState() == ROUND_ACTIVE and CurTime() - GAMEMODE.RoundStartTime < 10)) then
             startedCrouching[ply] = true
             stoppedCrouching[ply] = false
         end
