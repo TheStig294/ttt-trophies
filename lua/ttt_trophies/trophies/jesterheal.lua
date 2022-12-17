@@ -2,7 +2,7 @@ local TROPHY = {}
 TROPHY.id = "jesterheal"
 TROPHY.title = "Reverse healing"
 TROPHY.desc = "As a jester, use a health station while injured to lose max health"
-TROPHY.rarity = 2
+TROPHY.rarity = 3
 
 function TROPHY:Trigger()
     self.roleMessage = ROLE_JESTER

@@ -2,7 +2,7 @@ local TROPHY = {}
 TROPHY.id = "crowbarpush"
 TROPHY.title = "The pusher strikes again"
 TROPHY.desc = "See someone killed shortly after you crowbar-pushed them"
-TROPHY.rarity = 2
+TROPHY.rarity = 1
 
 function TROPHY:Trigger()
     self.roleMessage = ROLE_TRAITOR

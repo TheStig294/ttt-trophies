@@ -2,7 +2,7 @@ local TROPHY = {}
 TROPHY.id = "assassin"
 TROPHY.title = "Oh no! Anyway..."
 TROPHY.desc = "As an Assassin, win the round after breaking your contract"
-TROPHY.rarity = 1
+TROPHY.rarity = 2
 
 function TROPHY:Trigger()
     self.roleMessage = ROLE_ASSASSIN
