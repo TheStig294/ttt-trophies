@@ -9,6 +9,7 @@ if CLIENT then
         if newValue == "1" then
             if not GetGlobalBool("TTTTrophiesServerLoaded") then
                 hook.Add("TTTBeginRound", "TTTTrophiesDelayFastWeaponsTrophy", function()
+                    if not GetGlobalBool("TTTTrophiesServerLoaded") then return end
                     net.Start("TTTTrophiesChangeFastWeapons")
                     net.SendToServer()
                     hook.Remove("TTTBeginRound", "TTTTrophiesDelayFastWeaponsTrophy")
