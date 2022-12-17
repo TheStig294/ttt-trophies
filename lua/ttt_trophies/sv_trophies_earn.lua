@@ -1,14 +1,11 @@
 -- All server-side logic related to earning or earned trophies
-util.AddNetworkString("TTTRequestEarnedTrophies")
-util.AddNetworkString("TTTSendEarnedTrophies")
-util.AddNetworkString("TTTEarnedTrophiesChatMessage")
-
 -- Reads the earned trophies, and players with the rainbow effect on, from a file
 if file.Exists("ttt/trophies.txt", "DATA") then
     local fileContent = file.Read("ttt/trophies.txt")
     fileContent = util.JSONToTable(fileContent) or {}
     TTTTrophies.earned = fileContent.earned or {}
     TTTTrophies.rainbowPlayers = fileContent.rainbowPlayers or {}
+    TTTTrophies.stats = fileContent.stats or {}
 else
     -- Creates the earned trophies file if it doesn't exist
     file.CreateDir("ttt")
@@ -16,7 +13,12 @@ else
 end
 
 -- Sends each player their list of earned trophies when they have loaded in enough
+util.AddNetworkString("TTTRequestEarnedTrophies")
+util.AddNetworkString("TTTSendEarnedTrophies")
+
 net.Receive("TTTRequestEarnedTrophies", function(len, ply)
+    local chatMessagesCvar = net.ReadBool()
+    ply.DisableTrophyChatMessages = not chatMessagesCvar
     local id = ply:SteamID()
     local count
 
@@ -51,6 +53,8 @@ hook.Add("ShutDown", "TTTTrophiesSaveEarned", function()
 end)
 
 -- Shows a chat alert to everyone at the end of the round if someone has earned a trophy
+util.AddNetworkString("TTTEarnedTrophiesChatMessage")
+
 hook.Add("TTTEndRound", "TTTTrophiesChatAnnouncement", function()
     if table.IsEmpty(TTTTrophies.toMessage) or TTTTrophies.toMessage == {} then return end
 
@@ -69,13 +73,12 @@ hook.Add("TTTEndRound", "TTTTrophiesChatAnnouncement", function()
 end)
 
 -- Displays a chat message at the start of the round if a player is a role that they could earn a trophy with
-CreateConVar("ttt_trophies_chat_suggestions", "1", {FCVAR_NONE}, "Whether messages should be printed to chat suggesting trophies to earn", 0, 1)
+util.AddNetworkString("TTTTrophySuggestion")
 
 hook.Add("TTTBeginRound", "TTTTrophiesRoleSpecificChatSuggestion", function()
-    if not GetConVar("ttt_trophies_chat_suggestions"):GetBool() then return end
-
     timer.Simple(3, function()
         for _, ply in ipairs(player.GetAll()) do
+            if ply.DisableTrophyChatMessages then continue end
             if not ply:Alive() or ply:IsSpec() then continue end
             local role = ply:GetRole()
             -- Make trophies suggested to innocents have a rarer chance of showing up
@@ -86,8 +89,9 @@ hook.Add("TTTBeginRound", "TTTTrophiesRoleSpecificChatSuggestion", function()
                 for _, trophyID in ipairs(trophies) do
                     local earned = TTTTrophies.earned[ply:SteamID()][trophyID]
                     if earned then continue end
-                    local trophy = TTTTrophies.trophies[trophyID]
-                    ply:ChatPrint("[Trophy suggestion]\n" .. trophy.desc)
+                    net.Start("TTTTrophySuggestion")
+                    net.WriteString(trophyID)
+                    net.Send(ply)
                     break
                 end
             end
@@ -99,12 +103,22 @@ end)
 util.AddNetworkString("TTTTrophiesRainbowToggle")
 
 net.Receive("TTTTrophiesRainbowToggle", function(len, ply)
-    if TTTTrophies.rainbowPlayers[ply:SteamID()] then
-        TTTTrophies.rainbowPlayers[ply:SteamID()] = false
-        ply:ChatPrint("Rainbow disabled")
+    local earnedPlatinum = net.ReadBool()
+
+    if earnedPlatinum then
+        if TTTTrophies.rainbowPlayers[ply:SteamID()] then
+            TTTTrophies.rainbowPlayers[ply:SteamID()] = false
+            ply:ChatPrint("Rainbow disabled")
+        else
+            TTTTrophies.rainbowPlayers[ply:SteamID()] = true
+            ply:ChatPrint("Rainbow enabled")
+        end
     else
-        TTTTrophies.rainbowPlayers[ply:SteamID()] = true
-        ply:ChatPrint("Rainbow enabled")
+        if ply.DisableTrophyChatMessages then
+            ply.DisableTrophyChatMessages = false
+        else
+            ply.DisableTrophyChatMessages = true
+        end
     end
 end)
 

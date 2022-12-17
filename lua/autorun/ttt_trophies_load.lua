@@ -7,6 +7,7 @@ TTTTrophies.toMessage = {}
 TTTTrophies.toRegister = {}
 TTTTrophies.roleMessage = {}
 TTTTrophies.rainbowPlayers = {}
+TTTTrophies.stats = {}
 -- Creating a fake class of "TROPHY" using metatables, borrowed from the randomat's "EVENT" class
 local trophies_meta = {}
 trophies_meta.__index = trophies_meta
@@ -106,6 +107,7 @@ function trophies_meta:ProgressUpdate(plys, numerator, denominator)
     end
 
     for _, ply in ipairs(plys) do
+        if ply.DisableTrophyChatMessages then continue end
         if TTTTrophies.earned[plyID] and TTTTrophies.earned[plyID][self.id] then continue end
         ply:ChatPrint("[Trophy progress]\n" .. self.desc .. "\n(" .. numerator .. "/" .. denominator .. ")")
     end
@@ -129,7 +131,6 @@ local function AddClient(fil)
 end
 
 AddServer("ttt_trophies/sv_trophies_earn.lua")
-AddServer("ttt_trophies/sv_trophies_stats.lua")
 AddServer("ttt_trophies/trophies_shared.lua")
 AddClient("ttt_trophies/trophies_shared.lua")
 AddClient("ttt_trophies/cl_trophies_earn.lua")

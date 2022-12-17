@@ -1,7 +1,10 @@
 -- All client-side logic related to earning or earned trophies
+local chatMessagesCvar = CreateClientConVar("ttt_trophies_chat", "1", true, false, "Whether messages should be printed to chat showing trophy progress or suggesting trophies")
+
 hook.Add("Think", "TTTTrophiesSyncEarned", function()
     if GetGlobalBool("TTTTrophiesClientLoaded") then
         net.Start("TTTRequestEarnedTrophies")
+        net.WriteBool(chatMessagesCvar:GetBool())
         net.SendToServer()
         hook.Remove("Think", "TTTTrophiesSyncEarned")
     end
@@ -22,7 +25,6 @@ net.Receive("TTTSendEarnedTrophies", function()
 
         if trophy.id == "platinum" then
             chat.AddText("Press '" .. string.upper(GetConVar("ttt_trophies_hotkey_rainbow"):GetString()) .. "' to toggle rainbow effect")
-            rainbowToggle = true
         end
     end
 
@@ -62,21 +64,36 @@ net.Receive("TTTEarnedTrophiesChatMessage", function()
     chat.AddText(COLOR_YELLOW, nick, COLOR_WHITE, " has earned a trophy ", rarityColour, "[", trophy.title, "]\n", COLOR_WHITE, "\"", trophy.desc, "\"")
 end)
 
--- Rainbow guns reward
-CreateClientConVar("ttt_trophies_hotkey_rainbow", "J", true, false, "Hotkey for toggling rainbow effect")
+-- Rainbow guns reward/toggle for chat trophy suggestions
+CreateClientConVar("ttt_trophies_hotkey_rainbow", "J", true, false, "Hotkey for toggling trophy chat messages, or rainbow effect if all trophies are earned")
 
 hook.Add("PlayerButtonDown", "TTTTrophiesRainbowHokey", function(ply, button)
-    if not TTTTrophies.trophies.platinum or not TTTTrophies.trophies.platinum.earned or button ~= input.GetKeyCode(GetConVar("ttt_trophies_hotkey_rainbow"):GetString()) then return end
+    if button ~= input.GetKeyCode(GetConVar("ttt_trophies_hotkey_rainbow"):GetString()) then return end
 
     timer.Create("TTTTrophyRainbowToggleCooldown", 0.2, 1, function()
-        if rainbowToggle then
-            rainbowToggle = false
-        else
-            rainbowToggle = true
-        end
+        if TTTTrophies.trophies.platinum and TTTTrophies.trophies.platinum.earned then
+            if rainbowToggle then
+                rainbowToggle = false
+            else
+                rainbowToggle = true
+            end
 
-        net.Start("TTTTrophiesRainbowToggle")
-        net.SendToServer()
+            net.Start("TTTTrophiesRainbowToggle")
+            net.WriteBool(true)
+            net.SendToServer()
+        else
+            if chatMessagesCvar:GetBool() then
+                chatMessagesCvar:SetBool(false)
+                chat.AddText("Trophy chat messages disabled")
+            else
+                chatMessagesCvar:SetBool(true)
+                chat.AddText("Trophy chat messages enabled")
+            end
+
+            net.Start("TTTTrophiesRainbowToggle")
+            net.WriteBool(false)
+            net.SendToServer()
+        end
     end)
 end)
 

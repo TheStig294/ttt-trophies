@@ -123,7 +123,7 @@ local function AddTrophiesList()
         progressBar:SetSize(580, 20)
         -- Textbox for changing the hotkey to open the trophy list
         local textboxText = nonScrollList:Add("DLabel")
-        textboxText:SetText("  Keybind that opens this window:")
+        textboxText:SetText("        Key that opens this window:")
         textboxText:SetFont("TrophyDesc")
         textboxText:SetTextColor(COLOUR_WHITE)
         textboxText:SizeToContents()
@@ -141,7 +141,7 @@ local function AddTrophiesList()
 
         -- Textbox for changing the hotkey to toggle the reward for earning all trophies
         local textboxTextReward = nonScrollList:Add("DLabel")
-        textboxTextReward:SetText("Keybind to toggle platinum trophy reward (if earned):")
+        textboxTextReward:SetText("Key to toggle reward (if all trophies are earned):")
         textboxTextReward:SetFont("TrophyDesc")
         textboxTextReward:SetTextColor(COLOUR_WHITE)
         textboxTextReward:SizeToContents()
@@ -226,7 +226,12 @@ hook.Add("Think", "TTTTrophiesMessage", function()
     if GetGlobalBool("TTTTrophiesEarnedLoaded") then
         AddTrophiesList()
         trophiesListLoaded = true
-        chat.AddText("Press '" .. string.upper(GetConVar("ttt_trophies_hotkey"):GetString()) .. "' to open trophies list")
+
+        if GetConVar("ttt_trophies_chat"):GetBool() and not TTTTrophies.trophies.platinum.earned then
+            chat.AddText("Press '" .. string.upper(GetConVar("ttt_trophies_hotkey"):GetString()) .. "' to open trophies list")
+            chat.AddText("Press '" .. string.upper(GetConVar("ttt_trophies_hotkey_rainbow"):GetString()) .. "' to turn off trophy chat messages")
+        end
+
         hook.Remove("Think", "TTTTrophiesMessage")
     end
 end)
