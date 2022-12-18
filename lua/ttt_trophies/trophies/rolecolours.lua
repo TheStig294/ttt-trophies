@@ -5,20 +5,21 @@ TROPHY.desc = "In the settings tab, scroll down and set your role colours settin
 TROPHY.rarity = 1
 
 if CLIENT then
-    cvars.AddChangeCallback("ttt_color_mode", function(convar, oldValue, newValue)
-        if newValue == "simple" then
-            if not GetGlobalBool("TTTTrophiesServerLoaded") then
-                hook.Add("TTTBeginRound", "TTTTrophiesDelayRoleColoursTrophy", function()
+    hook.Add("TTTBeginRound", "TTTTrophiesDelayRoleColoursTrophy", function()
+        cvars.AddChangeCallback("ttt_color_mode", function(convar, oldValue, newValue)
+            if newValue == "simple" then
+                if not GetGlobalBool("TTTTrophiesServerLoaded") then
                     if not GetGlobalBool("TTTTrophiesServerLoaded") then return end
                     net.Start("TTTTrophiesChangeRoleColours")
                     net.SendToServer()
-                    hook.Remove("TTTBeginRound", "TTTTrophiesDelayRoleColoursTrophy")
-                end)
-            else
-                net.Start("TTTTrophiesChangeRoleColours")
-                net.SendToServer()
+                else
+                    net.Start("TTTTrophiesChangeRoleColours")
+                    net.SendToServer()
+                end
             end
-        end
+        end)
+
+        hook.Remove("TTTBeginRound", "TTTTrophiesDelayRoleColoursTrophy")
     end)
 end
 

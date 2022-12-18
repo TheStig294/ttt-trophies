@@ -5,20 +5,21 @@ TROPHY.desc = "In the settings tab, turn on the checkbox for \"Fast weapon switc
 TROPHY.rarity = 1
 
 if CLIENT then
-    cvars.AddChangeCallback("ttt_weaponswitcher_fast", function(convar, oldValue, newValue)
-        if newValue == "1" then
-            if not GetGlobalBool("TTTTrophiesServerLoaded") then
-                hook.Add("TTTBeginRound", "TTTTrophiesDelayFastWeaponsTrophy", function()
+    hook.Add("TTTBeginRound", "TTTTrophiesDelayFastWeaponsTrophy", function()
+        cvars.AddChangeCallback("ttt_weaponswitcher_fast", function(convar, oldValue, newValue)
+            if newValue == "1" then
+                if not GetGlobalBool("TTTTrophiesServerLoaded") then
                     if not GetGlobalBool("TTTTrophiesServerLoaded") then return end
                     net.Start("TTTTrophiesChangeFastWeapons")
                     net.SendToServer()
-                    hook.Remove("TTTBeginRound", "TTTTrophiesDelayFastWeaponsTrophy")
-                end)
-            else
-                net.Start("TTTTrophiesChangeFastWeapons")
-                net.SendToServer()
+                else
+                    net.Start("TTTTrophiesChangeFastWeapons")
+                    net.SendToServer()
+                end
             end
-        end
+        end)
+
+        hook.Remove("TTTBeginRound", "TTTTrophiesDelayFastWeaponsTrophy")
     end)
 end
 
