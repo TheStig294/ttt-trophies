@@ -6,24 +6,22 @@ TROPHY.rarity = 2
 
 function TROPHY:Trigger()
     self.roleMessage = ROLE_TRAITOR
-    local boughtTraitors = {}
+    local boughtPlayers = {}
 
     self:AddHook("TTTOrderedEquipment", function(ply, equ, passive)
-        if ply:IsTraitorTeam(ply) then
-            boughtTraitors[ply] = true
-        end
+        boughtPlayers[ply] = true
     end)
 
     self:AddHook("TTTEndRound", function(result)
         if result == WIN_TRAITOR then
             for _, ply in ipairs(player.GetAll()) do
-                if not boughtTraitors[ply] then
+                if TTTTrophies:IsTraitorTeam(ply) and not boughtPlayers[ply] then
                     self:Earn(ply)
                 end
             end
         end
 
-        table.Empty(boughtTraitors)
+        table.Empty(boughtPlayers)
     end)
 end
 
