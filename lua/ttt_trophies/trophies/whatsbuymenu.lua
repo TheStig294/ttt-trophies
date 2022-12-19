@@ -1,5 +1,5 @@
 local TROPHY = {}
-TROPHY.id = "nobuymenu"
+TROPHY.id = "whatsbuymenu"
 TROPHY.title = "What's a buy menu?"
 TROPHY.desc = "Win a round as a traitor without buying anything"
 TROPHY.rarity = 2
