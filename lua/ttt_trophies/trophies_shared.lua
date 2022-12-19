@@ -100,3 +100,48 @@ function TTTTrophies:MapIsSwitching()
 
     return rounds_left <= 0 or time_left <= 0
 end
+
+function TTTTrophies:IsBuyableItem(role, wep, includeWepsExist, excludeWepsExist)
+    local classname = wep.ClassName
+    local id = wep.id
+
+    -- Checking if item is an active item
+    if isstring(classname) and wep.CanBuy then
+        -- Also take into account the weapon exclude and include lists from Custom Roles, if they exist
+        if includeWepsExist then
+            for i, includedWep in ipairs(WEPS.BuyableWeapons[role]) do
+                if classname == includedWep then return true end
+            end
+        end
+
+        if excludeWepsExist then
+            for i, excludedWep in ipairs(WEPS.ExcludeWeapons[role]) do
+                if classname == excludedWep then return false end
+            end
+        end
+
+        if table.HasValue(wep.CanBuy, role) then return true end
+        -- Checking if item is a passive item
+    elseif isnumber(id) then
+        id = tonumber(id)
+        -- Loadout items cannot be bought as they are automatically given
+        local item = GetEquipmentItem(role, id)
+        if item.loadout then return false end
+
+        if includeWepsExist then
+            for i, includedWep in ipairs(WEPS.BuyableWeapons[role]) do
+                if id == includedWep then return true end
+            end
+        end
+
+        if excludeWepsExist then
+            for i, excludedWep in ipairs(WEPS.ExcludeWeapons[role]) do
+                if id == excludedWep then return false end
+            end
+        end
+
+        return true
+    end
+
+    return false
+end
