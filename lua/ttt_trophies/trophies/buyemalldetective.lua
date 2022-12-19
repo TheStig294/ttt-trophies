@@ -40,6 +40,8 @@ if CLIENT then
 end
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_DETECTIVE
+
     if not TTTTrophies.stats[self.id] then
         TTTTrophies.stats[self.id] = {}
     end

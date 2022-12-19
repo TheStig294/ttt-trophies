@@ -5,6 +5,7 @@ TROPHY.desc = "As a traitor, win a round without taking damage and killing at le
 TROPHY.rarity = 2
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_TRAITOR
     local takenDamage = {}
     local innocentKill = {}
 

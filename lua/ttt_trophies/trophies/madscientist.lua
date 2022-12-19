@@ -5,6 +5,8 @@ TROPHY.desc = "As a Mad Scientist, try to revive someone that's already a zombie
 TROPHY.rarity = 2
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_MADSCIENTIST
+
     self:AddHook("TTTMadScientistZombifyBegin", function(ply, tgt)
         if tgt:IsZombie() then
             self:Earn(ply)

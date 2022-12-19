@@ -5,6 +5,8 @@ TROPHY.desc = "Kill someone with a headshot to prevent them from making a noise"
 TROPHY.rarity = 1
 
 function TROPHY:Trigger()
+    self.roleMessage = ROLE_TRAITOR
+
     self:AddHook("ScalePlayerDamage", function(ply, hitgroup, dmginfo)
         if hitgroup == HITGROUP_HEAD then
             local attacker = dmginfo:GetAttacker()
