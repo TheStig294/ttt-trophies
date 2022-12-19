@@ -1,5 +1,5 @@
 local TROPHY = {}
-TROPHY.id = "buyalltraitor"
+TROPHY.id = "buyemalltraitor"
 TROPHY.title = "Gotta buy 'em all! (Traitor)"
 TROPHY.desc = "Buy every traitor item at least once"
 TROPHY.rarity = 3
