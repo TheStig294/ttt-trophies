@@ -108,6 +108,7 @@ function trophies_meta:ProgressUpdate(plys, numerator, denominator)
 
     for _, ply in ipairs(plys) do
         if ply.DisableTrophyChatMessages then continue end
+        local plyID = ply:SteamID()
         if TTTTrophies.earned[plyID] and TTTTrophies.earned[plyID][self.id] then continue end
         ply:ChatPrint("[Trophy progress]\n" .. self.desc .. "\n(" .. numerator .. "/" .. denominator .. ")")
     end
