@@ -1,6 +1,6 @@
 local TROPHY = {}
 TROPHY.id = "medium"
-TROPHY.title = "Sometimes you can trust the ghosts..."
+TROPHY.title = "Trust the ghosts?"
 TROPHY.desc = "As a Medium, kill a traitor while a dead player is near them"
 TROPHY.rarity = 3
 
