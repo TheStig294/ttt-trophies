@@ -31,7 +31,8 @@ function TROPHY:Trigger()
     local newItemPlayers = {}
     local boughtItemPlayers = {}
 
-    self:AddHook("TTTOrderedEquipment", function(ply, equ, passive)
+    self:AddHook("TTTOrderedEquipment", function(ply, equ, passive, from_randomat)
+        if from_randomat then return end
         if not TTTTrophies:IsTraitorTeam(ply) then return end
         boughtItemPlayers[ply] = true
 
