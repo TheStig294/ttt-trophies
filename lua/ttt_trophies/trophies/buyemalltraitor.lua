@@ -4,58 +4,44 @@ TROPHY.title = "Gotta buy 'em all! (Traitor)"
 TROPHY.desc = "Buy every traitor item at least once"
 TROPHY.rarity = 3
 
-if CLIENT then
-    hook.Add("TTTPrepareRound", "TTTTrophiesSendTraitorBuyable", function()
-        timer.Simple(3, function()
-            if LocalPlayer():EntIndex() ~= 1 then
-                hook.Remove("TTTPrepareRound", "TTTTrophiesSendTraitorBuyable")
-
-                return
-            end
-
-            local excludeWepsExist = istable(WEPS.ExcludeWeapons) and istable(WEPS.ExcludeWeapons[ROLE_TRAITOR])
-            local includeWepsExist = istable(WEPS.BuyableWeapons) and istable(WEPS.BuyableWeapons[ROLE_TRAITOR])
-
-            -- First check if its on the SWEP list
-            for _, v in pairs(weapons.GetList()) do
-                if TTTTrophies:IsBuyableItem(ROLE_TRAITOR, v, includeWepsExist, excludeWepsExist) then
-                    net.Start("TTTTrophies_SendTraitorEquipment")
-                    net.WriteString(v.ClassName)
-                    net.SendToServer()
-                end
-            end
-
-            -- If its not on the SWEP list, then check the equipment items table
-            for _, v in pairs(EquipmentItems[ROLE_TRAITOR]) do
-                if TTTTrophies:IsBuyableItem(ROLE_TRAITOR, v, includeWepsExist, excludeWepsExist) then
-                    net.Start("TTTTrophies_SendTraitorEquipment")
-                    net.WriteString(v.name)
-                    net.SendToServer()
-                end
-            end
-
-            hook.Remove("TTTPrepareRound", "TTTTrophiesSendTraitorBuyable")
-        end)
-    end)
-end
-
 function TROPHY:Trigger()
     self.roleMessage = ROLE_TRAITOR
+    -- Getting the list of buyable traitor items
+    -- At the start of the first round of a map, ask the first connected client for the printnames of all traitor and traitor weapons
+    -- Items are sent as ClassNames for active items, and PrintNames for passive items to uniquely identify them
+    local traitorBuyable = {}
+    local excludeWepsExist = istable(WEPS.ExcludeWeapons) and istable(WEPS.ExcludeWeapons[ROLE_TRAITOR])
+    local includeWepsExist = istable(WEPS.BuyableWeapons) and istable(WEPS.BuyableWeapons[ROLE_TRAITOR])
+
+    -- First check if its on the SWEP list
+    for _, v in pairs(weapons.GetList()) do
+        if TTTTrophies:IsBuyableItem(ROLE_TRAITOR, v, includeWepsExist, excludeWepsExist) then
+            traitorBuyable[v.ClassName] = true
+        end
+    end
+
+    -- If its not on the SWEP list, then check the equipment items table
+    for _, v in pairs(EquipmentItems[ROLE_TRAITOR]) do
+        if TTTTrophies:IsBuyableItem(ROLE_TRAITOR, v, includeWepsExist, excludeWepsExist) then
+            traitorBuyable[v.name] = true
+        end
+    end
+
+    self:AddHook("TTTRoleWeaponUpdated", function(role, weapon, inc, exc, noRandom)
+        if role ~= ROLE_TRAITOR then return end
+
+        if inc then
+            traitorBuyable[weapon] = true
+        end
+
+        if exc then
+            traitorBuyable[weapon] = nil
+        end
+    end)
 
     if not TTTTrophies.stats[self.id] then
         TTTTrophies.stats[self.id] = {}
     end
-
-    -- Getting the list of buyable traitor items
-    -- At the start of the first round of a map, ask the first connected client for the printnames of all traitor and traitor weapons
-    -- Items are sent as ClassNames for active items, and PrintNames for passive items to uniquely identify them
-    util.AddNetworkString("TTTTrophies_SendTraitorEquipment")
-    local traitorBuyable = {}
-
-    net.Receive("TTTTrophies_SendTraitorEquipment", function(len, ply)
-        local name = net.ReadString()
-        traitorBuyable[name] = true
-    end)
 
     self:AddHook("TTTOrderedEquipment", function(ply, equipment, is_item, given_by_randomat)
         if TTTTrophies.earned[ply:SteamID()] and TTTTrophies.earned[ply:SteamID()][self.plyID] then return end
