@@ -1,7 +1,7 @@
 local TROPHY = {}
 TROPHY.id = "rolecolours"
 TROPHY.title = "Customise your colours!"
-TROPHY.desc = "In the settings tab, scroll down and set your role colours setting to \"Simplified\""
+TROPHY.desc = "In the F1 settings tab, scroll and set your role colours setting to \"Simplified\""
 TROPHY.rarity = 1
 
 if CLIENT then

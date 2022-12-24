@@ -1,7 +1,7 @@
 local TROPHY = {}
 TROPHY.id = "fastweaponswitch"
 TROPHY.title = "Fast weapon switch!"
-TROPHY.desc = "In the settings tab, turn on the checkbox for \"Fast weapon switch\""
+TROPHY.desc = "In the F1 settings tab, turn on the checkbox for \"Fast weapon switch\""
 TROPHY.rarity = 1
 
 if CLIENT then
