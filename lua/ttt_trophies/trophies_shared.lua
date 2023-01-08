@@ -102,6 +102,8 @@ function TTTTrophies:MapIsSwitching()
 end
 
 function TTTTrophies:IsBuyableItem(role, wep)
+    if not role or not wep then return false end
+    
     local classname = wep.ClassName
     local id = wep.id
     local excludeWepsExist = istable(WEPS.ExcludeWeapons) and istable(WEPS.ExcludeWeapons[role])
