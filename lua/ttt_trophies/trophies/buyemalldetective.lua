@@ -10,19 +10,17 @@ function TROPHY:Trigger()
     -- At the start of the first round of a map, ask the first connected client for the printnames of all detective and detective weapons
     -- Items are sent as ClassNames for active items, and PrintNames for passive items to uniquely identify them
     local detectiveBuyable = {}
-    local excludeWepsExist = istable(WEPS.ExcludeWeapons) and istable(WEPS.ExcludeWeapons[ROLE_DETECTIVE])
-    local includeWepsExist = istable(WEPS.BuyableWeapons) and istable(WEPS.BuyableWeapons[ROLE_DETECTIVE])
 
     -- First check if its on the SWEP list
     for _, v in pairs(weapons.GetList()) do
-        if TTTTrophies:IsBuyableItem(ROLE_DETECTIVE, v, includeWepsExist, excludeWepsExist) then
+        if TTTTrophies:IsBuyableItem(ROLE_DETECTIVE, v) then
             detectiveBuyable[v.ClassName] = true
         end
     end
 
     -- If its not on the SWEP list, then check the equipment items table
     for _, v in pairs(EquipmentItems[ROLE_DETECTIVE]) do
-        if TTTTrophies:IsBuyableItem(ROLE_DETECTIVE, v, includeWepsExist, excludeWepsExist) then
+        if TTTTrophies:IsBuyableItem(ROLE_DETECTIVE, v) then
             detectiveBuyable[v.name] = true
         end
     end

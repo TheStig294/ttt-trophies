@@ -10,19 +10,17 @@ function TROPHY:Trigger()
     -- At the start of the first round of a map, ask the first connected client for the printnames of all traitor and traitor weapons
     -- Items are sent as ClassNames for active items, and PrintNames for passive items to uniquely identify them
     local traitorBuyable = {}
-    local excludeWepsExist = istable(WEPS.ExcludeWeapons) and istable(WEPS.ExcludeWeapons[ROLE_TRAITOR])
-    local includeWepsExist = istable(WEPS.BuyableWeapons) and istable(WEPS.BuyableWeapons[ROLE_TRAITOR])
 
     -- First check if its on the SWEP list
     for _, v in pairs(weapons.GetList()) do
-        if TTTTrophies:IsBuyableItem(ROLE_TRAITOR, v, includeWepsExist, excludeWepsExist) then
+        if TTTTrophies:IsBuyableItem(ROLE_TRAITOR, v) then
             traitorBuyable[v.ClassName] = true
         end
     end
 
     -- If its not on the SWEP list, then check the equipment items table
     for _, v in pairs(EquipmentItems[ROLE_TRAITOR]) do
-        if TTTTrophies:IsBuyableItem(ROLE_TRAITOR, v, includeWepsExist, excludeWepsExist) then
+        if TTTTrophies:IsBuyableItem(ROLE_TRAITOR, v) then
             traitorBuyable[v.name] = true
         end
     end

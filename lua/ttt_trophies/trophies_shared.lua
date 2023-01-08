@@ -101,9 +101,11 @@ function TTTTrophies:MapIsSwitching()
     return rounds_left <= 0 or time_left <= 0
 end
 
-function TTTTrophies:IsBuyableItem(role, wep, includeWepsExist, excludeWepsExist)
+function TTTTrophies:IsBuyableItem(role, wep)
     local classname = wep.ClassName
     local id = wep.id
+    local excludeWepsExist = istable(WEPS.ExcludeWeapons) and istable(WEPS.ExcludeWeapons[role])
+    local includeWepsExist = istable(WEPS.BuyableWeapons) and istable(WEPS.BuyableWeapons[role])
 
     -- Checking if item is an active item
     if isstring(classname) and wep.CanBuy then
