@@ -19,7 +19,9 @@ function TROPHY:Trigger()
     end)
 
     self:AddHook("DoPlayerDeath", function(ply, attacker, dmg)
+        if not IsPlayer(attacker) then return end
         local inflictor = dmg:GetInflictor()
+        if not IsValid(inflictor) then return end
         local activeWeapon = attacker:GetActiveWeapon()
 
         if attacker:GetRole() == ROLE_MERCENARY and TTTTrophies:IsTraitorTeam(ply) and boughtItems[attacker] then
