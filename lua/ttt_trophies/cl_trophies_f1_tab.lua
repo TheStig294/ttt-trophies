@@ -74,6 +74,10 @@ local function DrawTrophyBar(list, trophy)
     local desc = vgui.Create("DLabel", background)
     local descText = trophy.desc
 
+    if GetGlobalBool("ttt_trophies_hide_all_trophies") and not trophy.earned and trophy.id ~= "platinum" then
+        descText = ""
+    end
+
     if trophy.hidden then
         descText = "Hidden trophy"
     end

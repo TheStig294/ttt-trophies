@@ -1,4 +1,13 @@
 -- This file sets up all the core important logic of the trophies, as well as loads all other lua files in the right order
+-- Server-side convars
+if SERVER then
+    CreateConVar("ttt_trophies_hide_all_trophies", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY}, "Whether trophies should have their descriptions hidden if not yet earned", 0, 1)
+
+    hook.Add("TTTPrepareRound", "TTTTrophiesConvarSync", function()
+        SetGlobalBool("ttt_trophies_hide_all_trophies", GetConVar("ttt_trophies_hide_all_trophies"):GetBool())
+    end)
+end
+
 -- The global table used by the client and server to access all trophy data
 TTTTrophies = {}
 TTTTrophies.trophies = {}
