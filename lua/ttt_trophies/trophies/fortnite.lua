@@ -30,12 +30,7 @@ end
 
 -- Check the fortnite building tool can actually be bought by a traitor
 function TROPHY:Condition()
-    if weapons.Get("weapon_ttt_fortnite_building") and isfunction(GetTraitorBuyable) then
-        local traitorWeapons = GetTraitorBuyable()
-        if traitorWeapons["weapon_ttt_fortnite_building"] then return true end
-    else
-        return false
-    end
+    return TTTTrophies:IsBuyableItem(ROLE_TRAITOR, "weapon_ttt_fortnite_building")
 end
 
 RegisterTTTTrophy(TROPHY)
