@@ -4,7 +4,7 @@ TROPHY.title = "Wait, what are we playing?"
 TROPHY.desc = "Though the randomat, win a round where you aren't playing TTT!"
 TROPHY.rarity = 2
 
-local events = {
+local gamemodeEvents = {
     ["murder"] = true,
     ["prophunt"] = true,
     ["amongus"] = true,
@@ -17,7 +17,7 @@ function TROPHY:Trigger()
     local eventTriggered = false
 
     self:AddHook("TTTRandomatTriggered", function(id, owner)
-        if events[id] then
+        if gamemodeEvents[id] then
             eventTriggered = true
         end
     end)
@@ -44,10 +44,10 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    if not Randomat or not Randomat.Events then return false end
+    if not Randomat then return false end
 
-    for event, _ in pairs(events) do
-        if Randomat.Events[event] then return true end
+    for event, _ in pairs(gamemodeEvents) do
+        if ConVarExists("ttt_randomat_" .. event) and GetConVar("ttt_randomat_" .. event):GetBool() then return true end
     end
 
     return false
