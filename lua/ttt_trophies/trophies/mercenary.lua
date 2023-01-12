@@ -3,9 +3,9 @@ TROPHY.id = "mercenary"
 TROPHY.title = "See? I'm not a traitor!"
 TROPHY.desc = "As a Mercenary, kill a traitor using a weapon you bought"
 TROPHY.rarity = 1
+TROPHY.hidden = true
 
 function TROPHY:Trigger()
-    self.roleMessage = ROLE_MERCENARY
     local boughtItems = {}
 
     self:AddHook("TTTOrderedEquipment", function(ply, equipment, is_item)

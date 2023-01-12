@@ -1,11 +1,11 @@
 local TROPHY = {}
 TROPHY.id = "speedrun"
-TROPHY.title = "Speedrun!"
+TROPHY.title = "Traitor speedrun!"
 TROPHY.desc = "As a traitor, win a round in less than 60 seconds"
 TROPHY.rarity = 3
+TROPHY.hidden = true
 
 function TROPHY:Trigger()
-    self.roleMessage = ROLE_TRAITOR
     local roundStartTime
 
     self:AddHook("TTTBeginRound", function()

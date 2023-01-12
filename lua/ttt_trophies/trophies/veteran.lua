@@ -3,6 +3,7 @@ TROPHY.id = "veteran"
 TROPHY.title = "All alone..."
 TROPHY.desc = "As a Veteran, be the last innocent alive"
 TROPHY.rarity = 3
+TROPHY.hidden = true
 
 function TROPHY:Trigger()
     self:AddHook("DoPlayerDeath", function()

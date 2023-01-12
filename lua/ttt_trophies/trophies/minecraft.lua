@@ -3,10 +3,9 @@ TROPHY.id = "minecraft"
 TROPHY.title = "Sure, just play Minecraft..."
 TROPHY.desc = "Place 50 or more blocks down using the Minecraft Block"
 TROPHY.rarity = 1
+TROPHY.hidden = true
 
 function TROPHY:Trigger()
-    self.roleMessage = ROLE_DETECTIVE
-
     local function EarnTrophy(plys)
         self:Earn(plys)
     end

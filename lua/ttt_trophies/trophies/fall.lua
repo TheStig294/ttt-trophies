@@ -3,9 +3,9 @@ TROPHY.id = "fall"
 TROPHY.title = "Nice save!"
 TROPHY.desc = "Save yourself from a high damage fall by double-jumping"
 TROPHY.rarity = 2
+TROPHY.hidden = true
 
 function TROPHY:Trigger()
-    self.roleMessage = ROLE_INNOCENT
     local doubleJumping = {}
 
     self:AddHook("OnPlayerHitGround", function(ply, inWater, onFloater, speed)

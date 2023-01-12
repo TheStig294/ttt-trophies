@@ -3,6 +3,7 @@ TROPHY.id = "poison"
 TROPHY.title = "Oops, wrong button"
 TROPHY.desc = "Use a poison potion on yourself"
 TROPHY.rarity = 1
+TROPHY.hidden = true
 
 function TROPHY:Trigger()
     self:AddHook("DoPlayerDeath", function(ply, attacker, dmg)

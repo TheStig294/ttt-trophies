@@ -73,6 +73,11 @@ local function DrawTrophyBar(list, trophy)
     -- Description
     local desc = vgui.Create("DLabel", background)
     local descText = trophy.desc
+
+    if trophy.hidden then
+        descText = "Hidden trophy"
+    end
+
     desc:SetText(descText)
     desc:Dock(BOTTOM)
     desc:SetFont("TrophyDesc")

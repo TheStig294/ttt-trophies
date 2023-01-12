@@ -62,7 +62,11 @@ net.Receive("TTTEarnedTrophiesChatMessage", function()
         rarityColour = Color(46, 104, 165)
     end
 
-    chat.AddText(COLOR_YELLOW, nick, COLOR_WHITE, " has earned a trophy ", rarityColour, "[", trophy.title, "]\n", COLOR_WHITE, "\"", trophy.desc, "\"")
+    chat.AddText(COLOR_YELLOW, nick, COLOR_WHITE, " has earned a trophy ", rarityColour, "[", trophy.title, "]")
+
+    if not trophy.hidden then
+        chat.AddText(COLOR_WHITE, "\"", trophy.desc, "\"")
+    end
 end)
 
 -- Rainbow guns reward/toggle for chat trophy suggestions

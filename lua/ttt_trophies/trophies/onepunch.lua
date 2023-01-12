@@ -3,10 +3,9 @@ TROPHY.id = "onepunch"
 TROPHY.title = "Don't worry, it's the detective"
 TROPHY.desc = "See a detective equip a One Punch"
 TROPHY.rarity = 1
+TROPHY.hidden = true
 
 function TROPHY:Trigger()
-    self.roleMessage = ROLE_DETECTIVE
-
     self:AddHook("PlayerSwitchWeapon", function(ply, oldWep, newWep)
         if TTTTrophies:IsGoodDetectiveLike(ply) and IsValid(newWep) and newWep:GetClass() == "one_punch_skin" then
             self:Earn(player.GetAll())

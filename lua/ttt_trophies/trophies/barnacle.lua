@@ -1,8 +1,9 @@
 local TROPHY = {}
 TROPHY.id = "barnacle"
-TROPHY.title = "No-one saw that..."
+TROPHY.title = "Oh barnacles..."
 TROPHY.desc = "Get freed from a barnacle you placed"
 TROPHY.rarity = 2
+TROPHY.hidden = true
 
 function TROPHY:Trigger()
     local caughtPlayers = {}

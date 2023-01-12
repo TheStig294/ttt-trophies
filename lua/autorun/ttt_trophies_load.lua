@@ -102,6 +102,8 @@ function trophies_meta:IsAlive(ply)
 end
 
 function trophies_meta:ProgressUpdate(plys, numerator, denominator)
+    if self.hidden then return end
+
     if not istable(plys) then
         plys = {plys}
     end
@@ -161,7 +163,7 @@ if SERVER then
             -- Mark a trophy as role specific to give a suggestion in chat when you are that role to earn that trophy
             local role = trophy.roleMessage
 
-            if role then
+            if role and not trophy.hidden then
                 if not TTTTrophies.roleMessage[role] then
                     TTTTrophies.roleMessage[role] = {}
                 end

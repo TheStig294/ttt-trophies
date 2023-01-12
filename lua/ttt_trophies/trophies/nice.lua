@@ -3,6 +3,7 @@ TROPHY.id = "nice"
 TROPHY.title = "Nice"
 TROPHY.desc = "Play 69 rounds of TTT"
 TROPHY.rarity = 1
+TROPHY.hidden = true
 
 function TROPHY:Trigger()
     if not TTTTrophies.stats[self.id] then

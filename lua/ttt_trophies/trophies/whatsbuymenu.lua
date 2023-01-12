@@ -3,9 +3,9 @@ TROPHY.id = "whatsbuymenu"
 TROPHY.title = "What's a buy menu?"
 TROPHY.desc = "Win a round as a traitor without buying anything"
 TROPHY.rarity = 2
+TROPHY.hidden = true
 
 function TROPHY:Trigger()
-    self.roleMessage = ROLE_TRAITOR
     local boughtPlayers = {}
 
     self:AddHook("TTTOrderedEquipment", function(ply, equ, passive)
