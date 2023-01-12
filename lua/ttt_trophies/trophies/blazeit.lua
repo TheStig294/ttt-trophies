@@ -3,7 +3,6 @@ TROPHY.id = "blazeit"
 TROPHY.title = "Blaze it"
 TROPHY.desc = "Play 420 rounds of TTT"
 TROPHY.rarity = 2
-TROPHY.hidden = true
 
 function TROPHY:Trigger()
     -- Use the stats from the "nice" trophy
