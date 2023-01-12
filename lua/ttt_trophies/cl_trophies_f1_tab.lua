@@ -89,6 +89,11 @@ local function DrawTrophyBar(list, trophy)
     desc:SizeToContents()
 end
 
+local function AdminOptionsMenu()
+    if not LocalPlayer():IsAdmin() then return end
+    LocalPlayer():ChatPrint("test")
+end
+
 -- Adds the trophies list to the F1 menu
 local function AddTrophiesList()
     hook.Add("TTTSettingsTabs", "TTTTrophies", function(dtabs)
@@ -109,7 +114,24 @@ local function AddTrophiesList()
             draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0))
         end
 
-        -- Progress bar
+        -- Admin options menu
+        local spacerPanelWidth = 200
+
+        if LocalPlayer():IsAdmin() then
+            local optionsButton = nonScrollList:Add("DButton")
+            optionsButton:SetText("Admin Options")
+            optionsButton:SizeToContents()
+            spacerPanelWidth = spacerPanelWidth - optionsButton:GetSize()
+
+            function optionsButton:DoClick()
+                AdminOptionsMenu()
+            end
+        end
+
+        local spacerPanel = nonScrollList:Add("DPanel")
+        spacerPanel:SetBackgroundColor(COLOR_BLACK)
+        spacerPanel:SetWidth(spacerPanelWidth)
+        -- Progress bar text
         local earnedCount = 0
 
         for _, trophy in pairs(TTTTrophies.trophies) do
@@ -121,11 +143,11 @@ local function AddTrophiesList()
         local pctEarned = (earnedCount / table.Count(TTTTrophies.trophies)) * 100
         pctEarned = math.Round(pctEarned)
         local progressBarText = nonScrollList:Add("DLabel")
-        progressBarText:SetText("                                                      " .. pctEarned .. "% of trophies earned!")
+        progressBarText:SetText(pctEarned .. "% of trophies earned!")
         progressBarText:SetFont("TrophyDesc")
         progressBarText:SetTextColor(COLOUR_WHITE)
         progressBarText:SizeToContents()
-        progressBarText.OwnLine = true
+        -- Progress bar
         local progressBar = nonScrollList:Add("DProgress")
         progressBar:SetFraction(pctEarned / 100)
         progressBar.OwnLine = true
