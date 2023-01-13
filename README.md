@@ -160,7 +160,7 @@ Play 69 rounds of TTT\
 _trophies_nice_ - Default: 1 - Whether this trophy is enabled
 
 ## Nice save!
-Save yourself from a high damage fall by double-jumping\
+(Hidden) Save yourself from a high damage fall by double-jumping\
 \
 _trophies_fall_ - Default: 1 - Whether this trophy is enabled
 Requires: [Improved Double Jump!](https://steamcommunity.com/sharedfiles/filedetails/?id=2501234496)
