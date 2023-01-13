@@ -1,41 +1,4 @@
 -- This file sets up all the core important logic of the trophies, as well as loads all other lua files in the right order
--- Server-side convars
-if SERVER then
-    CreateConVar("ttt_trophies_hide_all_trophies", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY}, "Whether trophies should have their descriptions hidden if not yet earned", 0, 1)
-
-    local convars = {"ttt_trophies_hide_all_trophies"}
-
-    hook.Add("TTTPrepareRound", "TTTTrophiesConvarSync", function()
-        SetGlobalBool("ttt_trophies_hide_all_trophies", GetConVar("ttt_trophies_hide_all_trophies"):GetBool())
-    end)
-
-    util.AddNetworkString("TTTTrophiesToggleConvar")
-
-    net.Receive("TTTTrophiesToggleConvar", function(len, ply)
-        if not ply:IsAdmin() then return end
-        local cvarName = net.ReadString()
-        local found = false
-
-        for _, validCvar in ipairs(convars) do
-            if cvarName == validCvar then
-                found = true
-                break
-            end
-        end
-
-        if not found then return end
-        local cvar = GetConVar(cvarName)
-
-        if cvar:GetBool() then
-            cvar:SetBool(false)
-        else
-            cvar:SetBool(true)
-        end
-
-        SetGlobalBool(cvarName, cvar:GetBool())
-    end)
-end
-
 -- The global table used by the client and server to access all trophy data
 TTTTrophies = {}
 TTTTrophies.trophies = {}
@@ -60,6 +23,8 @@ if SERVER then
 
         -- Hook to stop trophies from being earned
         if hook.Run("TTTBlockTrophyEarned", self, plys) == true then return end
+        -- Check if trophy is disabled by an admin or not
+        if not GetGlobalBool("trophies_" .. self.id) then return end
 
         for _, ply in ipairs(plys) do
             local plyID = ply:SteamID()
@@ -140,6 +105,8 @@ end
 
 function trophies_meta:ProgressUpdate(plys, numerator, denominator)
     if self.hidden then return end
+    -- Check if trophy is disabled by an admin or not
+    if not GetGlobalBool("trophies_" .. self.id) then return end
 
     if not istable(plys) then
         plys = {plys}
@@ -183,8 +150,43 @@ for _, fil in ipairs(files) do
     AddClient("ttt_trophies/trophies/" .. fil)
 end
 
--- Loading the trophies list on the client and server
 if SERVER then
+    -- Loading server-side convars, including all convars controlling whether trophies are disabled by admins
+    local convars = {"ttt_trophies_hide_all_trophies"}
+
+    CreateConVar("ttt_trophies_hide_all_trophies", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY}, "Whether trophies should have their descriptions hidden if not yet earned", 0, 1)
+
+    hook.Add("TTTPrepareRound", "TTTTrophiesConvarSync", function()
+        SetGlobalBool("ttt_trophies_hide_all_trophies", GetConVar("ttt_trophies_hide_all_trophies"):GetBool())
+    end)
+
+    util.AddNetworkString("TTTTrophiesToggleConvar")
+
+    net.Receive("TTTTrophiesToggleConvar", function(len, ply)
+        if not ply:IsAdmin() then return end
+        local cvarName = net.ReadString()
+        local found = false
+
+        for _, validCvar in ipairs(convars) do
+            if cvarName == validCvar then
+                found = true
+                break
+            end
+        end
+
+        if not found then return end
+        local cvar = GetConVar(cvarName)
+
+        if cvar:GetBool() then
+            cvar:SetBool(false)
+        else
+            cvar:SetBool(true)
+        end
+
+        SetGlobalBool(cvarName, cvar:GetBool())
+    end)
+
+    -- Loading the trophies list on the server
     -- Don't process trophies list until the first round begins to give time for server configs to load,
     -- so the trophy:Condition() function can use them to check if certain mods are installed/enabled
     hook.Add("TTTPrepareRound", "TTTTrophiesPopulateList", function()
@@ -194,6 +196,12 @@ if SERVER then
             -- Don't add trophies that don't have their required mods installed
             if not trophy:Condition() then continue end
             SetGlobalBool("TTTTrophy" .. trophy.id, true)
+
+            -- Create an admin enabled/disable convar
+            local cvar = CreateConVar("trophies_" .. trophy.id, "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+
+            SetGlobalBool("trophies_" .. trophy.id, cvar:GetBool())
+            table.insert(convars, cvar:GetName())
             -- Apply the trophy's trigger hooks
             trophy:Trigger()
             TTTTrophies.trophies[trophy.id] = trophy
@@ -213,6 +221,7 @@ if SERVER then
         hook.Remove("TTTPrepareRound", "TTTTrophiesPopulateList")
     end)
 else
+    -- Loading the trophies list on the client
     -- Don't process trophies list until the server has loaded, and all trophy files on the client have loaded
     hook.Add("Think", "TTTTrophiesPopulateList", function()
         if GetGlobalBool("TTTTrophiesServerLoaded") then

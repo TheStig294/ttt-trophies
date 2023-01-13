@@ -84,6 +84,8 @@ hook.Add("TTTBeginRound", "TTTTrophiesRoleSpecificChatSuggestion", function()
 
             if trophies then
                 for _, trophyID in ipairs(trophies) do
+                    -- Check if trophy is disabled by an admin or not
+                    if not GetGlobalBool("trophies_" .. trophyID) then continue end
                     local earned = TTTTrophies.earned[ply:SteamID()] and TTTTrophies.earned[ply:SteamID()][trophyID]
                     if earned then continue end
                     local trophy = TTTTrophies.trophies[trophyID]

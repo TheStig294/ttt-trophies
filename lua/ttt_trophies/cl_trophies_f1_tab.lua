@@ -22,6 +22,8 @@ surface.CreateFont("TrophyDesc", {
 })
 
 local function DrawTrophyBar(list, trophy)
+    -- Don't display a trophy if it is disabled and the player is not an admin
+    if not GetGlobalBool("trophies_" .. trophy.id) and not LocalPlayer():IsAdmin() then return end
     -- Icon
     local icon = list:Add("DImage")
 
@@ -87,6 +89,22 @@ local function DrawTrophyBar(list, trophy)
     desc:SetFont("TrophyDesc")
     desc:SetTextColor(COLOUR_WHITE)
     desc:SizeToContents()
+
+    -- Enabled/disabled checkbox
+    if LocalPlayer():IsAdmin() then
+        local enabledBox = vgui.Create("DCheckBoxLabel", background)
+        enabledBox:SetText("Enabled")
+        enabledBox:SetChecked(GetGlobalBool("trophies_" .. trophy.id))
+        enabledBox:SetIndent(10)
+        enabledBox:SizeToContents()
+        enabledBox:SetPos(400, 5)
+
+        function enabledBox:OnChange()
+            net.Start("TTTTrophiesToggleConvar")
+            net.WriteString("trophies_" .. trophy.id)
+            net.SendToServer()
+        end
+    end
 end
 
 local function AdminOptionsMenu()
