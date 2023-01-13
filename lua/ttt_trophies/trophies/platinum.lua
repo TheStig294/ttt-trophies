@@ -9,7 +9,7 @@ function TROPHY:Trigger()
         local earnedTrophies = TTTTrophies.earned[ply:SteamID()]
 
         for trophyID, _ in pairs(TTTTrophies.trophies) do
-            if not earnedTrophies[trophyID] and trophyID ~= "platinum" then return end
+            if not earnedTrophies[trophyID] and GetGlobalBool("trophies_" .. trophyID) and trophyID ~= "platinum" then return end
         end
 
         self:Earn(ply)
@@ -23,7 +23,7 @@ function TROPHY:Trigger()
             if not earnedTrophies then continue end
 
             for trophyID, _ in pairs(TTTTrophies.trophies) do
-                if not earnedTrophies[trophyID] and trophyID ~= "platinum" then
+                if not earnedTrophies[trophyID] and GetGlobalBool("trophies_" .. trophyID) and trophyID ~= "platinum" then
                     earnedPlatinum = false
                     break
                 end
