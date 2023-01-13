@@ -21,6 +21,8 @@ surface.CreateFont("TrophyDesc", {
     outline = false,
 })
 
+local hideCheckboxesCvar = CreateClientConVar("ttt_trophies_hide_enabled_checkboxes", "0", true, false, "Whether the enabled/disabled trophy checkboxes are hidden (Normally only seen by admins, an admin can hide the checkboxes from appearing in their trophies list)")
+
 local function DrawTrophyBar(list, trophy)
     -- Don't display a trophy if it is disabled and the player is not an admin
     if not GetGlobalBool("trophies_" .. trophy.id) and not LocalPlayer():IsAdmin() then return end
@@ -91,7 +93,7 @@ local function DrawTrophyBar(list, trophy)
     desc:SizeToContents()
 
     -- Enabled/disabled checkbox
-    if LocalPlayer():IsAdmin() then
+    if LocalPlayer():IsAdmin() and not hideCheckboxesCvar:GetBool() then
         local enabledBox = vgui.Create("DCheckBoxLabel", background)
         enabledBox:SetText("Enabled")
         enabledBox:SetChecked(GetGlobalBool("trophies_" .. trophy.id))
@@ -110,7 +112,7 @@ end
 local function AdminOptionsMenu()
     if not LocalPlayer():IsAdmin() then return end
     local frame = vgui.Create("DFrame")
-    frame:SetSize(300, 100)
+    frame:SetSize(300, 150)
     frame:SetTitle("Admin Options")
     frame:MakePopup()
     frame:Center()
@@ -124,20 +126,32 @@ local function AdminOptionsMenu()
     local layout = vgui.Create("DListLayout", scroll)
     layout:Dock(FILL)
     local spacing = 10
+    local text = layout:Add("DLabel")
+    text:SetText("    Re-open trophies window to see changes take effect")
+    text:SizeToContents()
     local padding1 = layout:Add("DPanel")
     padding1:SetBackgroundColor(COLOR_BLACK)
     padding1:SetHeight(spacing)
-    local hideTrophiesCheckbox = layout:Add("DCheckBoxLabel")
-    hideTrophiesCheckbox:SetText("Hide trophy descriptions for all players until earned\n(Re-open trophies window to see change)")
-    hideTrophiesCheckbox:SetChecked(GetGlobalBool("ttt_trophies_hide_all_trophies"))
-    hideTrophiesCheckbox:SetIndent(spacing)
-    hideTrophiesCheckbox:SizeToContents()
+    local hideTrophiesBox = layout:Add("DCheckBoxLabel")
+    hideTrophiesBox:SetText("Hide trophy descriptions for all players until earned")
+    hideTrophiesBox:SetChecked(GetGlobalBool("ttt_trophies_hide_all_trophies"))
+    hideTrophiesBox:SetIndent(spacing)
+    hideTrophiesBox:SizeToContents()
 
-    function hideTrophiesCheckbox:OnChange()
+    function hideTrophiesBox:OnChange()
         net.Start("TTTTrophiesToggleConvar")
         net.WriteString("ttt_trophies_hide_all_trophies")
         net.SendToServer()
     end
+
+    local padding2 = layout:Add("DPanel")
+    padding2:SetBackgroundColor(COLOR_BLACK)
+    padding2:SetHeight(spacing)
+    local hideEnabledBox = layout:Add("DCheckBoxLabel")
+    hideEnabledBox:SetText("Hide enable/disable trophy checkboxes in trophies list\n -Only admins see the checkboxes at all\n -This setting only affects you")
+    hideEnabledBox:SetConVar("ttt_trophies_hide_enabled_checkboxes")
+    hideEnabledBox:SetIndent(spacing)
+    hideEnabledBox:SizeToContents()
 end
 
 -- Adds the trophies list to the F1 menu
