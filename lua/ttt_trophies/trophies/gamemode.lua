@@ -1,7 +1,7 @@
 local TROPHY = {}
 TROPHY.id = "gamemode"
 TROPHY.title = "Wait, what are we playing?"
-TROPHY.desc = "Though the randomat, win a round where you aren't playing TTT!"
+TROPHY.desc = "Through the randomat, win a round where you aren't playing TTT!"
 TROPHY.rarity = 2
 
 local gamemodeEvents = {
