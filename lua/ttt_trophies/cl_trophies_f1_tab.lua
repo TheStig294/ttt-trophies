@@ -91,7 +91,35 @@ end
 
 local function AdminOptionsMenu()
     if not LocalPlayer():IsAdmin() then return end
-    LocalPlayer():ChatPrint("test")
+    local frame = vgui.Create("DFrame")
+    frame:SetSize(300, 100)
+    frame:SetTitle("Admin Options")
+    frame:MakePopup()
+    frame:Center()
+
+    frame.Paint = function(self, w, h)
+        draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0))
+    end
+
+    local scroll = vgui.Create("DScrollPanel", frame)
+    scroll:Dock(FILL)
+    local layout = vgui.Create("DListLayout", scroll)
+    layout:Dock(FILL)
+    local spacing = 10
+    local padding1 = layout:Add("DPanel")
+    padding1:SetBackgroundColor(COLOR_BLACK)
+    padding1:SetHeight(spacing)
+    local hideTrophiesCheckbox = layout:Add("DCheckBoxLabel")
+    hideTrophiesCheckbox:SetText("Hide trophy descriptions for all players until earned\n(Re-open trophies window to see change)")
+    hideTrophiesCheckbox:SetChecked(GetGlobalBool("ttt_trophies_hide_all_trophies"))
+    hideTrophiesCheckbox:SetIndent(spacing)
+    hideTrophiesCheckbox:SizeToContents()
+
+    function hideTrophiesCheckbox:OnChange()
+        net.Start("TTTTrophiesToggleConvar")
+        net.WriteString("ttt_trophies_hide_all_trophies")
+        net.SendToServer()
+    end
 end
 
 -- Adds the trophies list to the F1 menu

@@ -3,8 +3,36 @@
 if SERVER then
     CreateConVar("ttt_trophies_hide_all_trophies", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY}, "Whether trophies should have their descriptions hidden if not yet earned", 0, 1)
 
+    local convars = {"ttt_trophies_hide_all_trophies"}
+
     hook.Add("TTTPrepareRound", "TTTTrophiesConvarSync", function()
         SetGlobalBool("ttt_trophies_hide_all_trophies", GetConVar("ttt_trophies_hide_all_trophies"):GetBool())
+    end)
+
+    util.AddNetworkString("TTTTrophiesToggleConvar")
+
+    net.Receive("TTTTrophiesToggleConvar", function(len, ply)
+        if not ply:IsAdmin() then return end
+        local cvarName = net.ReadString()
+        local found = false
+
+        for _, validCvar in ipairs(convars) do
+            if cvarName == validCvar then
+                found = true
+                break
+            end
+        end
+
+        if not found then return end
+        local cvar = GetConVar(cvarName)
+
+        if cvar:GetBool() then
+            cvar:SetBool(false)
+        else
+            cvar:SetBool(true)
+        end
+
+        SetGlobalBool(cvarName, cvar:GetBool())
     end)
 end
 
