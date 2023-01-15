@@ -63,8 +63,11 @@ net.Receive("TTTEarnedTrophiesChatMessage", function()
     end
 
     chat.AddText(COLOR_YELLOW, nick, COLOR_WHITE, " has earned a trophy ", rarityColour, "[", trophy.title, "]")
-    if trophy.hidden or (GetGlobalBool("ttt_trophies_hide_all_trophies") and not trophy.earned) then return end
-    chat.AddText(COLOR_WHITE, "\"", trophy.desc, "\"")
+
+    -- Hide descriptions of hidden trophies unless the trophy is earned, or it's the platinum trophy
+    if trophy.earned or (not trophy.hidden and not GetGlobalBool("ttt_trophies_hide_all_trophies")) or trophy.id == "platinum" then
+        chat.AddText(COLOR_WHITE, "\"", trophy.desc, "\"")
+    end
 end)
 
 -- Rainbow guns reward/toggle for chat trophy suggestions

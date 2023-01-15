@@ -74,23 +74,18 @@ local function DrawTrophyBar(list, trophy)
 
     title:SetTextColor(colour)
     title:SizeToContents()
+
     -- Description
-    local desc = vgui.Create("DLabel", background)
-    local descText = trophy.desc
-
-    if GetGlobalBool("ttt_trophies_hide_all_trophies") and not trophy.earned and trophy.id ~= "platinum" then
-        descText = ""
+    -- Hide descriptions of hidden trophies unless the trophy is earned, or it's the platinum trophy
+    if trophy.earned or (not GetGlobalBool("ttt_trophies_hide_all_trophies") and not trophy.hidden) or trophy.id == "platinum" then
+        local desc = vgui.Create("DLabel", background)
+        local descText = trophy.desc
+        desc:SetText(descText)
+        desc:Dock(BOTTOM)
+        desc:SetFont("TrophyDesc")
+        desc:SetTextColor(COLOUR_WHITE)
+        desc:SizeToContents()
     end
-
-    if trophy.hidden then
-        descText = "Hidden trophy"
-    end
-
-    desc:SetText(descText)
-    desc:Dock(BOTTOM)
-    desc:SetFont("TrophyDesc")
-    desc:SetTextColor(COLOUR_WHITE)
-    desc:SizeToContents()
 
     -- Enabled/disabled checkbox
     if LocalPlayer():IsAdmin() and not hideCheckboxesCvar:GetBool() then

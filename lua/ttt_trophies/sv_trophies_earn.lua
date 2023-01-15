@@ -75,6 +75,9 @@ end)
 
 -- Displays a chat message at the start of the round if a player is a role that they could earn a trophy with
 hook.Add("TTTBeginRound", "TTTTrophiesRoleSpecificChatSuggestion", function()
+    -- Don't bother with any of this if trophies are all hidden
+    if GetGlobalBool("ttt_trophies_hide_all_trophies") then return end
+
     timer.Simple(3, function()
         for _, ply in ipairs(player.GetAll()) do
             if ply.DisableTrophyChatMessages then continue end
@@ -84,11 +87,15 @@ hook.Add("TTTBeginRound", "TTTTrophiesRoleSpecificChatSuggestion", function()
 
             if trophies then
                 for _, trophyID in ipairs(trophies) do
-                    -- Check if trophy is disabled by an admin or not
+                    -- Don't show trophy suggestion if:
+                    -- Trophy is disabled by an admin
                     if not GetGlobalBool("trophies_" .. trophyID) then continue end
+                    -- Trophy is earned
                     local earned = TTTTrophies.earned[ply:SteamID()] and TTTTrophies.earned[ply:SteamID()][trophyID]
                     if earned then continue end
+                    -- Trophy is hidden
                     local trophy = TTTTrophies.trophies[trophyID]
+                    if trophy.hidden then continue end
 
                     local plys = {ply}
 
