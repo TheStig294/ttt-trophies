@@ -21,11 +21,12 @@ surface.CreateFont("TrophyDesc", {
     outline = false,
 })
 
-local hideCheckboxesCvar = CreateClientConVar("ttt_trophies_hide_enabled_checkboxes", "0", true, false, "Whether the enabled/disabled trophy checkboxes are hidden (Normally only seen by admins, an admin can hide the checkboxes from appearing in their trophies list)")
+local hideCheckboxesCvar = CreateClientConVar("ttt_trophies_hide_enabled_checkboxes", "0", true, false, "Only admins can see the disable trophy checkboxes or disabled trophies, enable this to hide them just for you")
 
 local function DrawTrophyBar(list, trophy)
     -- Don't display a trophy if it is disabled and the player is not an admin
-    if not GetGlobalBool("trophies_" .. trophy.id) and not LocalPlayer():IsAdmin() then return end
+    -- Or an admin has turned off seeing trophies that are disabled
+    if not GetGlobalBool("trophies_" .. trophy.id) and (not LocalPlayer():IsAdmin() or hideCheckboxesCvar:GetBool()) then return end
     -- Icon
     local icon = list:Add("DImage")
 
@@ -122,7 +123,8 @@ local function AdminOptionsMenu()
     layout:Dock(FILL)
     local spacing = 10
     local text = layout:Add("DLabel")
-    text:SetText("    Re-open trophies window to see changes take effect")
+    text:SetText("      Re-open trophies window to see changes take effect")
+    text:SetColor(COLOR_YELLOW)
     text:SizeToContents()
     local padding1 = layout:Add("DPanel")
     padding1:SetBackgroundColor(COLOR_BLACK)
@@ -143,7 +145,7 @@ local function AdminOptionsMenu()
     padding2:SetBackgroundColor(COLOR_BLACK)
     padding2:SetHeight(spacing)
     local hideEnabledBox = layout:Add("DCheckBoxLabel")
-    hideEnabledBox:SetText("Hide enable/disable trophy checkboxes in trophies list\n -Only admins see the checkboxes at all\n -This setting only affects you")
+    hideEnabledBox:SetText("Hide checkboxes and disabled trophies in trophy list\n -Only admins see checkboxes or disabled trophies\n -This setting only affects you")
     hideEnabledBox:SetConVar("ttt_trophies_hide_enabled_checkboxes")
     hideEnabledBox:SetIndent(spacing)
     hideEnabledBox:SizeToContents()
