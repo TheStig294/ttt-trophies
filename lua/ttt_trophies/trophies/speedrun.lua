@@ -13,6 +13,8 @@ function TROPHY:Trigger()
     end)
 
     self:AddHook("TTTEndRound", function(result)
+        if not roundStartTime then return end
+
         if result == WIN_TRAITOR and CurTime() - roundStartTime < 60 then
             for _, ply in ipairs(player.GetAll()) do
                 if TTTTrophies:IsTraitorTeam(ply) then
