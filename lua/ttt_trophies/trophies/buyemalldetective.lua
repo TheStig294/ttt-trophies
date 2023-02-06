@@ -64,6 +64,7 @@ function TROPHY:Trigger()
                 end
 
                 local item = GetEquipmentItem(ROLE_DETECTIVE, equipment)
+                if not item then return end
                 -- Don't count loadout items towards stats
                 if item.loadout then return end
 
