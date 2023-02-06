@@ -8,7 +8,9 @@ TROPHY.hidden = true
 function TROPHY:Trigger()
     local boughtItems = {}
 
-    self:AddHook("TTTOrderedEquipment", function(ply, equipment, is_item)
+    self:AddHook("TTTOrderedEquipment", function(ply, equipment, is_item, given_by_randomat)
+        if given_by_randomat then return end
+
         if ply:GetRole() == ROLE_MERCENARY and not is_item then
             if not boughtItems[ply] then
                 boughtItems[ply] = {}

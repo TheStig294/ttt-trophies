@@ -9,8 +9,8 @@ function TROPHY:Trigger()
     local boughtItem = {}
     local searchedBody = {}
 
-    self:AddHook("TTTOrderedEquipment", function(ply, equipment, is_item)
-        if not ply:IsImpersonator() then return end
+    self:AddHook("TTTOrderedEquipment", function(ply, equipment, is_item, given_by_randomat)
+        if given_by_randomat or not ply:IsImpersonator() then return end
         local detectiveItem = false
 
         if is_item then

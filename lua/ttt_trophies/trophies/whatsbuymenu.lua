@@ -8,7 +8,8 @@ TROPHY.hidden = true
 function TROPHY:Trigger()
     local boughtPlayers = {}
 
-    self:AddHook("TTTOrderedEquipment", function(ply, equ, passive)
+    self:AddHook("TTTOrderedEquipment", function(ply, equ, passive, given_by_randomat)
+        if given_by_randomat then return end
         boughtPlayers[ply] = true
     end)
 
