@@ -30,12 +30,13 @@ function TROPHY:Trigger()
 
     local itemsBought = {}
 
-    self:AddHook("TTTOrderedEquipment", function(ply, equ, passive)
-        if not TTTTrophies:IsGoodDetectiveLike(ply) then return end
+    self:AddHook("TTTOrderedEquipment", function(ply, equ, passive, given_by_randomat)
+        if given_by_randomat or not TTTTrophies:IsGoodDetectiveLike(ply) then return end
 
         -- Don't count loadout items as bought
         if passive then
             local passiveItem = GetEquipmentItem(ply:GetRole(), equ)
+            if not passiveItem then return end
             if passiveItem.loadout == true then return end
         end
 
