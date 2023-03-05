@@ -199,7 +199,7 @@ if SERVER then
             SetGlobalBool("TTTTrophy" .. trophy.id, true)
 
             -- Create an admin enabled/disable convar
-            local cvar = CreateConVar("trophies_" .. trophy.id, "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY})
+            local cvar = CreateConVar("trophies_" .. trophy.id, "1", {FCVAR_ARCHIVE})
 
             SetGlobalBool("trophies_" .. trophy.id, cvar:GetBool())
             table.insert(convars, cvar:GetName())
