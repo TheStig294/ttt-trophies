@@ -13,28 +13,27 @@ local gamemodeEvents = {
     ["battleroyale2"] = true
 }
 
-function TROPHY:Trigger()
-    local eventTriggered = false
+-- Trophy trigger function only runs when one of the specified randomats are triggered
+hook.Add("TTTRandomatTriggered", "TTTTrophiesBoomerang", function(id)
+    if gamemodeEvents[id] then
+        TROPHY:Trigger(true)
+    end
+end)
 
-    self:AddHook("TTTRandomatTriggered", function(id, owner)
-        if gamemodeEvents[id] then
-            eventTriggered = true
-        end
-    end)
-
+function TROPHY:Trigger(eventTriggered)
     self:AddHook("TTTEndRound", function(result)
-        if eventTriggered then
-            if result == WIN_TRAITOR then
-                for _, ply in ipairs(player.GetAll()) do
-                    if self:IsAlive(ply) and TTTTrophies:IsTraitorTeam(ply) then
-                        self:Earn(ply)
-                    end
+        if not eventTriggered then return end
+
+        if result == WIN_TRAITOR then
+            for _, ply in ipairs(player.GetAll()) do
+                if self:IsAlive(ply) and TTTTrophies:IsTraitorTeam(ply) then
+                    self:Earn(ply)
                 end
-            else
-                for _, ply in ipairs(player.GetAll()) do
-                    if self:IsAlive(ply) then
-                        self:Earn(ply)
-                    end
+            end
+        else
+            for _, ply in ipairs(player.GetAll()) do
+                if self:IsAlive(ply) then
+                    self:Earn(ply)
                 end
             end
         end
