@@ -45,7 +45,7 @@ local function TrophyPopup(trophyID)
     surface.SetFont("Default")
 
     if textWidth > 244 then
-        titleText = string.Left(titleText, 25) .. "..."
+        titleText = string.Left(titleText, 21) .. "..."
     end
 
     local bottomText = {
