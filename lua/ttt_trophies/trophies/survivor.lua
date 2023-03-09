@@ -20,6 +20,10 @@ function TROPHY:Trigger()
         end
     end)
 
+    self:AddHook("PostPlayerDeath", function(ply)
+        timer.Remove("TTTTrophies2hp" .. ply:SteamID64())
+    end)
+
     self:AddHook("TTTEndRound", function()
         for _, ply in ipairs(player.GetAll()) do
             timer.Remove("TTTTrophies2hp" .. ply:SteamID64())
