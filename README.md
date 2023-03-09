@@ -265,8 +265,14 @@ _trophies_traitorchat_ - Default: 1 - Whether this trophy is enabled
 ## Sure, just play Minecraft...
 (Hidden) Place 50 or more blocks down using the Minecraft Block\
 \
-_trophies_minecraft_ - Default: 1 - Whether this trophy is enabled
+_trophies_minecraft_ - Default: 1 - Whether this trophy is enabled\
 Requires: [[TTT] Minecraft SWEP (Detective)](https://steamcommunity.com/sharedfiles/filedetails/?id=2311866661)
+
+## Survivor
+Survive 2 minutes after being damaged to less than 5HP\
+Suggested by /u/Stuf404 on reddit\
+\
+_trophies_survivor_ - Default: 1 - Whether this trophy is enabled
 
 ## The pusher strikes again
 See someone killed shortly after you crowbar-pushed them\
