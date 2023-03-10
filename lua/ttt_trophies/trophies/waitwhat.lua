@@ -1,0 +1,34 @@
+local TROPHY = {}
+TROPHY.id = "waitwhat"
+TROPHY.title = "Wait, what?"
+TROPHY.desc = "Kill someone as a jester (without being an active clown!)"
+TROPHY.rarity = 3
+
+function TROPHY:Trigger()
+    self:AddHook("DoPlayerDeath", function(ply, attacker, dmg)
+        if not IsValid(attacker) or not attacker:IsPlayer() then return end
+
+        if attacker ~= ply and TTTTrophies:IsJesterTeam(attacker) and not ((attacker:IsClown() or (attacker.IsDetectoclown and attacker:IsDetectoclown())) and attacker:IsRoleActive()) then
+            self:Earn(attacker)
+        end
+    end)
+end
+
+-- Check there is at least 1 jester role in existence and is enabled
+function TROPHY:Condition()
+    if not JESTER_ROLES or not ROLE_STRINGS_RAW then return false end
+    local jesterRoleEnabled = false
+
+    for role, _ in pairs(JESTER_ROLES) do
+        local roleName = ROLE_STRINGS_RAW[role]
+
+        if roleName and ConVarExists("ttt_" .. roleName .. "_enabled") and GetConVar("ttt_" .. roleName .. "_enabled"):GetBool() then
+            jesterRoleEnabled = true
+            break
+        end
+    end
+
+    return jesterRoleEnabled
+end
+
+RegisterTTTTrophy(TROPHY)

@@ -328,6 +328,12 @@ As a Detective, use your DNA Scanner on a body to track their killer\
 \
 _trophies_detective_ - Default: 1 - Whether this trophy is enabled
 
+## Wait, what?
+Kill someone as a jester (without being an active clown!)\
+\
+_trophies_waitwhat_ - Default: 1 - Whether this trophy is enabled\
+Requires: [Custom Roles for TTT](https://steamcommunity.com/sharedfiles/filedetails/?id=2421039084)
+
 ## Wait, what are we playing?
 Through the randomat, win a round where you aren't playing TTT!\
 \
