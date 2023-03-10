@@ -330,6 +330,7 @@ _trophies_detective_ - Default: 1 - Whether this trophy is enabled
 
 ## Wait, what?
 Kill someone as a jester (without being an active clown!)\
+Suggested by /u/kainereygalo on Reddit\
 \
 _trophies_waitwhat_ - Default: 1 - Whether this trophy is enabled\
 Requires: [Custom Roles for TTT](https://steamcommunity.com/sharedfiles/filedetails/?id=2421039084)
