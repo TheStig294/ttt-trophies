@@ -5,7 +5,6 @@ TROPHY.desc = "As a Parasite, win the round within 2 seconds of taking over a pl
 TROPHY.rarity = 3
 
 function TROPHY:Trigger()
-    self.roleMessage = ROLE_PARASITE
     local parasiteKillers = {}
 
     self:AddHook("DoPlayerDeath", function(ply, attacker, dmg)
