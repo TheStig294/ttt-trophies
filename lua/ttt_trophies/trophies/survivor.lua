@@ -5,8 +5,6 @@ TROPHY.desc = "Survive 2 minutes after being damaged to less than 5HP"
 TROPHY.rarity = 3
 
 function TROPHY:Trigger()
-    self.roleMessage = ROLE_INNOCENT
-
     self:AddHook("PostEntityTakeDamage", function(ent, dmg, took)
         if not took or not IsValid(ent) then return end
         if not ent:IsPlayer() or not ent:Alive() or ent:IsSpec() then return end
