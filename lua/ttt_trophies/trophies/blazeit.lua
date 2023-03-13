@@ -5,11 +5,6 @@ TROPHY.desc = "Play 420 rounds of TTT"
 TROPHY.rarity = 2
 
 function TROPHY:Trigger()
-    -- Use the stats from the "nice" trophy
-    if not TTTTrophies.stats["nice"] then
-        TTTTrophies.stats["nice"] = {}
-    end
-
     local notSpectator = {}
 
     self:AddHook("TTTBeginRound", function()
@@ -21,6 +16,11 @@ function TROPHY:Trigger()
     end)
 
     self:AddHook("TTTEndRound", function()
+        -- Use the stats from the "nice" trophy
+        if not TTTTrophies.stats["nice"] then
+            TTTTrophies.stats["nice"] = {}
+        end
+
         for _, ply in ipairs(player.GetAll()) do
             if notSpectator[ply] then
                 local rounds = TTTTrophies.stats["nice"][ply:SteamID()]

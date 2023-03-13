@@ -149,6 +149,26 @@ local function AdminOptionsMenu()
     hideEnabledBox:SetConVar("ttt_trophies_hide_enabled_checkboxes")
     hideEnabledBox:SetIndent(spacing)
     hideEnabledBox:SizeToContents()
+    local padding3 = layout:Add("DPanel")
+    padding3:SetBackgroundColor(COLOR_BLACK)
+    padding3:SetHeight(spacing)
+    local resetButton = layout:Add("DButton")
+    resetButton:SetText("Double-click to reset everyone's achievements")
+    resetButton:SizeToContents()
+    local pressedReset = false
+
+    function resetButton:DoClick()
+        if pressedReset then
+            net.Start("TTTTrophiesResetAllAchievements")
+            net.SendToServer()
+        else
+            chat.AddText("Click again in 1 second to reset")
+
+            timer.Simple(1, function()
+                pressedReset = true
+            end)
+        end
+    end
 end
 
 -- Adds the trophies list to the F1 menu

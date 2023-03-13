@@ -43,6 +43,16 @@ net.Receive("TTTRequestEarnedTrophies", function(len, ply)
     net.Send(ply)
 end)
 
+util.AddNetworkString("TTTTrophiesResetAllAchievements")
+
+net.Receive("TTTTrophiesResetAllAchievements", function(len, ply)
+    if not ply:IsAdmin() then return end
+    TTTTrophies.earned = {}
+    TTTTrophies.rainbowPlayers = {}
+    TTTTrophies.stats = {}
+    ply:ChatPrint("All achievements reset!\nAchievement list won't update until map change or restarting the server")
+end)
+
 -- Saves the trophies earned, and players with the rainbow effect on, to a file so they persist
 hook.Add("ShutDown", "TTTTrophiesSaveEarned", function()
     local fileContent = {}
