@@ -85,8 +85,8 @@ end)
 
 -- Displays a chat message at the start of the round if a player is a role that they could earn a trophy with
 hook.Add("TTTBeginRound", "TTTTrophiesRoleSpecificChatSuggestion", function()
-    -- Don't bother with any of this if trophies are all hidden
-    if GetGlobalBool("ttt_trophies_hide_all_trophies") then return end
+    -- Don't bother with any of this if suggestion messages are turned off
+    if not GetGlobalBool("ttt_trophies_suggestion_msgs") then return end
 
     timer.Simple(3, function()
         for _, ply in ipairs(player.GetAll()) do

@@ -108,7 +108,7 @@ end
 local function AdminOptionsMenu()
     if not LocalPlayer():IsAdmin() then return end
     local frame = vgui.Create("DFrame")
-    frame:SetSize(300, 150)
+    frame:SetSize(300, 200)
     frame:SetTitle("Admin Options")
     frame:MakePopup()
     frame:Center()
@@ -132,7 +132,6 @@ local function AdminOptionsMenu()
     local hideTrophiesBox = layout:Add("DCheckBoxLabel")
     hideTrophiesBox:SetText("Hide trophy descriptions for all players until earned")
     hideTrophiesBox:SetChecked(GetGlobalBool("ttt_trophies_hide_all_trophies"))
-    hideTrophiesBox:SetIndent(spacing)
     hideTrophiesBox:SizeToContents()
 
     function hideTrophiesBox:OnChange()
@@ -144,14 +143,41 @@ local function AdminOptionsMenu()
     local padding2 = layout:Add("DPanel")
     padding2:SetBackgroundColor(COLOR_BLACK)
     padding2:SetHeight(spacing)
-    local hideEnabledBox = layout:Add("DCheckBoxLabel")
-    hideEnabledBox:SetText("Hide checkboxes and disabled trophies in trophy list\n -Only admins see checkboxes or disabled trophies\n -This setting only affects you")
-    hideEnabledBox:SetConVar("ttt_trophies_hide_enabled_checkboxes")
-    hideEnabledBox:SetIndent(spacing)
-    hideEnabledBox:SizeToContents()
+    local trophySuggestionsBox = layout:Add("DCheckBoxLabel")
+    trophySuggestionsBox:SetText("Show trophy suggestion messages in chat")
+    trophySuggestionsBox:SetChecked(GetGlobalBool("ttt_trophies_suggestion_msgs"))
+    trophySuggestionsBox:SizeToContents()
+
+    function trophySuggestionsBox:OnChange()
+        net.Start("TTTTrophiesToggleConvar")
+        net.WriteString("ttt_trophies_suggestion_msgs")
+        net.SendToServer()
+    end
+
     local padding3 = layout:Add("DPanel")
     padding3:SetBackgroundColor(COLOR_BLACK)
     padding3:SetHeight(spacing)
+    local trophyProgressBox = layout:Add("DCheckBoxLabel")
+    trophyProgressBox:SetText("Show trophy progress messages in chat")
+    trophyProgressBox:SetChecked(GetGlobalBool("ttt_trophies_progress_msgs"))
+    trophyProgressBox:SizeToContents()
+
+    function trophyProgressBox:OnChange()
+        net.Start("TTTTrophiesToggleConvar")
+        net.WriteString("ttt_trophies_progress_msgs")
+        net.SendToServer()
+    end
+
+    local padding4 = layout:Add("DPanel")
+    padding4:SetBackgroundColor(COLOR_BLACK)
+    padding4:SetHeight(spacing)
+    local hideEnabledBox = layout:Add("DCheckBoxLabel")
+    hideEnabledBox:SetText("Hide checkboxes and disabled trophies in trophy list\n -Only admins see checkboxes or disabled trophies\n -This setting only affects you")
+    hideEnabledBox:SetConVar("ttt_trophies_hide_enabled_checkboxes")
+    hideEnabledBox:SizeToContents()
+    local padding5 = layout:Add("DPanel")
+    padding5:SetBackgroundColor(COLOR_BLACK)
+    padding5:SetHeight(spacing)
     local resetButton = layout:Add("DButton")
     resetButton:SetText("Double-click to reset everyone's achievements")
     resetButton:SizeToContents()
@@ -335,7 +361,7 @@ hook.Add("Think", "TTTTrophiesMessage", function()
         AddTrophiesList()
         trophiesListLoaded = true
 
-        if GetConVar("ttt_trophies_chat"):GetBool() and not TTTTrophies.trophies.platinum.earned then
+        if GetConVar("ttt_trophies_chat"):GetBool() and TTTTrophies.trophies.platinum and not TTTTrophies.trophies.platinum.earned then
             chat.AddText("Press '" .. string.upper(GetConVar("ttt_trophies_hotkey"):GetString()) .. "' to open trophies list")
             chat.AddText("Press '" .. string.upper(GetConVar("ttt_trophies_hotkey_rainbow"):GetString()) .. "' to turn off trophy chat messages")
         end

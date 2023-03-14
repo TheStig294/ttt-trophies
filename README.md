@@ -28,7 +28,13 @@ Hotkey for opening the trophies list
 ## Server Convars
 
 _ttt_trophies_hide_all_trophies_ - Default: 0\
-Whether trophies have their descriptions hidden while unearned
+Whether trophies have their descriptions hidden while unearned\
+\
+_ttt_trophies_suggestion_msgs_ - Default: 1\
+Whether messages should show in chat suggesting a trophy to earn\
+\
+_ttt_trophies_progress_msgs_ - Default: 1\
+Whether messages should show in chat showing progress towards earning a trophy
 
 ## Trophies
 

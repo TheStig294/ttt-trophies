@@ -103,9 +103,9 @@ function trophies_meta:IsAlive(ply)
     return ply:Alive() and not ply:IsSpec()
 end
 
-function trophies_meta:ProgressUpdate(plys, numerator, denominator)
+function trophies_meta:ProgressUpdate(plys, numerator, denominator, msg)
     -- Check if trophy is disabled by an admin or not
-    if not GetGlobalBool("trophies_" .. self.id) then return end
+    if not GetGlobalBool("trophies_" .. self.id) or not GetGlobalBool("ttt_trophies_progress_msgs") then return end
 
     if not istable(plys) then
         plys = {plys}
@@ -115,7 +115,12 @@ function trophies_meta:ProgressUpdate(plys, numerator, denominator)
         if ply.DisableTrophyChatMessages then continue end
         local plyID = ply:SteamID()
         if TTTTrophies.earned[plyID] and TTTTrophies.earned[plyID][self.id] then continue end
-        ply:ChatPrint("[Trophy progress]\n" .. self.desc .. "\n(" .. numerator .. "/" .. denominator .. ")")
+
+        if msg then
+            ply:ChatPrint("[Trophy progress]\n" .. self.desc .. "\n(" .. msg .. ")")
+        else
+            ply:ChatPrint("[Trophy progress]\n" .. self.desc .. "\n(" .. numerator .. "/" .. denominator .. ")")
+        end
     end
 end
 
@@ -151,14 +156,20 @@ end
 
 if SERVER then
     -- Loading server-side convars, including all convars controlling whether trophies are disabled by admins
-    local convars = {"ttt_trophies_hide_all_trophies"}
+    local convars = {"ttt_trophies_hide_all_trophies", "ttt_trophies_suggestion_msgs", "ttt_trophies_progress_msgs"}
 
     CreateConVar("ttt_trophies_hide_all_trophies", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY}, "Whether trophies should have their descriptions hidden if not yet earned", 0, 1)
+
+    CreateConVar("ttt_trophies_suggestion_msgs", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY}, "Whether messages should show in chat suggesting a trophy to earn", 0, 1)
+
+    CreateConVar("ttt_trophies_progress_msgs", "1", {FCVAR_ARCHIVE, FCVAR_NOTIFY}, "Whether messages should show in chat showing progress towards earning a trophy", 0, 1)
 
     local debugCvar = CreateConVar("ttt_trophies_debug", "0", {FCVAR_ARCHIVE, FCVAR_NOTIFY}, "Forces trophies to load every round, for seeing changes to trophies you're making, otherwise don't enable, will break things", 0, 1)
 
     hook.Add("TTTPrepareRound", "TTTTrophiesConvarSync", function()
         SetGlobalBool("ttt_trophies_hide_all_trophies", GetConVar("ttt_trophies_hide_all_trophies"):GetBool())
+        SetGlobalBool("ttt_trophies_suggestion_msgs", GetConVar("ttt_trophies_suggestion_msgs"):GetBool())
+        SetGlobalBool("ttt_trophies_progress_msgs", GetConVar("ttt_trophies_progress_msgs"):GetBool())
     end)
 
     util.AddNetworkString("TTTTrophiesToggleConvar")
