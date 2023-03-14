@@ -2,7 +2,7 @@ local TROPHY = {}
 TROPHY.id = "basics"
 TROPHY.title = "Back to basics"
 TROPHY.desc = "As a traitor, win a round after buying only original TTT items"
-TROPHY.rarity = 2
+TROPHY.rarity = 1
 
 function TROPHY:Trigger()
     self.roleMessage = ROLE_TRAITOR

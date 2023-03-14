@@ -2,7 +2,7 @@ local TROPHY = {}
 TROPHY.id = "traitor"
 TROPHY.title = "CoD but hide-and-seek!"
 TROPHY.desc = "As a traitor, win a round without taking damage and killing at least 1 innocent"
-TROPHY.rarity = 2
+TROPHY.rarity = 1
 
 function TROPHY:Trigger()
     self.roleMessage = ROLE_TRAITOR
