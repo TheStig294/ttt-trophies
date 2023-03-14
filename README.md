@@ -158,6 +158,14 @@ Turn around instantly by right-clicking with the backwards shotgun\
 _trophies_spinning_ - Default: 1 - Whether this trophy is enabled\
 Requires: [[TTT] Joke Weapons Pack](https://steamcommunity.com/sharedfiles/filedetails/?id=2568344774)
 
+### How's your tummy feeling?
+
+Suggested by /u/MightyBobTheMighty on Reddit\
+As a Parasite, win a round within 2 seconds of taking over a player\
+\
+_trophies_parasite_ - Default: 1 - Whether this trophy is enabled\
+Requires: [Custom Roles for TTT](https://steamcommunity.com/sharedfiles/filedetails/?id=2421039084)
+
 ### I've got you now
 
 As an Informant, track someone through walls by looking at them long enough\
