@@ -39,7 +39,7 @@ if SERVER then
             TTTTrophies.toMessage[nick] = TTTTrophies.toMessage[nick] or {}
             table.insert(TTTTrophies.toMessage[nick], self.id)
 
-            -- Make the trophy unlock delayed by a few seconds so the platinum doesn't overlap the last trophy earned
+            -- If a player earns all trophies, automatically enable the rainbow effect
             if self.id == "platinum" then
                 TTTTrophies.rainbowPlayers[plyID] = true
             end
