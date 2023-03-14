@@ -421,6 +421,12 @@ Look upwards and shoot a backwards shotgun\
 _trophies_weee_ - Default: 1 - Whether this trophy is enabled\
 Requires: [[TTT] Joke Weapons Pack](https://steamcommunity.com/sharedfiles/filedetails/?id=2568344774)
 
+### We achieved world peace?
+
+Have 1/2 the round go on without anyone dying\
+\
+_trophies_worldpeace_ - Default: 1 - Whether this trophy is enabled
+
 ### What is happening?
 
 As a Randoman, be alive while 4 or more randomats are active\
