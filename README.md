@@ -423,7 +423,8 @@ Requires: [[TTT] Joke Weapons Pack](https://steamcommunity.com/sharedfiles/filed
 
 ### We achieved world peace?
 
-Have 1/2 the round go on without anyone dying\
+Suggested by /u/DiscoDan3580 on Reddit\
+(Hidden) Have 1/2 the round go on without anyone dying\
 \
 _trophies_worldpeace_ - Default: 1 - Whether this trophy is enabled
 
