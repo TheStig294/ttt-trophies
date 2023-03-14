@@ -46,6 +46,8 @@ net.Receive("TTTEarnTrophy", function()
 end)
 
 net.Receive("TTTEarnedTrophiesChatMessage", function()
+    -- This net message is set up before the trophy list, so don't run this before the trophy list is initialised
+    if not GetGlobalBool("TTTTrophiesClientLoaded") then return end
     if not chatMessagesCvar:GetBool() then return end
     local nick = net.ReadString()
     local id = net.ReadString()
