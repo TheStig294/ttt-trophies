@@ -3,6 +3,7 @@ TROPHY.id = "crouch"
 TROPHY.title = "Squat walk"
 TROPHY.desc = "Stay crouched and alive from first 10 seconds of a round to the end"
 TROPHY.rarity = 3
+TROPHY.forceDesc = true
 
 function TROPHY:Trigger()
     self.roleMessage = ROLE_INNOCENT

@@ -3,6 +3,7 @@ TROPHY.id = "platinum"
 TROPHY.title = "The reward is yours..."
 TROPHY.desc = "Earn all other trophies"
 TROPHY.rarity = 4
+TROPHY.forceDesc = true
 
 function TROPHY:Trigger()
     self:AddHook("TTTTrophyEarned", function(trophy, ply)

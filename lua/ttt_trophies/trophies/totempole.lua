@@ -3,6 +3,7 @@ TROPHY.id = "totempole"
 TROPHY.title = "Totem pole"
 TROPHY.desc = "Survive to the end of a round while stood on another player or being stood on"
 TROPHY.rarity = 3
+TROPHY.forceDesc = true
 
 function TROPHY:Trigger()
     self.roleMessage = ROLE_INNOCENT

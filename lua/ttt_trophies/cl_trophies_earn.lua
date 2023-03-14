@@ -66,8 +66,9 @@ net.Receive("TTTEarnedTrophiesChatMessage", function()
 
     chat.AddText(COLOR_YELLOW, nick, COLOR_WHITE, " has earned a trophy ", rarityColour, "[", trophy.title, "]")
 
-    -- Hide descriptions of hidden trophies unless the trophy is earned, or it's the platinum trophy
-    if trophy.earned or (not trophy.hidden and not GetGlobalBool("ttt_trophies_hide_all_trophies")) or trophy.id == "platinum" then
+    -- Hide descriptions of hidden trophies unless the trophy is earned, or its description is flagged as forced to show
+    -- (Some trophies are too hard to discover if all trophy descriptions are hidden)
+    if trophy.earned or (not trophy.hidden and not GetGlobalBool("ttt_trophies_hide_all_trophies")) or trophy.forceDesc then
         chat.AddText(COLOR_WHITE, "\"", trophy.desc, "\"")
     end
 end)

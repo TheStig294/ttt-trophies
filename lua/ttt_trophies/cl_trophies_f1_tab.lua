@@ -77,8 +77,9 @@ local function DrawTrophyBar(list, trophy)
     title:SizeToContents()
 
     -- Description
-    -- Hide descriptions of hidden trophies unless the trophy is earned, or it's the platinum trophy
-    if trophy.earned or (not GetGlobalBool("ttt_trophies_hide_all_trophies") and not trophy.hidden) or trophy.id == "platinum" then
+    -- Hide descriptions of hidden trophies unless the trophy is earned, or its description is flagged as forced to show
+    -- (Some trophies are too hard to discover if all trophy descriptions are hidden)
+    if trophy.earned or (not GetGlobalBool("ttt_trophies_hide_all_trophies") and not trophy.hidden) or trophy.forceDesc then
         local desc = vgui.Create("DLabel", background)
         local descText = trophy.desc
         desc:SetText(descText)
@@ -108,7 +109,7 @@ end
 local function AdminOptionsMenu()
     if not LocalPlayer():IsAdmin() then return end
     local frame = vgui.Create("DFrame")
-    frame:SetSize(300, 200)
+    frame:SetSize(300, 190)
     frame:SetTitle("Admin Options")
     frame:MakePopup()
     frame:Center()
@@ -123,14 +124,14 @@ local function AdminOptionsMenu()
     layout:Dock(FILL)
     local spacing = 10
     local text = layout:Add("DLabel")
-    text:SetText("      Re-open trophies window to see changes take effect")
+    text:SetText("    Re-open trophies window to see changes take effect")
     text:SetColor(COLOR_YELLOW)
     text:SizeToContents()
     local padding1 = layout:Add("DPanel")
     padding1:SetBackgroundColor(COLOR_BLACK)
     padding1:SetHeight(spacing)
     local hideTrophiesBox = layout:Add("DCheckBoxLabel")
-    hideTrophiesBox:SetText("Hide trophy descriptions for all players until earned")
+    hideTrophiesBox:SetText("Hide trophy descriptions for all players until earned\n -Some hard to discover trophies will still be visible")
     hideTrophiesBox:SetChecked(GetGlobalBool("ttt_trophies_hide_all_trophies"))
     hideTrophiesBox:SizeToContents()
 

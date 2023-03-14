@@ -3,6 +3,7 @@ TROPHY.id = "santa"
 TROPHY.title = "Naughty list"
 TROPHY.desc = "As a Santa, kill a traitor with a coal piece by right-clicking"
 TROPHY.rarity = 3
+TROPHY.forceDesc = true
 
 function TROPHY:Trigger()
     self.roleMessage = ROLE_SANTA
