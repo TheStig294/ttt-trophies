@@ -32,6 +32,8 @@ net.Receive("TTTSendEarnedTrophies", function()
 end)
 
 net.Receive("TTTEarnTrophy", function()
+    -- This net message is set up before the trophy list, so don't run this before the trophy list is initialised
+    if not GetGlobalBool("TTTTrophiesClientLoaded") then return end
     local trophyID = net.ReadString()
     local trophy = TTTTrophies.trophies[trophyID]
     trophy.earned = true
