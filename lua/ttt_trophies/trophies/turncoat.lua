@@ -2,7 +2,7 @@ local TROPHY = {}
 TROPHY.id = "turncoat"
 TROPHY.title = "Twist ending"
 TROPHY.desc = "As a Turncoat, win the round within 2 seconds of turning"
-TROPHY.rarity = 2
+TROPHY.rarity = 3
 
 function TROPHY:Trigger()
     self.roleMessage = ROLE_TURNCOAT
