@@ -1,7 +1,7 @@
 local TROPHY = {}
 TROPHY.id = "survivor"
 TROPHY.title = "Survivor"
-TROPHY.desc = "Survive 2 minutes after being damaged to less than 5HP"
+TROPHY.desc = "Survive a minute after being damaged to less than 5HP"
 TROPHY.rarity = 3
 
 function TROPHY:Trigger()
@@ -10,7 +10,7 @@ function TROPHY:Trigger()
         if not ent:IsPlayer() or not ent:Alive() or ent:IsSpec() then return end
 
         if ent:Health() <= 5 then
-            timer.Create("TTTTrophies2hp" .. ent:SteamID64(), 120, 1, function()
+            timer.Create("TTTTrophies2hp" .. ent:SteamID64(), 60, 1, function()
                 if IsValid(ent) then
                     self:Earn(ent)
                 end
