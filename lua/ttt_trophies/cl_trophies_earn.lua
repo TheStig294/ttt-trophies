@@ -36,6 +36,7 @@ net.Receive("TTTEarnTrophy", function()
     if not GetGlobalBool("TTTTrophiesClientLoaded") then return end
     local trophyID = net.ReadString()
     local trophy = TTTTrophies.trophies[trophyID]
+    if not trophy then return end
     trophy.earned = true
 
     -- Turn on a player's rainbow if the trophy earned is the platinum
