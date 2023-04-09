@@ -347,13 +347,6 @@ Earn all other trophies (Only requires trophies that can be obtained)\
 \
 _trophies_crowbarpush_ - Default: 1 - Whether this trophy is enabled
 
-### Totally not suspicious
-
-Witness someone use a fortnite building tool while they're not a detective\
-\
-_trophies_fortnite_ - Default: 1 - Whether this trophy is enabled
-Requires: [[TTT/SB] Fortnite Building Tool](https://steamcommunity.com/sharedfiles/filedetails/?id=1433010063)
-
 ### Totem pole
 
 Survive to the end of a round while stood on another player or being stood on\
@@ -385,13 +378,6 @@ Requires: [Custom Roles for TTT](https://steamcommunity.com/sharedfiles/filedeta
 Type "bloxwich" in chat\
 \
 _trophies_bloxwich_ - Default: 1 - Whether this trophy is enabled
-
-### Vertical healing
-
-As a Paladin, heal a player while being above or below them\
-\
-_trophies_paladin_ - Default: 1 - Whether this trophy is enabled\
-Requires: [Custom Roles for TTT](https://steamcommunity.com/sharedfiles/filedetails/?id=2421039084)
 
 ### Wait, this thing is useful?
 
