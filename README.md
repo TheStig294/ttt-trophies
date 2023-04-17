@@ -22,7 +22,7 @@ Whether the enabled/disabled trophy checkboxes are hidden (Normally only seen by
 _ttt_trophies_hotkey_rainbow_ - Default: J\
 Hotkey for toggling trophy chat messages, or rainbow effect if all trophies are earned\
 \
-_ttt_trophies_hotkey_ - Default: L\
+_ttt_trophies_hotkey_list_ - Default: I\
 Hotkey for opening the trophies list
 
 ## Server Convars

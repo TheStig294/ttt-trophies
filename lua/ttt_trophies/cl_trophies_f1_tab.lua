@@ -264,14 +264,14 @@ local function AddTrophiesList()
         textboxText:SizeToContents()
         local textbox = nonScrollList:Add("DTextEntry")
         textbox:SetSize(20, 20)
-        textbox:SetText(GetConVar("ttt_trophies_hotkey"):GetString())
+        textbox:SetText(GetConVar("ttt_trophies_hotkey_list"):GetString())
 
         textbox.OnLoseFocus = function(self)
-            GetConVar("ttt_trophies_hotkey"):SetString(string.upper(self:GetText()))
+            GetConVar("ttt_trophies_hotkey_list"):SetString(string.upper(self:GetText()))
         end
 
         textbox.OnEnter = function(self)
-            GetConVar("ttt_trophies_hotkey"):SetString(string.upper(self:GetText()))
+            GetConVar("ttt_trophies_hotkey_list"):SetString(string.upper(self:GetText()))
         end
 
         -- Textbox for changing the hotkey to toggle the reward for earning all trophies
@@ -340,11 +340,11 @@ local function AddTrophiesList()
 end
 
 -- Hotkey for opening the trophies tab
-CreateClientConVar("ttt_trophies_hotkey", "L", true, false, "Hotkey for opening the trophies list")
+CreateClientConVar("ttt_trophies_hotkey_list", "I", true, false, "Hotkey for opening the trophies list")
 local trophiesListLoaded = false
 
 hook.Add("PlayerButtonDown", "TTTTrophiesListHokey", function(ply, button)
-    if button ~= input.GetKeyCode(GetConVar("ttt_trophies_hotkey"):GetString()) then return end
+    if button ~= input.GetKeyCode(GetConVar("ttt_trophies_hotkey_list"):GetString()) then return end
 
     if not trophiesListLoaded then
         chat.AddText("Trophies list will load once the next round begins")
@@ -363,7 +363,7 @@ hook.Add("Think", "TTTTrophiesMessage", function()
         trophiesListLoaded = true
 
         if GetConVar("ttt_trophies_chat"):GetBool() and TTTTrophies.trophies.platinum and not TTTTrophies.trophies.platinum.earned then
-            chat.AddText("Press '" .. string.upper(GetConVar("ttt_trophies_hotkey"):GetString()) .. "' to open trophies list")
+            chat.AddText("Press '" .. string.upper(GetConVar("ttt_trophies_hotkey_list"):GetString()) .. "' to open trophies list")
             chat.AddText("Press '" .. string.upper(GetConVar("ttt_trophies_hotkey_rainbow"):GetString()) .. "' to turn off trophy chat messages")
         end
 
