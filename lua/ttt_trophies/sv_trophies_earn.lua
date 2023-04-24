@@ -67,9 +67,9 @@ end)
 util.AddNetworkString("TTTEarnedTrophiesChatMessage")
 
 hook.Add("TTTEndRound", "TTTTrophiesChatAnnouncement", function()
-    if table.IsEmpty(TTTTrophies.toMessage) or TTTTrophies.toMessage == {} then return end
-
     timer.Simple(6, function()
+        if table.IsEmpty(TTTTrophies.toMessage) or TTTTrophies.toMessage == {} then return end
+
         for nick, trophies in pairs(TTTTrophies.toMessage) do
             for _, trophyID in ipairs(trophies) do
                 net.Start("TTTEarnedTrophiesChatMessage")
