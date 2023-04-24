@@ -5,10 +5,14 @@ TROPHY.desc = "Kill someone as a jester (without being an active clown!)"
 TROPHY.rarity = 3
 
 function TROPHY:Trigger()
+    local function IsActiveClownLike(ply)
+        return ply:IsRoleActive() and (ply:IsClown() or (ply.IsDetectoclown and ply:IsDetectoclown()) or (ply.IsFrenchman and ply:IsFrenchman()))
+    end
+
     self:AddHook("DoPlayerDeath", function(ply, attacker, dmg)
         if not IsValid(attacker) or not attacker:IsPlayer() then return end
 
-        if attacker ~= ply and TTTTrophies:IsJesterTeam(attacker) and not ((attacker:IsClown() or (attacker.IsDetectoclown and attacker:IsDetectoclown())) and attacker:IsRoleActive()) then
+        if attacker ~= ply and TTTTrophies:IsJesterTeam(attacker) and not IsActiveClownLike(attacker) then
             self:Earn(attacker)
         end
     end)
