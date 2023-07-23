@@ -42,7 +42,7 @@ Trophies marked as (hidden) do not have their descriptions displayed in-game
 
 ### A lesson in trickery
 
-As a Quack, kill someone using a bomb station\
+Kill someone using the Quack's bomb station\
 \
 _trophies_quack_ - Default: 1 - Whether this trophy is enabled\
 Requires: [Custom Roles for TTT](https://steamcommunity.com/sharedfiles/filedetails/?id=2421039084)

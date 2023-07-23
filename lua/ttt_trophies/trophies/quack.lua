@@ -1,7 +1,7 @@
 local TROPHY = {}
 TROPHY.id = "quack"
 TROPHY.title = "A lesson in trickery..."
-TROPHY.desc = "As a Quack, kill someone using a bomb station"
+TROPHY.desc = "Kill someone using the Quack's bomb station"
 TROPHY.rarity = 3
 
 function TROPHY:Trigger()
