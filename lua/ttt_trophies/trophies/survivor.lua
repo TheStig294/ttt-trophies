@@ -9,9 +9,15 @@ function TROPHY:Trigger()
         if not took or not IsValid(ent) then return end
         if not ent:IsPlayer() or not ent:Alive() or ent:IsSpec() then return end
 
-        if ent:Health() <= 5 then
-            timer.Create("TTTTrophies2hp" .. ent:SteamID64(), 60, 1, function()
-                if IsValid(ent) then
+        if ent:Health() < 5 then
+            local ID = ent:SteamID64()
+
+            timer.Create("TTTTrophiesSurvivor" .. ID, 1, 60, function()
+                if not IsValid(ent) or ent:Health() >= 5 then
+                    timer.Remove("TTTTrophiesSurvivor" .. ID)
+
+                    return
+                elseif timer.RepsLeft("TTTTrophiesSurvivor" .. ID) == 0 then
                     self:Earn(ent)
                 end
             end)
@@ -19,12 +25,12 @@ function TROPHY:Trigger()
     end)
 
     self:AddHook("PostPlayerDeath", function(ply)
-        timer.Remove("TTTTrophies2hp" .. ply:SteamID64())
+        timer.Remove("TTTTrophiesSurvivor" .. ply:SteamID64())
     end)
 
     self:AddHook("TTTEndRound", function()
         for _, ply in ipairs(player.GetAll()) do
-            timer.Remove("TTTTrophies2hp" .. ply:SteamID64())
+            timer.Remove("TTTTrophiesSurvivor" .. ply:SteamID64())
         end
     end)
 end
