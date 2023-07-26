@@ -154,6 +154,11 @@ for _, fil in ipairs(files) do
     AddClient("ttt_trophies/trophies/" .. fil)
 end
 
+-- Create enable/disable convars for all trophies now, to be ready in time for the server config being loaded
+for _, trophy in ipairs(TTTTrophies.toRegister) do
+    CreateConVar("trophies_" .. trophy.id, "1", {FCVAR_ARCHIVE})
+end
+
 if SERVER then
     -- Loading server-side convars, including all convars controlling whether trophies are disabled by admins
     local convars = {"ttt_trophies_hide_all_trophies", "ttt_trophies_suggestion_msgs", "ttt_trophies_progress_msgs"}
@@ -208,12 +213,11 @@ if SERVER then
             -- Don't add trophies that don't have their required mods installed
             if not trophy:Condition() then continue end
             SetGlobalBool("TTTTrophy" .. trophy.id, true)
-
             -- Create an admin enabled/disable convar
-            local cvar = CreateConVar("trophies_" .. trophy.id, "1", {FCVAR_ARCHIVE})
-
+            local cvarName = "trophies_" .. trophy.id
+            local cvar = GetConVar(cvarName)
             SetGlobalBool("trophies_" .. trophy.id, cvar:GetBool())
-            table.insert(convars, cvar:GetName())
+            table.insert(convars, cvarName)
             -- Apply the trophy's trigger hooks
             trophy:Trigger()
             TTTTrophies.trophies[trophy.id] = trophy
