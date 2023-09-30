@@ -261,12 +261,26 @@ As a Communist, win with 5 or more players converted to communism\
 _trophies_communist_ - Default: 1 - Whether this trophy is enabled\
 Requires: [Custom Roles for TTT Jingle Jam 2021 Roles Pack](https://steamcommunity.com/sharedfiles/filedetails/?id=2739626026)
 
+### PaP Experimenter
+
+Pack-a-Punch 30 unique weapons\
+\
+_trophies_papexperimenter_ - Default: 1 - Whether this trophy is enabled\
+Requires: [[TTT] Pack-a-Punch! (Weapon upgrader item)](https://steamcommunity.com/sharedfiles/filedetails/?id=3043406619)
+
 ### Playing the long game
 
 As an Impersonator, search a body and buy a detective item in 1 round\
 \
 _trophies_impersonator_ - Default: 1 - Whether this trophy is enabled\
 Requires: [Custom Roles for TTT](https://steamcommunity.com/sharedfiles/filedetails/?id=2421039084)
+
+### Quake Pro
+
+Pack-a-Punch yourself!\
+\
+_trophies_papself_ - Default: 1 - Whether this trophy is enabled\
+Requires: [[TTT] Pack-a-Punch! (Weapon upgrader item)](https://steamcommunity.com/sharedfiles/filedetails/?id=3043406619)
 
 ### Random item button?
 
@@ -378,6 +392,13 @@ Requires: [Custom Roles for TTT](https://steamcommunity.com/sharedfiles/filedeta
 Type "bloxwich" in chat\
 \
 _trophies_bloxwich_ - Default: 1 - Whether this trophy is enabled
+
+### Unique Upgrade
+
+Pack-a-Punch a classic randomat-only weapon\
+\
+_trophies_paprandomat_ - Default: 1 - Whether this trophy is enabled\
+Requires: [[TTT] Pack-a-Punch! (Weapon upgrader item)](https://steamcommunity.com/sharedfiles/filedetails/?id=3043406619)
 
 ### Wait, this thing is useful?
 
