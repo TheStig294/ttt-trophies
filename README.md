@@ -266,7 +266,7 @@ Requires: [Custom Roles for TTT Jingle Jam 2021 Roles Pack](https://steamcommuni
 Pack-a-Punch 30 unique weapons\
 \
 _trophies_papexperimenter_ - Default: 1 - Whether this trophy is enabled\
-Requires: [[TTT] Pack-a-Punch! (Weapon upgrader item)](https://steamcommunity.com/sharedfiles/filedetails/?id=3043406619)
+Requires: [[TTT] Pack-a-Punch Item (Weapon upgrader!)](https://steamcommunity.com/sharedfiles/filedetails/?id=3043605644)
 
 ### Playing the long game
 
@@ -280,7 +280,7 @@ Requires: [Custom Roles for TTT](https://steamcommunity.com/sharedfiles/filedeta
 Pack-a-Punch yourself!\
 \
 _trophies_papself_ - Default: 1 - Whether this trophy is enabled\
-Requires: [[TTT] Pack-a-Punch! (Weapon upgrader item)](https://steamcommunity.com/sharedfiles/filedetails/?id=3043406619)
+Requires: [[TTT] Pack-a-Punch Item (Weapon upgrader!)](https://steamcommunity.com/sharedfiles/filedetails/?id=3043605644)
 
 ### Random item button?
 
@@ -398,7 +398,7 @@ _trophies_bloxwich_ - Default: 1 - Whether this trophy is enabled
 Pack-a-Punch a classic randomat-only weapon\
 \
 _trophies_paprandomat_ - Default: 1 - Whether this trophy is enabled\
-Requires: [[TTT] Pack-a-Punch! (Weapon upgrader item)](https://steamcommunity.com/sharedfiles/filedetails/?id=3043406619)
+Requires: [[TTT] Pack-a-Punch Item (Weapon upgrader!)](https://steamcommunity.com/sharedfiles/filedetails/?id=3043605644)
 
 ### Wait, this thing is useful?
 
