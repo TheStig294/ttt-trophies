@@ -18,10 +18,12 @@ function TROPHY:Trigger()
                         veteranAlive = nil
 
                         return
+                    else
+                        veteranAlive = ply
                     end
-
-                    veteranAlive = ply
                 elseif TTTTrophies:IsInnocentTeam(ply) then
+                    veteranAlive = nil
+
                     return
                 end
             end
@@ -29,7 +31,7 @@ function TROPHY:Trigger()
     end)
 
     self:AddHook("TTTEndRound", function(result)
-        if IsValid(veteranAlive) and (result == WIN_INNOCENT or result == WIN_TIMELIMIT) and veteranAlive:GetRole() == ROLE_VETERAN then
+        if IsValid(veteranAlive) and (result == WIN_INNOCENT or result == WIN_TIMELIMIT) and self:IsAlive(veteranAlive) and veteranAlive:GetRole() == ROLE_VETERAN then
             self:Earn(veteranAlive)
         end
 
