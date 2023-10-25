@@ -2,7 +2,7 @@ local TROPHY = {}
 TROPHY.id = "worldpeace"
 TROPHY.title = "We achieved world peace?"
 TROPHY.desc = "Have 1/2 the round go on without anyone dying"
-TROPHY.rarity = 2
+TROPHY.rarity = 1
 TROPHY.hidden = true
 
 function TROPHY:Trigger()

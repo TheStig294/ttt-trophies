@@ -2,7 +2,7 @@ local TROPHY = {}
 TROPHY.id = "communist"
 TROPHY.title = "Our win, comrade"
 TROPHY.desc = "As a Communist, win with 5 or more players converted to communism"
-TROPHY.rarity = 3
+TROPHY.rarity = 2
 
 function TROPHY:Trigger()
     self.roleMessage = ROLE_COMMUNIST

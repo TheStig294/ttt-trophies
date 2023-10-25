@@ -2,7 +2,7 @@ local TROPHY = {}
 TROPHY.id = "fall"
 TROPHY.title = "Nice save!"
 TROPHY.desc = "Save yourself from a high damage fall by double-jumping"
-TROPHY.rarity = 2
+TROPHY.rarity = 1
 TROPHY.hidden = true
 
 function TROPHY:Trigger()

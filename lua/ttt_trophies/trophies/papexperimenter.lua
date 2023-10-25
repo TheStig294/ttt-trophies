@@ -2,7 +2,7 @@ local TROPHY = {}
 TROPHY.id = "papexperimenter"
 TROPHY.title = "PaP Experimenter"
 TROPHY.desc = "Pack-a-Punch 30 unique weapons" -- 30 is the total number of weapons TTT has by default
-TROPHY.rarity = 3
+TROPHY.rarity = 2
 
 function TROPHY:Trigger()
     self.roleMessage = ROLE_TRAITOR

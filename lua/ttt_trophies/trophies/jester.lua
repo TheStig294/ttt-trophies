@@ -2,7 +2,7 @@ local TROPHY = {}
 TROPHY.id = "jester"
 TROPHY.title = "Directed by Robert B. Weide"
 TROPHY.desc = "As a Jester, win"
-TROPHY.rarity = 3
+TROPHY.rarity = 2
 TROPHY.hidden = true
 
 function TROPHY:Trigger()

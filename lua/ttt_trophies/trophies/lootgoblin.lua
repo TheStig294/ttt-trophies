@@ -2,7 +2,7 @@ local TROPHY = {}
 TROPHY.id = "lootgoblin"
 TROPHY.title = "Sneaky little goblin"
 TROPHY.desc = "As a Loot Goblin, survive to the end of the round"
-TROPHY.rarity = 2
+TROPHY.rarity = 1
 TROPHY.hidden = true
 
 function TROPHY:Trigger()

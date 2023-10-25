@@ -2,7 +2,7 @@ local TROPHY = {}
 TROPHY.id = "blazeit"
 TROPHY.title = "Blaze it"
 TROPHY.desc = "Play 420 rounds of TTT"
-TROPHY.rarity = 2
+TROPHY.rarity = 1
 
 function TROPHY:Trigger()
     local notSpectator = {}

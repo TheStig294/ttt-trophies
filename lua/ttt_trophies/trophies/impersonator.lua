@@ -2,7 +2,7 @@ local TROPHY = {}
 TROPHY.id = "impersonator"
 TROPHY.title = "Playing the long game"
 TROPHY.desc = "As an Impersonator, search a body and buy a detective item in 1 round"
-TROPHY.rarity = 1
+TROPHY.rarity = 2
 
 function TROPHY:Trigger()
     self.roleMessage = ROLE_IMPERSONATOR
