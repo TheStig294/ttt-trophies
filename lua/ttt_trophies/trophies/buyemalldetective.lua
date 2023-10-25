@@ -6,6 +6,11 @@ TROPHY.rarity = 3
 
 function TROPHY:Trigger()
     self.roleMessage = ROLE_DETECTIVE
+
+    if SERVER then
+        util.AddNetworkString("TTTTrophiesBuyEmAllDetective")
+    end
+
     -- Getting the list of buyable detective items
     -- At the start of the first round of a map, ask the first connected client for the printnames of all detective and detective weapons
     -- Items are sent as ClassNames for active items, and PrintNames for passive items to uniquely identify them
@@ -58,8 +63,8 @@ function TROPHY:Trigger()
 
                 if equipment then
                     equipment = math.floor(equipment)
-                else
                     -- If is_item is truthy but the passed equipment failed to be converted to a number then something went wrong here
+                else
                     return
                 end
 
@@ -99,14 +104,39 @@ function TROPHY:Trigger()
                 self:Earn(ply)
             else
                 -- Only show progress towards the trophy if the number of detective items bought has changed
-                local noOfBoughtItems = #buyableEquipment - #unboughtEquipment
+                local unboughtCount = #unboughtEquipment
+                local noOfBoughtItems = #buyableEquipment - unboughtCount
 
                 if not TTTTrophies.stats[self.id][plyID]["___noOfBoughtItems"] or noOfBoughtItems ~= TTTTrophies.stats[self.id][plyID]["___noOfBoughtItems"] then
                     TTTTrophies.stats[self.id][plyID]["___noOfBoughtItems"] = noOfBoughtItems
                     self:ProgressUpdate(ply, noOfBoughtItems, #buyableEquipment)
+
+                    if unboughtCount <= 5 then
+                        net.Start("TTTTrophiesBuyEmAllDetective")
+                        net.WriteUInt(unboughtCount, 4)
+
+                        for _, class in ipairs(unboughtEquipment) do
+                            net.WriteString(class)
+                        end
+
+                        net.Send(ply)
+                    end
                 end
             end
         end)
+    end)
+end
+
+if CLIENT then
+    net.Receive("TTTTrophiesBuyEmAllDetective", function()
+        local unboughtCount = net.ReadUInt(4)
+        chat.AddText("Unbought items:")
+
+        for i = 1, unboughtCount do
+            local class = net.ReadString()
+            local printName = weapons.Get(class).PrintName
+            chat.AddText(LANG.TryTranslation(printName) or class)
+        end
     end)
 end
 
