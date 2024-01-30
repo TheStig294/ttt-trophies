@@ -21,6 +21,7 @@ surface.CreateFont("TTTTrophyPopup", {
 
 local function TrophyPopup(trophyID)
     local trophy = TTTTrophies.trophies[trophyID]
+    if not trophy then return end
     -- Drawing the popup
     local width = 360
     local height = 85
