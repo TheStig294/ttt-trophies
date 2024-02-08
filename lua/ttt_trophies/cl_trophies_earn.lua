@@ -55,6 +55,7 @@ net.Receive("TTTEarnedTrophiesChatMessage", function()
     local nick = net.ReadString()
     local id = net.ReadString()
     local trophy = TTTTrophies.trophies[id]
+    if not trophy then return end
     local rarityColour
 
     if trophy.rarity == 1 then
