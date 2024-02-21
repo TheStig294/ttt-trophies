@@ -26,7 +26,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_hypnotist_enabled") and GetConVar("ttt_hypnotist_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_HYPNOTIST)
 end
 
 RegisterTTTTrophy(TROPHY)

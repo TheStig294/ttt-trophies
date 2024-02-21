@@ -17,7 +17,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_zombie_enabled") and GetConVar("ttt_zombie_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_ZOMBIE)
 end
 
 RegisterTTTTrophy(TROPHY)

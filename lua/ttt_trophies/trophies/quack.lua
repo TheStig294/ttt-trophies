@@ -22,7 +22,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_quack_enabled") and GetConVar("ttt_quack_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_QUACK)
 end
 
 RegisterTTTTrophy(TROPHY)

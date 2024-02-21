@@ -23,7 +23,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_communist_enabled") and GetConVar("ttt_communist_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_COMMUNIST)
 end
 
 RegisterTTTTrophy(TROPHY)

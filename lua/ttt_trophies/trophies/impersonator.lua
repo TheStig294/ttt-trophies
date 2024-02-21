@@ -54,7 +54,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_impersonator_enabled") and GetConVar("ttt_impersonator_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_IMPERSONATOR)
 end
 
 RegisterTTTTrophy(TROPHY)

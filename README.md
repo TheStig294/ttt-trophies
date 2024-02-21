@@ -408,7 +408,7 @@ _trophies_detective_ - Default: 1 - Whether this trophy is enabled
 
 ### Wait, what?
 
-Kill someone as a jester (without being an active clown!)\
+Kill someone as a jester\
 Suggested by /u/kainereygalo on Reddit\
 \
 _trophies_waitwhat_ - Default: 1 - Whether this trophy is enabled\

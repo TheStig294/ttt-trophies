@@ -22,7 +22,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_medium_enabled") and GetConVar("ttt_medium_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_MEDIUM)
 end
 
 RegisterTTTTrophy(TROPHY)

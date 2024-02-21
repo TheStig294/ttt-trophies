@@ -40,7 +40,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_veteran_enabled") and GetConVar("ttt_veteran_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_VETERAN)
 end
 
 RegisterTTTTrophy(TROPHY)

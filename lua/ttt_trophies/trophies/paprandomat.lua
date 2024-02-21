@@ -2,7 +2,7 @@ local TROPHY = {}
 TROPHY.id = "paprandomat"
 TROPHY.title = "Unique Upgrade"
 TROPHY.desc = "Pack-a-Punch a classic randomat-only weapon"
-TROPHY.rarity = 2
+TROPHY.rarity = 3
 
 local randomatWeapons = {
     ["weapon_ttt_randomatclub"] = true,

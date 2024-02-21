@@ -28,7 +28,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_marshal_enabled") and GetConVar("ttt_marshal_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_MARSHAL)
 end
 
 RegisterTTTTrophy(TROPHY)

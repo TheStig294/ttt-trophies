@@ -30,7 +30,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_drunk_enabled") and GetConVar("ttt_drunk_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_DRUNK)
 end
 
 RegisterTTTTrophy(TROPHY)

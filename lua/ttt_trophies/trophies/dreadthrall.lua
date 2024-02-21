@@ -38,7 +38,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_dreadthrall_enabled") and GetConVar("ttt_dreadthrall_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_DREADTHRALL)
 end
 
 RegisterTTTTrophy(TROPHY)

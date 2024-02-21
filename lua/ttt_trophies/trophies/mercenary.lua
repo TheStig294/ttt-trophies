@@ -41,7 +41,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_mercenary_enabled") and GetConVar("ttt_mercenary_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_MERCENARY)
 end
 
 RegisterTTTTrophy(TROPHY)

@@ -25,7 +25,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_paramedic_enabled") and GetConVar("ttt_paramedic_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_PARAMEDIC)
 end
 
 RegisterTTTTrophy(TROPHY)

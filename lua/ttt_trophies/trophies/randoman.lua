@@ -23,7 +23,7 @@ hook.Add("TTTRandomatTriggered", "TTTTrophiesRandoman", function(id, owner)
 end)
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_randoman_enabled") and GetConVar("ttt_randoman_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_RANDOMAN)
 end
 
 RegisterTTTTrophy(TROPHY)

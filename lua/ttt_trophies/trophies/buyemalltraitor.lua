@@ -134,8 +134,13 @@ if CLIENT then
 
         for i = 1, unboughtCount do
             local class = net.ReadString()
-            local printName = weapons.Get(class).PrintName
-            chat.AddText(LANG.TryTranslation(printName) or class)
+            local wep = weapons.Get(class)
+
+            if wep then
+                chat.AddText(LANG.TryTranslation(wep.PrintName) or class)
+            else
+                chat.AddText(class)
+            end
         end
     end)
 end

@@ -15,7 +15,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_madscientist_enabled") and GetConVar("ttt_madscientist_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_MADSCIENTIST)
 end
 
 RegisterTTTTrophy(TROPHY)

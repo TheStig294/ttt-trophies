@@ -27,9 +27,8 @@ function TROPHY:Trigger()
     end)
 end
 
--- TTTParasiteRespawn hook was only added in Custom Roles version 1.8.2
 function TROPHY:Condition()
-    return ConVarExists("ttt_parasite_enabled") and GetConVar("ttt_parasite_enabled"):GetBool() and CRVersion("1.8.2")
+    return TTTTrophies:CanRoleSpawn(ROLE_PARASITE)
 end
 
 RegisterTTTTrophy(TROPHY)

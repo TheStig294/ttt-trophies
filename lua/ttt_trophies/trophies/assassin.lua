@@ -30,7 +30,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_assassin_enabled") and GetConVar("ttt_assassin_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_ASSASSIN)
 end
 
 RegisterTTTTrophy(TROPHY)

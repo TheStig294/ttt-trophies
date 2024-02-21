@@ -16,7 +16,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_lootgoblin_enabled") and GetConVar("ttt_lootgoblin_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_LOOTGOBLIN)
 end
 
 RegisterTTTTrophy(TROPHY)

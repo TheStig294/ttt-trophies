@@ -19,7 +19,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_jester_enabled") and GetConVar("ttt_jester_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_JESTER)
 end
 
 RegisterTTTTrophy(TROPHY)

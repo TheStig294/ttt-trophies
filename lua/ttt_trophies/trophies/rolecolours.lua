@@ -33,7 +33,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return CR_VERSION
+    return ConVarExists("ttt_color_mode_override") and GetConVar("ttt_color_mode_override"):GetString() == "none"
 end
 
 RegisterTTTTrophy(TROPHY)

@@ -30,7 +30,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_turncoat_enabled") and GetConVar("ttt_turncoat_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_TURNCOAT)
 end
 
 RegisterTTTTrophy(TROPHY)

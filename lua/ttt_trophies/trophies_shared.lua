@@ -153,3 +153,17 @@ function TTTTrophies:IsBuyableItem(role, wep)
 
     return false
 end
+
+function TTTTrophies:CanRoleSpawn(role)
+    if not role or role == -1 then return false end
+    if util.CanRoleSpawn then return util.CanRoleSpawn(role) end
+    if role == ROLE_DETECTIVE or role == ROLE_INNOCENT or role == ROLE_TRAITOR then return true end
+
+    if ROLE_STRINGS_RAW then
+        local cvar = "ttt_" .. ROLE_STRINGS_RAW[role] .. "_enabled"
+
+        return ConVarExists(cvar) and GetConVar(cvar):GetBool()
+    end
+
+    return false
+end

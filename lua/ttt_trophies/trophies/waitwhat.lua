@@ -1,7 +1,7 @@
 local TROPHY = {}
 TROPHY.id = "waitwhat"
 TROPHY.title = "Wait, what?"
-TROPHY.desc = "Kill someone as a jester (without being an active clown!)"
+TROPHY.desc = "Kill someone as a jester"
 TROPHY.rarity = 3
 
 function TROPHY:Trigger()
@@ -20,13 +20,11 @@ end
 
 -- Check there is at least 1 jester role in existence and is enabled
 function TROPHY:Condition()
-    if not JESTER_ROLES or not ROLE_STRINGS_RAW then return false end
+    if not JESTER_ROLES or not ROLE_STRINGS_RAW or not util.CanRoleSpawn then return false end
     local jesterRoleEnabled = false
 
     for role, _ in pairs(JESTER_ROLES) do
-        local roleName = ROLE_STRINGS_RAW[role]
-
-        if roleName and ConVarExists("ttt_" .. roleName .. "_enabled") and GetConVar("ttt_" .. roleName .. "_enabled"):GetBool() then
+        if util.CanRoleSpawn(role) then
             jesterRoleEnabled = true
             break
         end

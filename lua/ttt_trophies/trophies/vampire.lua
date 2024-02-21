@@ -44,7 +44,7 @@ function TROPHY:Trigger()
 end
 
 function TROPHY:Condition()
-    return ConVarExists("ttt_vampire_enabled") and GetConVar("ttt_vampire_enabled"):GetBool() and ConVarExists("ttt_vampire_convert_enabled") and GetConVar("ttt_vampire_convert_enabled"):GetBool()
+    return TTTTrophies:CanRoleSpawn(ROLE_VAMPIRE) and ConVarExists("ttt_vampire_convert_enabled") and GetConVar("ttt_vampire_convert_enabled"):GetBool()
 end
 
 RegisterTTTTrophy(TROPHY)
