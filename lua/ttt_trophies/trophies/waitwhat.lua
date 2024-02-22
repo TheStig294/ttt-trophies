@@ -20,11 +20,11 @@ end
 
 -- Check there is at least 1 jester role in existence and is enabled
 function TROPHY:Condition()
-    if not JESTER_ROLES or not ROLE_STRINGS_RAW or not util.CanRoleSpawn then return false end
+    if not JESTER_ROLES or not ROLE_STRINGS_RAW then return false end
     local jesterRoleEnabled = false
 
     for role, _ in pairs(JESTER_ROLES) do
-        if util.CanRoleSpawn(role) then
+        if TTTTrophies:CanRoleSpawn(role) then
             jesterRoleEnabled = true
             break
         end
