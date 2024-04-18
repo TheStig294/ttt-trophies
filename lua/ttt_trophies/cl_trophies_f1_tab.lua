@@ -198,137 +198,142 @@ local function AdminOptionsMenu()
     end
 end
 
+local function CreateTrophiesMenu()
+    -- Base panel
+    local basePnl = vgui.Create("DPanel")
+    basePnl:Dock(FILL)
+    basePnl:SetBackgroundColor(COLOR_BLACK)
+    -- List outside the scrollbar
+    local nonScrollList = vgui.Create("DIconLayout", basePnl)
+    nonScrollList:Dock(TOP)
+    -- Sets the space between the image and text boxes
+    nonScrollList:SetSpaceY(10)
+    nonScrollList:SetSpaceX(10)
+    -- Sets the space between the edge of the window and the edges of the tab's contents
+    nonScrollList:SetBorder(10)
+
+    nonScrollList.Paint = function(self, w, h)
+        draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0))
+    end
+
+    -- Admin options menu
+    local spacerPanelWidth = 200
+
+    if LocalPlayer():IsAdmin() then
+        local optionsButton = nonScrollList:Add("DButton")
+        optionsButton:SetText("Admin Options")
+        optionsButton:SizeToContents()
+        spacerPanelWidth = spacerPanelWidth - optionsButton:GetSize()
+
+        function optionsButton:DoClick()
+            AdminOptionsMenu()
+        end
+    end
+
+    local spacerPanel = nonScrollList:Add("DPanel")
+    spacerPanel:SetBackgroundColor(COLOR_BLACK)
+    spacerPanel:SetWidth(spacerPanelWidth)
+    -- Progress bar text
+    local earnedCount = 0
+
+    for _, trophy in pairs(TTTTrophies.trophies) do
+        if trophy.earned then
+            earnedCount = earnedCount + 1
+        end
+    end
+
+    local pctEarned = (earnedCount / table.Count(TTTTrophies.trophies)) * 100
+    pctEarned = math.Round(pctEarned)
+    local progressBarText = nonScrollList:Add("DLabel")
+    progressBarText:SetText(pctEarned .. "% of trophies earned!")
+    progressBarText:SetFont("TrophyDesc")
+    progressBarText:SetTextColor(COLOUR_WHITE)
+    progressBarText:SizeToContents()
+    -- Progress bar
+    local progressBar = nonScrollList:Add("DProgress")
+    progressBar:SetFraction(pctEarned / 100)
+    progressBar.OwnLine = true
+    progressBar:SetSize(580, 20)
+    -- Textbox for changing the hotkey to open the trophy list
+    local textboxText = nonScrollList:Add("DLabel")
+    textboxText:SetText("   Key that opens this window:")
+    textboxText:SetFont("TrophyDesc")
+    textboxText:SetTextColor(COLOUR_WHITE)
+    textboxText:SizeToContents()
+    local textbox = nonScrollList:Add("DTextEntry")
+    textbox:SetSize(20, 20)
+    textbox:SetText(GetConVar("ttt_trophies_hotkey_list"):GetString())
+
+    textbox.OnLoseFocus = function(self)
+        GetConVar("ttt_trophies_hotkey_list"):SetString(string.upper(self:GetText()))
+    end
+
+    textbox.OnEnter = function(self)
+        GetConVar("ttt_trophies_hotkey_list"):SetString(string.upper(self:GetText()))
+    end
+
+    -- Textbox for changing the hotkey to toggle the reward for earning all trophies
+    local textboxTextReward = nonScrollList:Add("DLabel")
+    textboxTextReward:SetText("Key to toggle messages, or reward if all trophies earned:")
+    textboxTextReward:SetFont("TrophyDesc")
+    textboxTextReward:SetTextColor(COLOUR_WHITE)
+    textboxTextReward:SizeToContents()
+    local textboxReward = nonScrollList:Add("DTextEntry")
+    textboxReward:SetSize(20, 20)
+    textboxReward:SetText(GetConVar("ttt_trophies_hotkey_rainbow"):GetString())
+
+    textboxReward.OnLoseFocus = function(self)
+        GetConVar("ttt_trophies_hotkey_rainbow"):SetString(string.upper(self:GetText()))
+    end
+
+    textboxReward.OnEnter = function(self)
+        GetConVar("ttt_trophies_hotkey_rainbow"):SetString(string.upper(self:GetText()))
+    end
+
+    -- Scrollbar
+    local scroll = vgui.Create("DScrollPanel", basePnl)
+    scroll:Dock(BOTTOM)
+    scroll:SetSize(600, 280)
+    -- List of trophies in scrollbar
+    local list = vgui.Create("DIconLayout", scroll)
+    list:Dock(FILL)
+    -- Sets the space between the image and text boxes
+    list:SetSpaceY(10)
+    list:SetSpaceX(10)
+    -- Sets the space between the edge of the window and the edges of the tab's contents
+    list:SetBorder(10)
+
+    list.Paint = function(self, w, h)
+        draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0))
+    end
+
+    -- Sorts the trophies by earned/unearned and rarity
+    if table.IsEmpty(earnedTrophies) and table.IsEmpty(unearnedTrophies) then
+        for id, trophy in pairs(TTTTrophies.trophies) do
+            if trophy.earned then
+                table.insert(earnedTrophies, trophy)
+            else
+                table.insert(unearnedTrophies, trophy)
+            end
+        end
+    end
+
+    -- The list of trophies, showing if they are earned or not
+    for id, trophy in SortedPairsByMemberValue(unearnedTrophies, "rarity", false) do
+        DrawTrophyBar(list, trophy)
+    end
+
+    for id, trophy in SortedPairsByMemberValue(earnedTrophies, "rarity", false) do
+        DrawTrophyBar(list, trophy)
+    end
+
+    return basePnl
+end
+
 -- Adds the trophies list to the F1 menu
 local function AddTrophiesList()
     hook.Add("TTTSettingsTabs", "TTTTrophies", function(dtabs)
-        -- Base panel
-        local basePnl = vgui.Create("DPanel")
-        basePnl:Dock(FILL)
-        basePnl:SetBackgroundColor(COLOR_BLACK)
-        -- List outside the scrollbar
-        local nonScrollList = vgui.Create("DIconLayout", basePnl)
-        nonScrollList:Dock(TOP)
-        -- Sets the space between the image and text boxes
-        nonScrollList:SetSpaceY(10)
-        nonScrollList:SetSpaceX(10)
-        -- Sets the space between the edge of the window and the edges of the tab's contents
-        nonScrollList:SetBorder(10)
-
-        nonScrollList.Paint = function(self, w, h)
-            draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0))
-        end
-
-        -- Admin options menu
-        local spacerPanelWidth = 200
-
-        if LocalPlayer():IsAdmin() then
-            local optionsButton = nonScrollList:Add("DButton")
-            optionsButton:SetText("Admin Options")
-            optionsButton:SizeToContents()
-            spacerPanelWidth = spacerPanelWidth - optionsButton:GetSize()
-
-            function optionsButton:DoClick()
-                AdminOptionsMenu()
-            end
-        end
-
-        local spacerPanel = nonScrollList:Add("DPanel")
-        spacerPanel:SetBackgroundColor(COLOR_BLACK)
-        spacerPanel:SetWidth(spacerPanelWidth)
-        -- Progress bar text
-        local earnedCount = 0
-
-        for _, trophy in pairs(TTTTrophies.trophies) do
-            if trophy.earned then
-                earnedCount = earnedCount + 1
-            end
-        end
-
-        local pctEarned = (earnedCount / table.Count(TTTTrophies.trophies)) * 100
-        pctEarned = math.Round(pctEarned)
-        local progressBarText = nonScrollList:Add("DLabel")
-        progressBarText:SetText(pctEarned .. "% of trophies earned!")
-        progressBarText:SetFont("TrophyDesc")
-        progressBarText:SetTextColor(COLOUR_WHITE)
-        progressBarText:SizeToContents()
-        -- Progress bar
-        local progressBar = nonScrollList:Add("DProgress")
-        progressBar:SetFraction(pctEarned / 100)
-        progressBar.OwnLine = true
-        progressBar:SetSize(580, 20)
-        -- Textbox for changing the hotkey to open the trophy list
-        local textboxText = nonScrollList:Add("DLabel")
-        textboxText:SetText("   Key that opens this window:")
-        textboxText:SetFont("TrophyDesc")
-        textboxText:SetTextColor(COLOUR_WHITE)
-        textboxText:SizeToContents()
-        local textbox = nonScrollList:Add("DTextEntry")
-        textbox:SetSize(20, 20)
-        textbox:SetText(GetConVar("ttt_trophies_hotkey_list"):GetString())
-
-        textbox.OnLoseFocus = function(self)
-            GetConVar("ttt_trophies_hotkey_list"):SetString(string.upper(self:GetText()))
-        end
-
-        textbox.OnEnter = function(self)
-            GetConVar("ttt_trophies_hotkey_list"):SetString(string.upper(self:GetText()))
-        end
-
-        -- Textbox for changing the hotkey to toggle the reward for earning all trophies
-        local textboxTextReward = nonScrollList:Add("DLabel")
-        textboxTextReward:SetText("Key to toggle messages, or reward if all trophies earned:")
-        textboxTextReward:SetFont("TrophyDesc")
-        textboxTextReward:SetTextColor(COLOUR_WHITE)
-        textboxTextReward:SizeToContents()
-        local textboxReward = nonScrollList:Add("DTextEntry")
-        textboxReward:SetSize(20, 20)
-        textboxReward:SetText(GetConVar("ttt_trophies_hotkey_rainbow"):GetString())
-
-        textboxReward.OnLoseFocus = function(self)
-            GetConVar("ttt_trophies_hotkey_rainbow"):SetString(string.upper(self:GetText()))
-        end
-
-        textboxReward.OnEnter = function(self)
-            GetConVar("ttt_trophies_hotkey_rainbow"):SetString(string.upper(self:GetText()))
-        end
-
-        -- Scrollbar
-        local scroll = vgui.Create("DScrollPanel", basePnl)
-        scroll:Dock(BOTTOM)
-        scroll:SetSize(600, 280)
-        -- List of trophies in scrollbar
-        local list = vgui.Create("DIconLayout", scroll)
-        list:Dock(FILL)
-        -- Sets the space between the image and text boxes
-        list:SetSpaceY(10)
-        list:SetSpaceX(10)
-        -- Sets the space between the edge of the window and the edges of the tab's contents
-        list:SetBorder(10)
-
-        list.Paint = function(self, w, h)
-            draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0))
-        end
-
-        -- Sorts the trophies by earned/unearned and rarity
-        if table.IsEmpty(earnedTrophies) and table.IsEmpty(unearnedTrophies) then
-            for id, trophy in pairs(TTTTrophies.trophies) do
-                if trophy.earned then
-                    table.insert(earnedTrophies, trophy)
-                else
-                    table.insert(unearnedTrophies, trophy)
-                end
-            end
-        end
-
-        -- The list of trophies, showing if they are earned or not
-        for id, trophy in SortedPairsByMemberValue(unearnedTrophies, "rarity", false) do
-            DrawTrophyBar(list, trophy)
-        end
-
-        for id, trophy in SortedPairsByMemberValue(earnedTrophies, "rarity", false) do
-            DrawTrophyBar(list, trophy)
-        end
-
+        local basePnl = CreateTrophiesMenu()
         -- Adds the tab panel to TTT's F1 menu
         dtabs:AddSheet("Trophies", basePnl, "ttt_trophies/bronze16.png", false, false, "TTT Trophies/Achievements")
 
@@ -337,6 +342,18 @@ local function AddTrophiesList()
             dtabs:SwitchToName("Trophies")
         end
     end)
+end
+
+-- Opening the trophies tab when the F1 menu is not available
+local function OpenStandaloneF1Menu()
+    local frame = vgui.Create("DFrame")
+    frame:SetSize(600, 410)
+    frame:Center()
+    frame:SetTitle("Trophies")
+    frame:ShowCloseButton(true)
+    frame:MakePopup()
+    local basePnl = CreateTrophiesMenu()
+    basePnl:SetParent(frame)
 end
 
 -- Hotkey for opening the trophies tab
@@ -353,13 +370,22 @@ hook.Add("PlayerButtonDown", "TTTTrophiesListHokey", function(ply, button)
     end
 
     hotkeyPressed = true
-    RunConsoleCommand("ttt_helpscreen")
+
+    if TTT2 then
+        OpenStandaloneF1Menu()
+    else
+        RunConsoleCommand("ttt_helpscreen")
+    end
 end)
 
 -- Prints a message to chat to say the trophies list has loaded and is ready to be used, controlled by a global bool set in cl_trophies_earn.lua
 hook.Add("Think", "TTTTrophiesMessage", function()
     if GetGlobalBool("TTTTrophiesEarnedLoaded") then
-        AddTrophiesList()
+        -- Don't add the trophies menu to the F1 menu tab if TTT2 is being used, it doesn't work
+        if not TTT2 then
+            AddTrophiesList()
+        end
+
         trophiesListLoaded = true
 
         if GetConVar("ttt_trophies_chat"):GetBool() and TTTTrophies.trophies.platinum and not TTTTrophies.trophies.platinum.earned then
@@ -370,3 +396,5 @@ hook.Add("Think", "TTTTrophiesMessage", function()
         hook.Remove("Think", "TTTTrophiesMessage")
     end
 end)
+
+concommand.Add("ttt_trophies_window", OpenStandaloneF1Menu)
