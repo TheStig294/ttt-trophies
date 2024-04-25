@@ -139,13 +139,13 @@ In the F1 settings tab, turn on the checkbox for "Fast weapon switch"\
 \
 _trophies_fastweaponswitch_ - Default: 1 - Whether this trophy is enabled
 
-### Gotta buy 'em all! (Detective)
+### Bought 'em all! (Detective)
 
 Buy every detective item at least once\
 \
 _trophies_buyemalldetective_ - Default: 1 - Whether this trophy is enabled
 
-### Gotta buy 'em all! (Traitor)
+### Bought 'em all! (Traitor)
 
 Buy every traitor item at least once\
 \

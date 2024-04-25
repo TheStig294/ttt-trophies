@@ -1,6 +1,6 @@
 local TROPHY = {}
 TROPHY.id = "buyemalldetective"
-TROPHY.title = "Gotta buy 'em all! (Detective)"
+TROPHY.title = "Bought 'em all! (Detective)"
 TROPHY.desc = "Buy every detective item at least once"
 TROPHY.rarity = 3
 
