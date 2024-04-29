@@ -4,6 +4,10 @@ TROPHY.title = "Don't wanna hear this noise"
 TROPHY.desc = "Use the mute button to mute and unmute music (Press 'M')"
 TROPHY.rarity = 1
 
+if SERVER then
+    util.AddNetworkString("TTTTrophyMusicMuteButton")
+end
+
 if CLIENT then
     hook.Add("TTTMusicMuteButton", "TTTTrophiesMusicMuteButton", function()
         net.Start("TTTTrophyMusicMuteButton")
@@ -13,7 +17,6 @@ end
 
 function TROPHY:Trigger()
     self.roleMessage = ROLE_INNOCENT
-    util.AddNetworkString("TTTTrophyMusicMuteButton")
 
     net.Receive("TTTTrophyMusicMuteButton", function(len, ply)
         self:Earn(ply)
