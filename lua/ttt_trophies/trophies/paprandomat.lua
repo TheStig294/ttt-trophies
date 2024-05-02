@@ -27,7 +27,9 @@ local randomatWeapons = {
     ["weapon_ttt_donconnon_randomat"] = true,
     ["weapon_ttt_knife_randomat"] = true,
     ["weapon_ttt_impostor_knife_randomat"] = true,
-    ["weapon_ttt_mud_device_randomat"] = true
+    ["weapon_ttt_mud_device_randomat"] = true,
+    ["weapon_ttt_cracker"] = true,
+    ["weapon_yeti_club"] = true
 }
 
 function TROPHY:Trigger()
