@@ -15,6 +15,7 @@ All client settings can also be changed using the trophies list. Press 'L' to op
 \
 _ttt_trophies_chat_ - Default: 1\
 Whether this mod puts messages in chat. e.g. when others earn a trophy, you make progress towards a trophy, or a trophy gets suggested to you\
+Turning this off also disables buy menu icons being added, indicating items to do with unlocking certain trophies\
 \
 _ttt_trophies_hide_enabled_checkboxes_ - Default: 1\
 Whether the enabled/disabled trophy checkboxes are hidden (Normally only seen by admins, an admin can hide the checkboxes from appearing in their trophies list)\
