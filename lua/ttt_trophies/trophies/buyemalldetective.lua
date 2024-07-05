@@ -169,212 +169,214 @@ end
 -- Adding icons to the buy menu to show if a weapon is unbought or not
 -- 
 if CLIENT then
-    -- Travels down the panel hierarchy of the buy menu, and returns a table of all buy menu icons
-    local function GetItemIconPanels(dsheet)
-        if not dsheet then return end
-        local panelHierachy
+    hook.Add("PostGamemodeLoaded", "TTTTrophiesBuyEmAllDetective", function()
+        -- Travels down the panel hierarchy of the buy menu, and returns a table of all buy menu icons
+        local function GetItemIconPanels(dsheet)
+            if not dsheet then return end
+            local panelHierachy
 
-        -- The way the buy menu panels are laid out depends on what version of TTT you are using
-        -- In Custom Roles, the search bar is in the way, on the main dsheet on the left hand side
-        -- In the regular Better Equipment Menu UI, and TTT2, the search bar is on the right hand side, a different panel to the main dsheet
-        -- First index is the scroll panel child, the second index is the "Equipment Items" child, its children are all of the buy menu icons
-        -- A table of the children of that panel is returned (The buy menu icons)
-        if CR_VERSION then
-            panelHierachy = {2, 1}
-        else
-            panelHierachy = {1, 1}
-        end
-
-        local buyMenu
-
-        for _, tab in ipairs(dsheet:GetItems()) do
-            if tab.Name == "Order Equipment" then
-                buyMenu = tab.Panel
-                break
+            -- The way the buy menu panels are laid out depends on what version of TTT you are using
+            -- In Custom Roles, the search bar is in the way, on the main dsheet on the left hand side
+            -- In the regular Better Equipment Menu UI, and TTT2, the search bar is on the right hand side, a different panel to the main dsheet
+            -- First index is the scroll panel child, the second index is the "Equipment Items" child, its children are all of the buy menu icons
+            -- A table of the children of that panel is returned (The buy menu icons)
+            if CR_VERSION then
+                panelHierachy = {2, 1}
+            else
+                panelHierachy = {1, 1}
             end
-        end
 
-        if not buyMenu then return end
-        buyMenu = buyMenu:GetChildren()
+            local buyMenu
 
-        -- From here, things get unavoidably arbitrary
-        -- Hopefully Panel:GetChildren() always returns these child panels the same way every time since they don't have any sort of ID
-        -- Being super careful here to check for nil or empty table values at each step,
-        -- since Gmod store skins or future updates for the buy menu could render it unusable otherwise
-        for _, childIndex in ipairs(panelHierachy) do
-            if not buyMenu or table.IsEmpty(buyMenu) then return end
-            buyMenu = buyMenu[childIndex]
+            for _, tab in ipairs(dsheet:GetItems()) do
+                if tab.Name == "Order Equipment" then
+                    buyMenu = tab.Panel
+                    break
+                end
+            end
+
             if not buyMenu then return end
             buyMenu = buyMenu:GetChildren()
+
+            -- From here, things get unavoidably arbitrary
+            -- Hopefully Panel:GetChildren() always returns these child panels the same way every time since they don't have any sort of ID
+            -- Being super careful here to check for nil or empty table values at each step,
+            -- since Gmod store skins or future updates for the buy menu could render it unusable otherwise
+            for _, childIndex in ipairs(panelHierachy) do
+                if not buyMenu or table.IsEmpty(buyMenu) then return end
+                buyMenu = buyMenu[childIndex]
+                if not buyMenu then return end
+                buyMenu = buyMenu:GetChildren()
+            end
+
+            return buyMenu
         end
 
-        return buyMenu
-    end
+        local iconToClass = {}
 
-    local iconToClass = {}
+        local function GetClassFromIcon(icon)
+            if table.IsEmpty(iconToClass) then
+                for _, wep in ipairs(weapons.GetList()) do
+                    local wepIcon = wep.Icon
 
-    local function GetClassFromIcon(icon)
-        if table.IsEmpty(iconToClass) then
-            for _, wep in ipairs(weapons.GetList()) do
-                local wepIcon = wep.Icon
+                    if wepIcon then
+                        if TTT2 then
+                            wepIcon = string.StripExtension(wepIcon)
+                        end
 
-                if wepIcon then
-                    if TTT2 then
-                        wepIcon = string.StripExtension(wepIcon)
-                    end
-
-                    iconToClass[wepIcon] = WEPS.GetClass(wep)
-                end
-            end
-
-            -- Because TTT2 passes a string ID for passive items, we can actually use the ID of an item to uniquely identify it
-            -- (For once a win for TTT2...)
-            if TTT2 then
-                for _, equ in ipairs(items.GetList()) do
-                    local equIcon = equ.material
-
-                    if equIcon then
-                        iconToClass[equIcon] = equ.id
-                    end
-                end
-            else
-                for _, equ in ipairs(EquipmentItems[ROLE_DETECTIVE]) do
-                    local equIcon = equ.material
-
-                    if equIcon then
-                        iconToClass[equIcon] = equ.name
-                    end
-                end
-            end
-        end
-
-        return iconToClass[icon]
-    end
-
-    local mainBuyMenuPanel
-
-    hook.Add("TTTEquipmentTabs", "TTTTrophiesAddBuyMenuIcons", function(dsheet)
-        -- Don't ask the server for unbought items if this trophy has been disabled
-        -- (This also then prevents any icons from being added, since there's then no need)
-        -- Also disable icons if the player has disabled trophy chat messages since they likely aren't interested in hunting trophies
-        if not GetGlobalBool("trophies_buyemalldetective") or not TTTTrophies:IsDetectiveTeam(LocalPlayer()) or not GetConVar("ttt_trophies_chat"):GetBool() then return end
-        mainBuyMenuPanel = dsheet
-        net.Start("TTTTrophiesBuyEmAllDetectiveGetUnbought")
-        net.SendToServer()
-    end)
-
-    net.Receive("TTTTrophiesBuyEmAllDetectiveSendUnbought", function()
-        -- If the player has closed the buy menu in the time it takes for the server to respond with the list of unbought items, then don't do anything
-        if not mainBuyMenuPanel then return end
-        local unboughtEquipment = {}
-        local noOfUnboughtEquipment = net.ReadUInt(8)
-        if noOfUnboughtEquipment == 0 then return end
-
-        for i = 1, noOfUnboughtEquipment do
-            unboughtEquipment[net.ReadString()] = true
-        end
-
-        -- First traverse down the buy menu panel hierarchy
-        local itemIcons = GetItemIconPanels(mainBuyMenuPanel)
-        if not itemIcons or table.IsEmpty(itemIcons) then return end
-        -- Now we've finally made it, start looping through the buy menu icons
-        local iconToUnbought = {}
-
-        for _, iconPanel in ipairs(itemIcons) do
-            if not iconPanel.GetIcon then return end
-            local icon
-
-            -- TTT2 just loves to be difficult doesn't it?
-            -- (TTT2 breaks the GetIcon() function, it always returns nil...)
-            if TTT2 then
-                icon = iconPanel.Icon:GetMaterial():GetName()
-            else
-                icon = iconPanel:GetIcon()
-            end
-
-            local class = GetClassFromIcon(icon)
-            -- Skip passive items, or items we couldn't find
-            if not class then continue end
-
-            -- Count how many items are unbought vs. not
-            if unboughtEquipment[class] then
-                iconToUnbought[icon] = true
-            end
-        end
-
-        -- Then create the icons, either showing unbought, or not unbought, whichever adds less icons
-        for _, iconPanel in ipairs(itemIcons) do
-            local unbought
-
-            if TTT2 then
-                unbought = iconToUnbought[iconPanel.Icon:GetMaterial():GetName()]
-            else
-                unbought = iconToUnbought[iconPanel:GetIcon()]
-            end
-
-            if not unbought then continue end
-            local icon = vgui.Create("DImage")
-            icon:SetImage("ttt_trophies/gold16.png")
-            icon:SetTooltip("Never Bought")
-            -- Set the icon to be faded if the buy menu icon is faded (e.g. weapon is not re-buyable)
-            icon:SetImageColor(iconPanel.Icon:GetImageColor())
-
-            -- This is how other overlayed icons are done in vanilla TTT, so we do the same here
-            -- This normally used for the slot icon and custom item icon
-            -- Hopefully TTT2 also has a "LayeredIcon" vgui element but you know how TTT2 goes... We'll probably have to do something else...
-            icon.PerformLayout = function(s)
-                s:AlignTop(4)
-                s:CenterHorizontal()
-                s:SetSize(16, 16)
-            end
-
-            -- Vanilla TTT doesn't support adding icons onto passive items, so we have to add the required functions ourselves...
-            if not iconPanel.AddLayer then
-                iconPanel.Layers = {}
-
-                function iconPanel:AddLayer(pnl)
-                    if not IsValid(pnl) then return end
-                    pnl:SetParent(self)
-                    pnl:SetMouseInputEnabled(false)
-                    pnl:SetKeyboardInputEnabled(false)
-                    table.insert(self.Layers, pnl)
-                end
-
-                function iconPanel:PerformLayout()
-                    if self.animPress:Active() then return end
-                    self:SetSize(self.m_iIconSize, self.m_iIconSize)
-                    self.Icon:StretchToParent(0, 0, 0, 0)
-
-                    for _, p in ipairs(self.Layers) do
-                        p:SetPos(0, 0)
-                        p:InvalidateLayout()
+                        iconToClass[wepIcon] = WEPS.GetClass(wep)
                     end
                 end
 
-                function iconPanel:EnableMousePassthrough(pnl)
-                    for _, p in pairs(self.Layers) do
-                        if p == pnl then
-                            p.OnMousePressed = function(s, mc)
-                                s:GetParent():OnMousePressed(mc)
-                            end
+                -- Because TTT2 passes a string ID for passive items, we can actually use the ID of an item to uniquely identify it
+                -- (For once a win for TTT2...)
+                if TTT2 then
+                    for _, equ in ipairs(items.GetList()) do
+                        local equIcon = equ.material
 
-                            p.OnCursorEntered = function(s)
-                                s:GetParent():OnCursorEntered()
-                            end
+                        if equIcon then
+                            iconToClass[equIcon] = equ.id
+                        end
+                    end
+                else
+                    for _, equ in ipairs(EquipmentItems[ROLE_DETECTIVE]) do
+                        local equIcon = equ.material
 
-                            p.OnCursorExited = function(s)
-                                s:GetParent():OnCursorExited()
-                            end
-
-                            p:SetMouseInputEnabled(true)
+                        if equIcon then
+                            iconToClass[equIcon] = equ.name
                         end
                     end
                 end
             end
 
-            iconPanel:AddLayer(icon)
-            iconPanel:EnableMousePassthrough(icon)
+            return iconToClass[icon]
         end
+
+        local mainBuyMenuPanel
+
+        hook.Add("TTTEquipmentTabs", "TTTTrophiesAddBuyMenuIconsDetective", function(dsheet)
+            -- Don't ask the server for unbought items if this trophy has been disabled
+            -- (This also then prevents any icons from being added, since there's then no need)
+            -- Also disable icons if the player has disabled trophy chat messages since they likely aren't interested in hunting trophies
+            if not GetGlobalBool("trophies_buyemalldetective") or not TTTTrophies:IsDetectiveLike(LocalPlayer()) or not GetConVar("ttt_trophies_chat"):GetBool() then return end
+            mainBuyMenuPanel = dsheet
+            net.Start("TTTTrophiesBuyEmAllDetectiveGetUnbought")
+            net.SendToServer()
+        end)
+
+        net.Receive("TTTTrophiesBuyEmAllDetectiveSendUnbought", function()
+            -- If the player has closed the buy menu in the time it takes for the server to respond with the list of unbought items, then don't do anything
+            if not mainBuyMenuPanel then return end
+            local unboughtEquipment = {}
+            local noOfUnboughtEquipment = net.ReadUInt(8)
+            if noOfUnboughtEquipment == 0 then return end
+
+            for i = 1, noOfUnboughtEquipment do
+                unboughtEquipment[net.ReadString()] = true
+            end
+
+            -- First traverse down the buy menu panel hierarchy
+            local itemIcons = GetItemIconPanels(mainBuyMenuPanel)
+            if not itemIcons or table.IsEmpty(itemIcons) then return end
+            -- Now we've finally made it, start looping through the buy menu icons
+            local iconToUnbought = {}
+
+            for _, iconPanel in ipairs(itemIcons) do
+                if not iconPanel.GetIcon then return end
+                local icon
+
+                -- TTT2 just loves to be difficult doesn't it?
+                -- (TTT2 breaks the GetIcon() function, it always returns nil...)
+                if TTT2 then
+                    icon = iconPanel.Icon:GetMaterial():GetName()
+                else
+                    icon = iconPanel:GetIcon()
+                end
+
+                local class = GetClassFromIcon(icon)
+                -- Skip passive items, or items we couldn't find
+                if not class then continue end
+
+                -- Count how many items are unbought vs. not
+                if unboughtEquipment[class] then
+                    iconToUnbought[icon] = true
+                end
+            end
+
+            -- Then create the icons, either showing unbought, or not unbought, whichever adds less icons
+            for _, iconPanel in ipairs(itemIcons) do
+                local unbought
+
+                if TTT2 then
+                    unbought = iconToUnbought[iconPanel.Icon:GetMaterial():GetName()]
+                else
+                    unbought = iconToUnbought[iconPanel:GetIcon()]
+                end
+
+                if not unbought then continue end
+                local icon = vgui.Create("DImage")
+                icon:SetImage("ttt_trophies/gold16.png")
+                icon:SetTooltip("Never Bought")
+                -- Set the icon to be faded if the buy menu icon is faded (e.g. weapon is not re-buyable)
+                icon:SetImageColor(iconPanel.Icon:GetImageColor())
+
+                -- This is how other overlayed icons are done in vanilla TTT, so we do the same here
+                -- This normally used for the slot icon and custom item icon
+                -- Hopefully TTT2 also has a "LayeredIcon" vgui element but you know how TTT2 goes... We'll probably have to do something else...
+                icon.PerformLayout = function(s)
+                    s:AlignTop(4)
+                    s:CenterHorizontal()
+                    s:SetSize(16, 16)
+                end
+
+                -- Vanilla TTT doesn't support adding icons onto passive items, so we have to add the required functions ourselves...
+                if not iconPanel.AddLayer then
+                    iconPanel.Layers = {}
+
+                    function iconPanel:AddLayer(pnl)
+                        if not IsValid(pnl) then return end
+                        pnl:SetParent(self)
+                        pnl:SetMouseInputEnabled(false)
+                        pnl:SetKeyboardInputEnabled(false)
+                        table.insert(self.Layers, pnl)
+                    end
+
+                    function iconPanel:PerformLayout()
+                        if self.animPress:Active() then return end
+                        self:SetSize(self.m_iIconSize, self.m_iIconSize)
+                        self.Icon:StretchToParent(0, 0, 0, 0)
+
+                        for _, p in ipairs(self.Layers) do
+                            p:SetPos(0, 0)
+                            p:InvalidateLayout()
+                        end
+                    end
+
+                    function iconPanel:EnableMousePassthrough(pnl)
+                        for _, p in pairs(self.Layers) do
+                            if p == pnl then
+                                p.OnMousePressed = function(s, mc)
+                                    s:GetParent():OnMousePressed(mc)
+                                end
+
+                                p.OnCursorEntered = function(s)
+                                    s:GetParent():OnCursorEntered()
+                                end
+
+                                p.OnCursorExited = function(s)
+                                    s:GetParent():OnCursorExited()
+                                end
+
+                                p:SetMouseInputEnabled(true)
+                            end
+                        end
+                    end
+                end
+
+                iconPanel:AddLayer(icon)
+                iconPanel:EnableMousePassthrough(icon)
+            end
+        end)
     end)
 end
 
