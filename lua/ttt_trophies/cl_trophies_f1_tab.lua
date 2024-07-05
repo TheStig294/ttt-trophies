@@ -335,7 +335,7 @@ local function AddTrophiesList()
     hook.Add("TTTSettingsTabs", "TTTTrophies", function(dtabs)
         local basePnl = CreateTrophiesMenu()
         -- Adds the tab panel to TTT's F1 menu
-        dtabs:AddSheet("Trophies", basePnl, "ttt_trophies/bronze16.png", false, false, "TTT Trophies/Achievements")
+        dtabs:AddSheet("Trophies", basePnl, "ttt_trophies/gold16.png", false, false, "TTT Trophies/Achievements")
 
         if hotkeyPressed then
             hotkeyPressed = false

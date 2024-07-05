@@ -97,10 +97,10 @@ hook.Add("PlayerButtonDown", "TTTTrophiesRainbowHokey", function(ply, button)
         else
             if chatMessagesCvar:GetBool() then
                 chatMessagesCvar:SetBool(false)
-                chat.AddText("Trophy chat messages disabled\n(\"Trophy earned\" popups on the top right will still show)")
+                chat.AddText("Trophy chat messages and buy menu icons disabled\n(\"Trophy earned\" popups on the top right will still show)")
             else
                 chatMessagesCvar:SetBool(true)
-                chat.AddText("Trophy chat messages enabled")
+                chat.AddText("Trophy chat messages and buy menu icons enabled")
             end
 
             net.Start("TTTTrophiesRainbowToggle")
