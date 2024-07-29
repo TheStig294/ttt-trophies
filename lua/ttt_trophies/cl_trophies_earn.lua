@@ -117,8 +117,8 @@ local mult = 1
 local halfMult = mult / 2
 
 hook.Add("PreDrawViewModel", "TTTTrophiesRainbow", function(vm, ply, weapon)
-    -- Don't try to do the rainbow effect while a player hasn't earned all trophies yet
-    if not rainbowToggle or ply:IsSpec() or not ply:Alive() or ply:GetRenderMode() ~= RENDERMODE_NORMAL or ply:GetNoDraw() or ply:GetNWBool("disguised", false) or ply:GetMaterial() == "sprites/heatwave" then
+    -- Don't try to do the rainbow effect while a player is disguised, invisible, dead, hasn't earned all trophies yet or has an upgraded weapon
+    if not rainbowToggle or ply:IsSpec() or not ply:Alive() or ply:GetRenderMode() ~= RENDERMODE_NORMAL or ply:GetNoDraw() or ply:GetNWBool("disguised", false) or ply:GetMaterial() == "sprites/heatwave" or weapon.PAPUpgrade then
         vm:SetColor(COLOR_WHITE)
 
         return

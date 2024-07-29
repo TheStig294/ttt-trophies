@@ -151,8 +151,8 @@ hook.Add("PlayerPostThink", "TTTPlatinumTrophyReward", function(ply)
     local wep = ply:GetActiveWeapon()
     if not IsValid(wep) then return end
 
-    -- Don't try to do the rainbow effect while a player is disguised, invisible, dead or hasn't earned all trophies yet
-    if not TTTTrophies.rainbowPlayers[ply:SteamID()] or ply:IsSpec() or not ply:Alive() or ply:GetRenderMode() ~= RENDERMODE_NORMAL or ply:GetNoDraw() or ply:GetNWBool("disguised", false) or ply:GetMaterial() == "sprites/heatwave" then
+    -- Don't try to do the rainbow effect while a player is disguised, invisible, dead, hasn't earned all trophies yet or has an upgraded weapon
+    if not TTTTrophies.rainbowPlayers[ply:SteamID()] or ply:IsSpec() or not ply:Alive() or ply:GetRenderMode() ~= RENDERMODE_NORMAL or ply:GetNoDraw() or ply:GetNWBool("disguised", false) or ply:GetMaterial() == "sprites/heatwave" or wep.PAPUpgrade then
         wep:SetColor(COLOR_WHITE)
 
         return
