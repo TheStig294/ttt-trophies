@@ -258,7 +258,7 @@ if CLIENT then
             -- Don't ask the server for unbought items if this trophy has been disabled
             -- (This also then prevents any icons from being added, since there's then no need)
             -- Also disable icons if the player has disabled trophy chat messages since they likely aren't interested in hunting trophies
-            if not GetGlobalBool("trophies_buyemalltraitor") or not TTTTrophies:IsTraitorTeam(LocalPlayer()) or not GetConVar("ttt_trophies_chat"):GetBool() then return end
+            if not GetGlobalBool("trophies_buyemalltraitor") or TTTTrophies.trophies.buyemalltraitor.earned or not TTTTrophies:IsTraitorTeam(LocalPlayer()) or not GetConVar("ttt_trophies_chat"):GetBool() then return end
             mainBuyMenuPanel = dsheet
             net.Start("TTTTrophiesBuyEmAllTraitorGetUnbought")
             net.SendToServer()
@@ -266,7 +266,7 @@ if CLIENT then
 
         net.Receive("TTTTrophiesBuyEmAllTraitorSendUnbought", function()
             -- If the player has closed the buy menu in the time it takes for the server to respond with the list of unbought items, then don't do anything
-            if not mainBuyMenuPanel then return end
+            if not mainBuyMenuPanel or not mainBuyMenuPanel.GetItems then return end
             local unboughtEquipment = {}
             local noOfUnboughtEquipment = net.ReadUInt(8)
             if noOfUnboughtEquipment == 0 then return end
