@@ -1,7 +1,5 @@
 -- The tab added to TTT's F1 settings menu
 local hotkeyPressed = false
-local earnedTrophies = {}
-local unearnedTrophies = {}
 
 surface.CreateFont("TrophyDesc", {
     font = "Arial",
@@ -198,6 +196,64 @@ local function AdminOptionsMenu()
     end
 end
 
+local earnedTrophies = {}
+local unearnedTrophies = {}
+
+local function DrawTrophiesList(list, searchQuery)
+    if not searchQuery then
+        searchQuery = ""
+    end
+
+    -- Sorts the trophies by earned/unearned and rarity
+    if table.IsEmpty(earnedTrophies) and table.IsEmpty(unearnedTrophies) then
+        for id, trophy in pairs(TTTTrophies.trophies) do
+            if trophy.earned then
+                table.insert(earnedTrophies, trophy)
+            else
+                table.insert(unearnedTrophies, trophy)
+            end
+        end
+    end
+
+    -- If there is a search query, search the trophies' title and description
+    -- Find the name and description for each unearned trophy
+    for id, TROPHY in SortedPairsByMemberValue(unearnedTrophies, "rarity", false) do
+        local description = ""
+
+        if TROPHY.title then
+            description = description .. TROPHY.title
+        end
+
+        -- Don't show results for trophies with hidden descriptions
+        if TROPHY.earned or (not GetGlobalBool("ttt_trophies_hide_all_trophies") and not TROPHY.hidden) or TROPHY.forceDesc then
+            description = description .. TROPHY.desc
+        end
+
+        -- Search for the trophies' name and description
+        if string.find(string.lower(description), string.lower(searchQuery), 1, true) then
+            DrawTrophyBar(list, TROPHY)
+        end
+    end
+
+    -- Find the name and description for each earned trophy
+    for id, TROPHY in SortedPairsByMemberValue(earnedTrophies, "rarity", false) do
+        local description = ""
+
+        if TROPHY.title then
+            description = description .. TROPHY.title
+        end
+
+        if TROPHY.desc then
+            description = description .. TROPHY.desc
+        end
+
+        -- Search for the trophies' title and description
+        if string.find(string.lower(description), string.lower(searchQuery), 1, true) then
+            DrawTrophyBar(list, TROPHY)
+        end
+    end
+end
+
 local function CreateTrophiesMenu()
     -- Base panel
     local basePnl = vgui.Create("DPanel")
@@ -290,10 +346,14 @@ local function CreateTrophiesMenu()
         GetConVar("ttt_trophies_hotkey_rainbow"):SetString(string.upper(self:GetText()))
     end
 
+    -- Search bar
+    local searchBar = nonScrollList:Add("DTextEntry")
+    searchBar:SetSize(570, 20)
+    searchBar:SetPlaceholderText("Search...")
+    searchBar:SetUpdateOnType(true)
     -- Scrollbar
     local scroll = vgui.Create("DScrollPanel", basePnl)
-    scroll:Dock(BOTTOM)
-    scroll:SetSize(600, 280)
+    scroll:Dock(FILL)
     -- List of trophies in scrollbar
     local list = vgui.Create("DIconLayout", scroll)
     list:Dock(FILL)
@@ -307,24 +367,13 @@ local function CreateTrophiesMenu()
         draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0))
     end
 
-    -- Sorts the trophies by earned/unearned and rarity
-    if table.IsEmpty(earnedTrophies) and table.IsEmpty(unearnedTrophies) then
-        for id, trophy in pairs(TTTTrophies.trophies) do
-            if trophy.earned then
-                table.insert(earnedTrophies, trophy)
-            else
-                table.insert(unearnedTrophies, trophy)
-            end
-        end
-    end
+    DrawTrophiesList(list)
 
-    -- The list of trophies, showing if they are earned or not
-    for id, trophy in SortedPairsByMemberValue(unearnedTrophies, "rarity", false) do
-        DrawTrophyBar(list, trophy)
-    end
-
-    for id, trophy in SortedPairsByMemberValue(earnedTrophies, "rarity", false) do
-        DrawTrophyBar(list, trophy)
+    -- Refreshes the trophies list according to what is typed in the search bar
+    searchBar.OnValueChange = function(_, value)
+        list:Clear()
+        scroll:InvalidateLayout()
+        DrawTrophiesList(list, value)
     end
 
     return basePnl
