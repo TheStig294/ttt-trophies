@@ -258,7 +258,7 @@ if CLIENT then
             -- Don't ask the server for unbought items if this trophy has been disabled
             -- (This also then prevents any icons from being added, since there's then no need)
             -- Also disable icons if the player has disabled trophy chat messages since they likely aren't interested in hunting trophies
-            if not GetGlobalBool("trophies_buyemalldetective") or TTTTrophies.trophies.buyemalldetective.earned or not TTTTrophies:IsDetectiveLike(LocalPlayer()) or not GetConVar("ttt_trophies_chat"):GetBool() then return end
+            if not GetGlobalBool("trophies_buyemalldetective") or not TTTTrophies.trophies.buyemalldetective or TTTTrophies.trophies.buyemalldetective.earned or not TTTTrophies:IsDetectiveLike(LocalPlayer()) or not GetConVar("ttt_trophies_chat"):GetBool() then return end
             mainBuyMenuPanel = dsheet
             net.Start("TTTTrophiesBuyEmAllDetectiveGetUnbought")
             net.SendToServer()
