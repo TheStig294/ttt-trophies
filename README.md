@@ -455,3 +455,6 @@ As a Zombie, buy an item\
 \
 _trophies_zombie_ - Default: 1 - Whether this trophy is enabled\
 Requires: [Custom Roles for TTT](https://steamcommunity.com/sharedfiles/filedetails/?id=2421039084)
+
+## Steam Workshop Link
+https://steamcommunity.com/sharedfiles/filedetails/?id=2902853445
