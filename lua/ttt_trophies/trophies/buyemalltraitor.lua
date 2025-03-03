@@ -136,17 +136,33 @@ function TROPHY:Trigger()
 
             if table.IsEmpty(unboughtEquipment) or unboughtEquipment == {} then
                 self:Earn(ply)
-            else
                 -- Only show progress towards the trophy if the number of traitor items bought has changed
-                if not TTTTrophies.stats[self.id][plyID]["___noOfBoughtItems"] or noOfBoughtItems ~= TTTTrophies.stats[self.id][plyID]["___noOfBoughtItems"] then
-                    TTTTrophies.stats[self.id][plyID]["___noOfBoughtItems"] = noOfBoughtItems
-                    self:ProgressUpdate(ply, noOfBoughtItems, noOfBuyableEquipment)
+            elseif not TTTTrophies.stats[self.id][plyID]["___noOfBoughtItems"] or noOfBoughtItems ~= TTTTrophies.stats[self.id][plyID]["___noOfBoughtItems"] then
+                TTTTrophies.stats[self.id][plyID]["___noOfBoughtItems"] = noOfBoughtItems
+                self:ProgressUpdate(ply, noOfBoughtItems, noOfBuyableEquipment)
+
+                if #unboughtEquipment < 5 then
+                    for _, equ in ipairs(unboughtEquipment) do
+                        local printname = TTTTrophies:GetWeaponName(equ)
+
+                        if printname then
+                            ply:ChatPrint(printname)
+                        else
+                            timer.Simple(2, function()
+                                printname = TTTTrophies:GetWeaponName(equ)
+
+                                if printname then
+                                    ply:ChatPrint(printname)
+                                end
+                            end)
+                        end
+                    end
                 end
             end
         end)
     end)
 
-    net.Receive("TTTTrophiesBuyEmAllTraitorGetUnbought", function(len, ply)
+    net.Receive("TTTTrophiesBuyEmAllTraitorGetUnbought", function(_, ply)
         local unboughtEquipment, noOfBoughtItems, noOfBuyableEquipment = GetUnboughtEquipment(ply:SteamID())
         local noOfUnboughtEquipment = #unboughtEquipment
 
@@ -165,10 +181,10 @@ function TROPHY:Trigger()
     end)
 end
 
--- 
--- Adding icons to the buy menu to show if a weapon is unbought or not
--- 
 if CLIENT then
+    -- 
+    -- Adding icons to the buy menu to show if a weapon is unbought or not
+    -- 
     hook.Add("PostGamemodeLoaded", "TTTTrophiesBuyEmAllTraitor", function()
         -- Travels down the panel hierarchy of the buy menu, and returns a table of all buy menu icons
         local function GetItemIconPanels(dsheet)

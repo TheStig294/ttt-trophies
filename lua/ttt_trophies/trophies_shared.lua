@@ -167,3 +167,62 @@ function TTTTrophies:CanRoleSpawn(role)
 
     return false
 end
+
+if SERVER then
+    util.AddNetworkString("TTTTrophiesRequestWeaponName")
+    util.AddNetworkString("TTTTrophiesSendWeaponName")
+end
+
+local nameCache = {}
+
+local function GetWeaponName(classname)
+    if nameCache[classname] then return nameCache[classname] end
+    local SWEP = weapons.Get(classname)
+
+    if SWEP then
+        local printname = SWEP.PrintName
+
+        if LANG and LANG.TryTranslation then
+            printname = LANG.TryTranslation(printname)
+        end
+
+        return printname
+    end
+end
+
+-- Can return nil if the weapon name hasn't been cached yet
+function TTTTrophies:GetWeaponName(classname)
+    if nameCache[classname] then return nameCache[classname] end
+
+    if SERVER then
+        local firstPly = Entity(1)
+        if not IsValid(firstPly) then return end
+        net.Start("TTTTrophiesRequestWeaponName")
+        net.WriteString(classname)
+        net.Send(firstPly)
+    else
+        nameCache[classname] = GetWeaponName(classname)
+
+        return nameCache[classname]
+    end
+end
+
+if CLIENT then
+    net.Receive("TTTTrophiesRequestWeaponName", function()
+        local classname = net.ReadString()
+        local printname = GetWeaponName(classname)
+        net.Start("TTTTrophiesSendWeaponName")
+        net.WriteString(classname)
+        net.WriteString(printname)
+        net.SendToServer()
+    end)
+end
+
+if SERVER then
+    net.Receive("TTTTrophiesSendWeaponName", function(_, ply)
+        if ply:EntIndex() ~= 1 then return end
+        local classname = net.ReadString()
+        local printname = net.ReadString()
+        nameCache[classname] = printname
+    end)
+end

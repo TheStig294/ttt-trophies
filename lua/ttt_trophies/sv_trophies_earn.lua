@@ -16,7 +16,7 @@ end
 util.AddNetworkString("TTTRequestEarnedTrophies")
 util.AddNetworkString("TTTSendEarnedTrophies")
 
-net.Receive("TTTRequestEarnedTrophies", function(len, ply)
+net.Receive("TTTRequestEarnedTrophies", function(_, ply)
     local chatMessagesCvar = net.ReadBool()
     ply.DisableTrophyChatMessages = not chatMessagesCvar
     local id = ply:SteamID()
@@ -25,17 +25,17 @@ net.Receive("TTTRequestEarnedTrophies", function(len, ply)
     if not TTTTrophies.earned[id] or table.IsEmpty(TTTTrophies.earned[id]) or TTTTrophies.earned[id] == {} then
         count = 0
         TTTTrophies.earned[id] = {}
-        TTTTrophies.earned[id]["___name"] = ply:Nick()
     else
         count = table.Count(TTTTrophies.earned[id])
     end
 
+    TTTTrophies.earned[id]["___name"] = ply:Nick()
     net.Start("TTTSendEarnedTrophies")
     net.WriteUInt(count, 16)
     net.WriteBool(TTTTrophies.rainbowPlayers[id] or false)
 
     if count > 0 then
-        for trophyID, earned in pairs(TTTTrophies.earned[id]) do
+        for trophyID, _ in pairs(TTTTrophies.earned[id]) do
             net.WriteString(trophyID)
         end
     end
@@ -45,7 +45,7 @@ end)
 
 util.AddNetworkString("TTTTrophiesResetAllAchievements")
 
-net.Receive("TTTTrophiesResetAllAchievements", function(len, ply)
+net.Receive("TTTTrophiesResetAllAchievements", function(_, ply)
     if not ply:IsAdmin() then return end
     TTTTrophies.earned = {}
     TTTTrophies.rainbowPlayers = {}
@@ -89,7 +89,7 @@ hook.Add("TTTBeginRound", "TTTTrophiesRoleSpecificChatSuggestion", function()
     if not GetGlobalBool("ttt_trophies_suggestion_msgs") then return end
 
     timer.Simple(3, function()
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if ply.DisableTrophyChatMessages then continue end
             if not ply:Alive() or ply:IsSpec() then continue end
             local role = ply:GetRole()
@@ -121,7 +121,7 @@ end)
 -- Controls toggling a player's rainbow effect on and off
 util.AddNetworkString("TTTTrophiesRainbowToggle")
 
-net.Receive("TTTTrophiesRainbowToggle", function(len, ply)
+net.Receive("TTTTrophiesRainbowToggle", function(_, ply)
     local earnedPlatinum = net.ReadBool()
 
     if earnedPlatinum then
