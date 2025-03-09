@@ -83,7 +83,7 @@ function TROPHY:Trigger()
         timer.Simple(0.1, function()
             -- Items given by randomats aren't bought by the player, so they shouldn't count
             if given_by_randomat or GetGlobalBool("DisableRandomatStats") or not IsValid(ply) then return end
-            if not TTTTrophies:IsDetectiveTeam(ply) then return end
+            if not TTTTrophies:IsDetectiveLike(ply) then return end
 
             -- Recording the item as bought
             -- If an item is a passive item, then the passed item id in the equipment parameter needs to be converted to the item's print name
@@ -143,19 +143,7 @@ function TROPHY:Trigger()
 
                 if #unboughtEquipment < 5 then
                     for _, equ in ipairs(unboughtEquipment) do
-                        local printname = TTTTrophies:GetWeaponName(equ)
-
-                        if printname then
-                            ply:ChatPrint(printname)
-                        else
-                            timer.Simple(2, function()
-                                printname = TTTTrophies:GetWeaponName(equ)
-
-                                if printname then
-                                    ply:ChatPrint(printname)
-                                end
-                            end)
-                        end
+                        TTTTrophies:PrintWeaponName(equ, ply)
                     end
                 end
             end
@@ -274,7 +262,7 @@ if CLIENT then
             -- Don't ask the server for unbought items if this trophy has been disabled
             -- (This also then prevents any icons from being added, since there's then no need)
             -- Also disable icons if the player has disabled trophy chat messages since they likely aren't interested in hunting trophies
-            if not GetGlobalBool("trophies_buyemalldetective") or not TTTTrophies.trophies.buyemalldetective or TTTTrophies.trophies.buyemalldetective.earned or not TTTTrophies:IsDetectiveTeam(LocalPlayer()) or not GetConVar("ttt_trophies_chat"):GetBool() then return end
+            if not GetGlobalBool("trophies_buyemalldetective") or not TTTTrophies.trophies.buyemalldetective or TTTTrophies.trophies.buyemalldetective.earned or not TTTTrophies:IsDetectiveLike(LocalPlayer()) or not GetConVar("ttt_trophies_chat"):GetBool() then return end
             mainBuyMenuPanel = dsheet
             net.Start("TTTTrophiesBuyEmAllDetectiveGetUnbought")
             net.SendToServer()
