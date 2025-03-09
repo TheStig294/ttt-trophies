@@ -216,46 +216,6 @@ if CLIENT then
             return buyMenu
         end
 
-        local iconToClass = {}
-
-        local function GetClassFromIcon(icon)
-            if table.IsEmpty(iconToClass) then
-                for _, wep in ipairs(weapons.GetList()) do
-                    local wepIcon = wep.Icon
-
-                    if wepIcon then
-                        if TTT2 then
-                            wepIcon = string.StripExtension(wepIcon)
-                        end
-
-                        iconToClass[wepIcon] = WEPS.GetClass(wep)
-                    end
-                end
-
-                -- Because TTT2 passes a string ID for passive items, we can actually use the ID of an item to uniquely identify it
-                -- (For once a win for TTT2...)
-                if TTT2 then
-                    for _, equ in ipairs(items.GetList()) do
-                        local equIcon = equ.material
-
-                        if equIcon then
-                            iconToClass[equIcon] = equ.id
-                        end
-                    end
-                else
-                    for _, equ in ipairs(EquipmentItems[ROLE_DETECTIVE]) do
-                        local equIcon = equ.material
-
-                        if equIcon then
-                            iconToClass[equIcon] = equ.name
-                        end
-                    end
-                end
-            end
-
-            return iconToClass[icon]
-        end
-
         local mainBuyMenuPanel
 
         hook.Add("TTTEquipmentTabs", "TTTTrophiesAddBuyMenuIconsDetective", function(dsheet)
@@ -282,41 +242,12 @@ if CLIENT then
             -- First traverse down the buy menu panel hierarchy
             local itemIcons = GetItemIconPanels(mainBuyMenuPanel)
             if not itemIcons or table.IsEmpty(itemIcons) then return end
+
             -- Now we've finally made it, start looping through the buy menu icons
-            local iconToUnbought = {}
-
-            for _, iconPanel in ipairs(itemIcons) do
-                if not iconPanel.GetIcon then return end
-                local icon
-
-                -- TTT2 just loves to be difficult doesn't it?
-                -- (TTT2 breaks the GetIcon() function, it always returns nil...)
-                if TTT2 then
-                    icon = iconPanel.Icon:GetMaterial():GetName()
-                else
-                    icon = iconPanel:GetIcon()
-                end
-
-                local class = GetClassFromIcon(icon)
-                -- Skip passive items, or items we couldn't find
-                if not class then continue end
-
-                -- Count how many items are unbought vs. not
-                if unboughtEquipment[class] then
-                    iconToUnbought[icon] = true
-                end
-            end
-
             -- Then create the icons, either showing unbought, or not unbought, whichever adds less icons
             for _, iconPanel in ipairs(itemIcons) do
-                local unbought
-
-                if TTT2 then
-                    unbought = iconToUnbought[iconPanel.Icon:GetMaterial():GetName()]
-                else
-                    unbought = iconToUnbought[iconPanel:GetIcon()]
-                end
-
+                if not iconPanel.item or (not iconPanel.item.id and not iconPanel.item.name) then return end
+                local unbought = unboughtEquipment[iconPanel.item.id] or unboughtEquipment[iconPanel.item.name]
                 if not unbought then continue end
                 local icon = vgui.Create("DImage")
                 icon:SetImage("ttt_trophies/gold16.png")
@@ -326,7 +257,6 @@ if CLIENT then
 
                 -- This is how other overlayed icons are done in vanilla TTT, so we do the same here
                 -- This normally used for the slot icon and custom item icon
-                -- Hopefully TTT2 also has a "LayeredIcon" vgui element but you know how TTT2 goes... We'll probably have to do something else...
                 icon.PerformLayout = function(s)
                     s:AlignTop(4)
                     s:CenterHorizontal()

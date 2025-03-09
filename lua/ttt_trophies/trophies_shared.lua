@@ -179,10 +179,15 @@ function TTTTrophies:PrintWeaponName(classname, ply)
         net.Send(ply)
     else
         local SWEP = weapons.Get(classname)
+        local name
 
         if SWEP and SWEP.PrintName and isstring(SWEP.PrintName) then
-            chat.AddText(LANG.TryTranslation(SWEP.PrintName))
+            name = SWEP.PrintName
+        else
+            name = classname
         end
+
+        chat.AddText(LANG.TryTranslation(name))
     end
 end
 
