@@ -143,19 +143,7 @@ function TROPHY:Trigger()
 
                 if #unboughtEquipment < 5 then
                     for _, equ in ipairs(unboughtEquipment) do
-                        local printname = TTTTrophies:GetWeaponName(equ)
-
-                        if printname then
-                            ply:ChatPrint(printname)
-                        else
-                            timer.Simple(2, function()
-                                printname = TTTTrophies:GetWeaponName(equ)
-
-                                if printname then
-                                    ply:ChatPrint(printname)
-                                end
-                            end)
-                        end
+                        TTTTrophies:PrintWeaponName(equ, ply)
                     end
                 end
             end
