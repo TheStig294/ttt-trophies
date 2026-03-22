@@ -7,14 +7,14 @@ TROPHY.hidden = true
 
 function TROPHY:Trigger()
     self:AddHook("PlayerSwitchWeapon", function(ply, oldWep, newWep)
-        if TTTTrophies:IsGoodDetectiveLike(ply) and IsValid(newWep) and newWep:GetClass() == "one_punch_skin" then
+        if TTTTrophies:IsGoodDetectiveLike(ply) and IsValid(newWep) and newWep:GetClass() == "weapon_ttt_one_punch" then
             self:Earn(player.GetAll())
         end
     end)
 end
 
 function TROPHY:Condition()
-    return weapons.Get("one_punch_skin")
+    return weapons.Get("weapon_ttt_one_punch")
 end
 
 RegisterTTTTrophy(TROPHY)
