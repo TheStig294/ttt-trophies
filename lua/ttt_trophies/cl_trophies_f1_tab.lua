@@ -393,9 +393,11 @@ local function AddTrophiesList()
     end)
 end
 
--- Opening the trophies tab when the F1 menu is not available
+local frame
+
 local function OpenStandaloneF1Menu()
-    local frame = vgui.Create("DFrame")
+    if IsValid(frame) then return end
+    frame = vgui.Create("DFrame")
     frame:SetSize(600, 410)
     frame:Center()
     frame:SetTitle("Trophies")
