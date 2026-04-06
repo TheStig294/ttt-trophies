@@ -198,3 +198,19 @@ if CLIENT then
         TTTTrophies:PrintWeaponName(classname)
     end)
 end
+
+function TTTTrophies:GetRoundState()
+    if TTT2 then
+        return gameloop.GetRoundState()
+    else
+        return GetRoundState()
+    end
+end
+
+function TTTTrophies:RoundStartTime()
+    if TTT2 then
+        return gameloop.timeRoundStart
+    else
+        return GAMEMODE.RoundStartTime
+    end
+end

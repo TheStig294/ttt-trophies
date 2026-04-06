@@ -11,7 +11,7 @@ function TROPHY:Trigger()
     local stoppedCrouching = {}
 
     self:AddHook("PlayerButtonDown", function(ply, button)
-        if button == KEY_LCONTROL and (GetRoundState() == ROUND_PREP or (GetRoundState() == ROUND_ACTIVE and CurTime() - GAMEMODE.RoundStartTime < 10)) then
+        if button == KEY_LCONTROL and (TTTTrophies:GetRoundState() == ROUND_PREP or (TTTTrophies:GetRoundState() == ROUND_ACTIVE and CurTime() - TTTTrophies:RoundStartTime() < 10)) then
             startedCrouching[ply] = true
             stoppedCrouching[ply] = false
         end
@@ -24,7 +24,7 @@ function TROPHY:Trigger()
     end)
 
     self:AddHook("TTTEndRound", function()
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if not stoppedCrouching[ply] and startedCrouching[ply] and self:IsAlive(ply) then
                 self:Earn(ply)
             end

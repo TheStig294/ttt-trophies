@@ -6,17 +6,9 @@ TROPHY.rarity = 3
 TROPHY.hidden = true
 
 function TROPHY:Trigger()
-    local roundStartTime
-
-    self:AddHook("TTTBeginRound", function()
-        roundStartTime = CurTime()
-    end)
-
     self:AddHook("TTTEndRound", function(result)
-        if not roundStartTime then return end
-
-        if result == WIN_TRAITOR and CurTime() - roundStartTime < 60 then
-            for _, ply in ipairs(player.GetAll()) do
+        if result == WIN_TRAITOR and CurTime() - TTTTrophies:RoundStartTime() < 60 then
+            for _, ply in player.Iterator() do
                 if TTTTrophies:IsTraitorTeam(ply) then
                     self:Earn(ply)
                 end
