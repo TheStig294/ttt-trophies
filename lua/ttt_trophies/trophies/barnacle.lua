@@ -14,7 +14,7 @@ function TROPHY:Trigger()
 
         if weapon:GetClass() == "weapon_ttt_barnacle" then
             timer.Create("TTTTrophiesCheckBarnacleCaught", 0.1, 0, function()
-                for _, ply in ipairs(player.GetAll()) do
+                for _, ply in player.Iterator() do
                     if ply:IsEFlagSet(EFL_IS_BEING_LIFTED_BY_BARNACLE) then
                         caughtPlayers[ply] = true
                     elseif caughtPlayers[ply] then

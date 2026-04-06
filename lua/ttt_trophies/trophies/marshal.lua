@@ -17,7 +17,7 @@ function TROPHY:Trigger()
     self:AddHook("TTTEndRound", function(result)
         if result ~= WIN_INNOCENT then return end
 
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if ply:IsDeputy() and self:IsAlive(ply) and IsPlayer(promotionPair[ply]) then
                 self:Earn(promotionPair[ply])
             end

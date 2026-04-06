@@ -14,7 +14,7 @@ end
 
 hook.Add("TTTRandomatTriggered", "TTTTrophiesRandoman", function(id, owner)
     if #Randomat.ActiveEvents == 4 then
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if ply:IsRandoman() then
                 TROPHY:Trigger(ply)
             end

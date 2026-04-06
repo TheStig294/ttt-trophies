@@ -19,7 +19,7 @@ function TROPHY:Trigger()
 
     self:AddHook("TTTEndRound", function()
         if TTTTrophies:MapIsSwitching() then
-            for _, ply in ipairs(player.GetAll()) do
+            for _, ply in player.Iterator() do
                 local plyID = ply:SteamID()
 
                 if not perfectMaps[plyID] then

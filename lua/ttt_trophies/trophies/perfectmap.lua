@@ -14,7 +14,7 @@ function TROPHY:Trigger()
 
     self:AddHook("TTTEndRound", function()
         if TTTTrophies:MapIsSwitching() then
-            for _, ply in ipairs(player.GetAll()) do
+            for _, ply in player.Iterator() do
                 if not lostKarma[ply] then
                     self:Earn(ply)
                 end

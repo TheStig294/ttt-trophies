@@ -9,9 +9,9 @@ function TROPHY:Trigger()
     local veteranAlive
 
     self:AddHook("DoPlayerDeath", function()
-        if GetRoundState() ~= ROUND_ACTIVE then return end
+        if TTTTrophies:GetRoundState() ~= ROUND_ACTIVE then return end
 
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if self:IsAlive(ply) then
                 if ply:GetRole() == ROLE_VETERAN then
                     if veteranAlive then

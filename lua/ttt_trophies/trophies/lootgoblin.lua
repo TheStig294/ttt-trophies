@@ -7,7 +7,7 @@ TROPHY.hidden = true
 
 function TROPHY:Trigger()
     self:AddHook("TTTEndRound", function()
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if ply:GetRole() == ROLE_LOOTGOBLIN and self:IsAlive(ply) then
                 self:Earn(ply)
             end

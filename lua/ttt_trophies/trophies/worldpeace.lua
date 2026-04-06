@@ -9,7 +9,7 @@ function TROPHY:Trigger()
     local roundtime
 
     local function ResetTimer()
-        if GetRoundState() ~= ROUND_ACTIVE then return end
+        if TTTTrophies:GetRoundState() ~= ROUND_ACTIVE then return end
 
         timer.Create("TTTTrophiesWorldPeace", roundtime, 1, function()
             self:Earn(player.GetAll())

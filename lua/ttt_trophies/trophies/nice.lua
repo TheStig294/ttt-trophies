@@ -12,7 +12,7 @@ function TROPHY:Trigger()
     local notSpectator = {}
 
     self:AddHook("TTTBeginRound", function()
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if self:IsAlive(ply) then
                 notSpectator[ply] = true
             end
@@ -20,7 +20,7 @@ function TROPHY:Trigger()
     end)
 
     self:AddHook("TTTEndRound", function()
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if notSpectator[ply] then
                 local rounds = TTTTrophies.stats[self.id][ply:SteamID()]
 

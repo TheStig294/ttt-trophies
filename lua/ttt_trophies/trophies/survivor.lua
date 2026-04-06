@@ -29,7 +29,7 @@ function TROPHY:Trigger()
     end)
 
     self:AddHook("TTTEndRound", function()
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             timer.Remove("TTTTrophiesSurvivor" .. ply:SteamID64())
         end
     end)

@@ -49,7 +49,7 @@ function TROPHY:Trigger()
 
     self:AddHook("TTTEndRound", function(result)
         if result == WIN_INNOCENT or result == WIN_TIMELIMIT then
-            for _, ply in ipairs(player.GetAll()) do
+            for _, ply in player.Iterator() do
                 if not randomItemsBought[ply] or not TTTTrophies:IsGoodDetectiveLike(ply) then continue end
                 local earnedTrophy = true
 

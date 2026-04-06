@@ -9,7 +9,7 @@ function TROPHY:Trigger()
     self.roleMessage = ROLE_INNOCENT
 
     self:AddHook("TTTEndRound", function()
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if self:IsAlive(ply) and IsPlayer(ply:GetGroundEntity()) then
                 self:Earn({ply, ply:GetGroundEntity()})
             end

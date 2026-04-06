@@ -25,13 +25,13 @@ function TROPHY:Trigger(eventTriggered)
         if not eventTriggered then return end
 
         if result == WIN_TRAITOR then
-            for _, ply in ipairs(player.GetAll()) do
+            for _, ply in player.Iterator() do
                 if self:IsAlive(ply) and TTTTrophies:IsTraitorTeam(ply) then
                     self:Earn(ply)
                 end
             end
         else
-            for _, ply in ipairs(player.GetAll()) do
+            for _, ply in player.Iterator() do
                 if self:IsAlive(ply) then
                     self:Earn(ply)
                 end

@@ -18,7 +18,7 @@ function TROPHY:Trigger()
 
     -- Backup check for earning the platinum, in case the last trophy becomes disabled, or some other weirdness I didn't think of
     self:AddHook("TTTPrepareRound", function()
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             local earnedPlatinum = true
             local earnedTrophies = TTTTrophies.earned[ply:SteamID()]
             if not earnedTrophies then continue end

@@ -7,7 +7,7 @@ TROPHY.hidden = true
 
 function TROPHY:Trigger()
     self:AddHook("DoPlayerDeath", function(ply, attacker, dmg)
-        if GetRoundState() == ROUND_PREP then
+        if TTTTrophies:GetRoundState() == ROUND_PREP then
             self:Earn(ply)
         end
     end)

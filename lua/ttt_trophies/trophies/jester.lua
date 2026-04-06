@@ -8,7 +8,7 @@ TROPHY.hidden = true
 function TROPHY:Trigger()
     self:AddHook("TTTEndRound", function(result)
         if result == WIN_JESTER then
-            for _, ply in ipairs(player.GetAll()) do
+            for _, ply in player.Iterator() do
                 -- Give the trophy to all dead jesters when the jester has won
                 if ply:GetRole() == ROLE_JESTER and not ply:Alive() and ply:IsSpec() then
                     self:Earn(ply)

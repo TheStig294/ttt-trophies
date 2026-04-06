@@ -11,7 +11,7 @@ function TROPHY:Trigger()
         local drunk
         local otherPlayer
 
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if self:IsAlive(ply) then
                 if ply:IsDrunk() then
                     if IsPlayer(drunk) then return end

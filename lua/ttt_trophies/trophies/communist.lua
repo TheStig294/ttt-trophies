@@ -10,7 +10,7 @@ function TROPHY:Trigger()
     self:AddHook("TTTEndRound", function(result)
         local communists = {}
 
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if ply:IsCommunist() and self:IsAlive(ply) then
                 table.insert(communists, ply)
             end

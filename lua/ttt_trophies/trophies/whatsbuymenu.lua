@@ -15,7 +15,7 @@ function TROPHY:Trigger()
 
     self:AddHook("TTTEndRound", function(result)
         if result == WIN_TRAITOR then
-            for _, ply in ipairs(player.GetAll()) do
+            for _, ply in player.Iterator() do
                 if TTTTrophies:IsTraitorTeam(ply) and not boughtPlayers[ply] then
                     self:Earn(ply)
                 end
