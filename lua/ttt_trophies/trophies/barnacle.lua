@@ -9,28 +9,26 @@ function TROPHY:Trigger()
     local caughtPlayers = {}
     local freedPlayers = {}
 
-    self:AddHook("WeaponEquip", function(weapon, owner)
-        if not IsValid(weapon) then return end
+    self:AddHook("WeaponEquip", function(weapon, _)
+        if not IsValid(weapon) or not weapon.GetClass or weapon:GetClass() ~= "weapon_ttt_barnacle" then return end
 
-        if weapon:GetClass() == "weapon_ttt_barnacle" then
-            timer.Create("TTTTrophiesCheckBarnacleCaught", 0.1, 0, function()
-                for _, ply in player.Iterator() do
-                    if ply:IsEFlagSet(EFL_IS_BEING_LIFTED_BY_BARNACLE) then
-                        caughtPlayers[ply] = true
-                    elseif caughtPlayers[ply] then
-                        freedPlayers[ply] = true
+        timer.Create("TTTTrophiesCheckBarnacleCaught", 0.1, 0, function()
+            for _, ply in player.Iterator() do
+                if ply:IsEFlagSet(EFL_IS_BEING_LIFTED_BY_BARNACLE) then
+                    caughtPlayers[ply] = true
+                elseif caughtPlayers[ply] then
+                    freedPlayers[ply] = true
 
-                        timer.Simple(0.3, function()
-                            caughtPlayers[ply] = false
-                            freedPlayers[ply] = false
-                        end)
-                    end
+                    timer.Simple(0.3, function()
+                        caughtPlayers[ply] = false
+                        freedPlayers[ply] = false
+                    end)
                 end
-            end)
-        end
+            end
+        end)
     end)
 
-    self:AddHook("OnNPCKilled", function(npc, attacker, inflictor)
+    self:AddHook("OnNPCKilled", function(npc, attacker, _)
         if not IsPlayer(attacker) or not IsValid(npc) then return end
         if npc:GetClass() ~= "npc_barnacle" or not IsPlayer(npc.Owner) then return end
 
